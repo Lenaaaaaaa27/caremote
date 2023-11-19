@@ -97,7 +97,7 @@ int create_database() {
 
 
 int verification_database(){
-    const char *nom_fichier = "../src/caremote_db";
+    const char *nom_fichier = "../caremote_db";
 
     if (access(nom_fichier, F_OK) != -1) {
         printf("Le fichier existe.\n");
