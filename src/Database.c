@@ -2,20 +2,16 @@
 // Created by Léna on 19/11/2023.
 //
 
-//
-// Created by Léna on 19/11/2023.
-//
-
 
 #include <stdio.h>
 #include <sqlite3.h>
 #include <unistd.h>
 
+// To create the database
 int create_database() {
     sqlite3 *db;
     char *error_message = 0;
 
-    // Ouvrir ou créer la base de données
     int rc = sqlite3_open("../caremote_db", &db);
 
 
@@ -24,14 +20,14 @@ int create_database() {
         return 1;
     }
 
-    // Script SQL pour créer une table "utilisateurs"
+
     const char *create_table_sql =
             "CREATE TABLE profile("
             "id INTEGER PRIMARY KEY,"
             "username VARCHAR(20)"
             ");";
 
-    // Exécuter le script SQL
+
     rc = sqlite3_exec(db, create_table_sql, 0, 0, &error_message);
 
     if (rc != SQLITE_OK) {
@@ -87,7 +83,6 @@ int create_database() {
         return 1;
     }
 
-    // Fermer la base de données
     sqlite3_close(db);
 
     printf("La base de donnees a ete cree.\n");
@@ -99,11 +94,7 @@ int create_database() {
 int verification_database(){
     const char *nom_fichier = "../caremote_db";
 
-    if (access(nom_fichier, F_OK) != -1) {
-        printf("Le fichier existe.\n");
-    } else {
-        create_database();
-    }
-
-    return 0;
+int verification_database(){
+    if (access("../caremote_db", F_OK) == -1) return 0;
+    return 1;
 }

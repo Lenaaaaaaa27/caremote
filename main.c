@@ -2,5 +2,7 @@
 #include "includes.h"
 
 int main() {
-    verification_database();
+   if(!verification_database()) create_database();
+
+   return 0;
 }
