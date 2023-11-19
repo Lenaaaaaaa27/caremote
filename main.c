@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include "includes.h"
 
 int main() {
-    printf("Hello, World!\n");
-    return 0;
+    verification_database();
 }
