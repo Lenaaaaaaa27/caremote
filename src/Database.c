@@ -90,10 +90,7 @@ int create_database() {
     return 0;
 }
 
-
-int verification_database(){
-    const char *nom_fichier = "../caremote_db";
-
+// Verify if the database already exists
 int verification_database(){
     if (access("../caremote_db", F_OK) == -1) return 0;
     return 1;
