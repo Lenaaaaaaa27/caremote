@@ -23,7 +23,7 @@ int create_database() {
 
     const char *create_table_sql =
             "CREATE TABLE profile("
-            "id INTEGER PRIMARY KEY,"
+            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "username VARCHAR(20)"
             ");";
 
@@ -39,7 +39,7 @@ int create_database() {
 
     const char *create_table_2_sql =
             "CREATE TABLE configuration("
-            "id INTEGER PRIMARY KEY,"
+            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "name VARCHAR(30),"
             "move_forward CHAR,"
             "move_backward CHAR,"
@@ -62,7 +62,7 @@ int create_database() {
 
     const char *create_table_3_sql =
             "CREATE TABLE session ("
-            "id INTEGER PRIMARY KEY,"
+            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "name VARCHAR(40),"
             "duration INTEGER,"
             "max_speed FLOAT,"
@@ -92,6 +92,6 @@ int create_database() {
 
 // Verify if the database already exists
 int verification_database(){
-    if (access("../caremote_db", F_OK) == -1) return 0;
-    return 1;
+    if (access("../caremote_db", F_OK) == -1) return 1;
+    return 0;
 }
