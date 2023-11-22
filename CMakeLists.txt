@@ -3,7 +3,14 @@ project(caremote C)
 
 set(CMAKE_C_STANDARD 17)
 
-add_executable(caremote main.c)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK4 REQUIRED gtk4)
 
-target_sources(caremote PRIVATE lib/sqlite-amalgamation-3440000/sqlite3.c)
-target_include_directories(caremote PRIVATE lib/sqlite-amalgamation-3440000/)
+include_directories(${GTK4_INCLUDE_DIRS})
+link_directories(${GTK4_LIBRARY_DIRS})
+
+add_definitions(${GTK4_CFLAGS_OTHER})
+
+add_executable(caremote main.c)
+target_link_libraries(caremote ${GTK4_LIBRARIES})
+
