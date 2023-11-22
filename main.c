@@ -1,8 +1,8 @@
-#include <stdio.h>
 #include "includes.h"
+#include <gtk/gtk.h>
 
 int main() {
-   if(!verification_database()) create_database();
+    if(verification_database()) create_database();
 
-   return 0;
+    return 0;
 }
