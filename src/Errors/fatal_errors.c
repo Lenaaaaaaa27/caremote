@@ -1,7 +1,6 @@
 //
 // Created by Lena on 27/11/2023.
 //
-#include<stdlib.h>
 
 void handle_error(const char*);
 

@@ -3,8 +3,6 @@
 //
 
 #include<sqlite3.h>
-#include "../Errors/fatal_errors.c"
-
 int create_profile(char username[20]){
 
     sqlite3 *db;

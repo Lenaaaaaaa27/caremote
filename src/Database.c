@@ -2,7 +2,6 @@
 // Created by Léna on 19/11/2023.
 //
 
-#include <stdio.h>
 #include <sqlite3.h>
 #include <unistd.h>
 #include "bd_requests/config.c"
@@ -14,8 +13,7 @@ int create_database() {
     char *error_message = 0;
 
     if (sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
-        fprintf(stderr, "Impossible d'ouvrir/creer la base de donnees : %s\n", sqlite3_errmsg(db));
-        return 1;
+        error_content(101);
     }
 
 
@@ -26,10 +24,9 @@ int create_database() {
             ");";
 
     if (sqlite3_exec(db, create_table_sql, 0, 0, &error_message) != SQLITE_OK) {
-        fprintf(stderr, "Erreur lors de la creation de la table : %s\n", error_message);
         sqlite3_free(error_message);
         sqlite3_close(db);
-        return 2;
+        error_content(101);
     }
 
     const char *create_table_2_sql =
@@ -48,10 +45,9 @@ int create_database() {
             ");";
 
     if (sqlite3_exec(db, create_table_2_sql, 0, 0, &error_message) != SQLITE_OK) {
-        fprintf(stderr, "Erreur lors de la creation de la table : %s\n", error_message);
         sqlite3_free(error_message);
         sqlite3_close(db);
-        return 1;
+        error_content(101);
     }
 
     const char *create_table_3_sql =
@@ -70,15 +66,12 @@ int create_database() {
             ")";
 
     if (sqlite3_exec(db, create_table_3_sql, 0, 0, &error_message) != SQLITE_OK) {
-        fprintf(stderr, "Erreur lors de la creation de la table : %s\n", error_message);
         sqlite3_free(error_message);
         sqlite3_close(db);
-        return 1;
+        error_content(101);
     }
 
     sqlite3_close(db);
-
-    printf("La base de donnees a ete cree.\n");
 
     create_profile("Default User");
     create_configuration(1);
