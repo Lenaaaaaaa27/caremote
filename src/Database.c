@@ -29,7 +29,7 @@ int create_database() {
         fprintf(stderr, "Erreur lors de la creation de la table : %s\n", error_message);
         sqlite3_free(error_message);
         sqlite3_close(db);
-        return 1;
+        return 2;
     }
 
     const char *create_table_2_sql =

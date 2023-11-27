@@ -2,10 +2,8 @@
 // Created by Lena on 22/11/2023.
 // CRUD for configurations
 //
-#include<string.h>
 #include<sqlite3.h>
-#include<stdio.h>
-#include <stdlib.h>
+#include "../Errors/fatal_errors.c"
 
 typedef struct {
     char *name;
@@ -25,7 +23,7 @@ int create_configuration(int id_profile){
     sqlite3_stmt *stmt;
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
-        return 1;
+        error_content(101);
 
     if (sqlite3_prepare_v2(db, "INSERT INTO configuration (name,"
                                "move_forward,"
@@ -38,9 +36,8 @@ int create_configuration(int id_profile){
                                "id_profile)"
                                "VALUES (?,?,?,?,?,?,?,?,?)",
                                -1, &stmt, NULL) != SQLITE_OK) {
-        printf("Erreur de preparation de la requete : %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        error_content(101);
     }
 
     sqlite3_bind_text(stmt, 1, "Nouvelle configuration", -1, SQLITE_STATIC);
@@ -53,12 +50,10 @@ int create_configuration(int id_profile){
     sqlite3_bind_text(stmt, 8, "&", -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt, 9, id_profile);
 
-    // To execute the request
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
-        printf("Erreur lors de l'execution de la requete : %s\n", sqlite3_errmsg(db));
-    } else {
-        printf("Nouvelle config ajoutee\n");
+        sqlite3_close(db);
+        error_content(101);
     }
 
     sqlite3_finalize(stmt);
@@ -71,12 +66,12 @@ int get_configurations(int id_profile){
     sqlite3_stmt *stmt;
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
-        return 1;
+        error_content(101);
+
     char *req = "SELECT name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button FROM configuration WHERE id_profile = ?";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
-        printf("Erreur de preparation de la requete : %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        error_content(101);
     }
 
     sqlite3_bind_int(stmt, 1, id_profile);
@@ -113,12 +108,12 @@ int get_configuration(int id_configuration){
     sqlite3_stmt *stmt;
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
-        return 1;
+        error_content(101);
+
     char *req = "SELECT name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button FROM configuration WHERE id = ?";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
-        printf("Erreur de preparation de la requete : %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        error_content(101);
     }
 
     sqlite3_bind_int(stmt, 1, id_configuration);
@@ -156,8 +151,10 @@ int update_configuration(int id, Configuration *config) {
     int parameters_count = 0;
     char *sql = "UPDATE configuration SET";
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
-        return 1;
+    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
+        error_content(101);
+        sqlite3_free(sql);
+    }
 
     if (config->name != NULL) {
         sql = sqlite3_mprintf("%s name = ?,", sql);
@@ -195,20 +192,17 @@ int update_configuration(int id, Configuration *config) {
         parameters_count++;
     }
 
-    if (parameters_count == 0) {
-        printf("Aucun paramètre de mise à jour spécifié.\n");
-        return 1;
-    }
+    if (parameters_count == 0)
+        return 0;
 
-    // Retirer la virgule finale
     sql[strlen(sql) - 1] = '\0';
 
-    // Ajouter la condition WHERE pour identifier la configuration à mettre à jour
     sql = sqlite3_mprintf("%s WHERE id = ?", sql);
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
-        fprintf(stderr, "Erreur de préparation de la requête : %s\n", sqlite3_errmsg(db));
+        error_content(101);
         sqlite3_free(sql);
+        sqlite3_close(db);
         return 1;
     }
 
@@ -234,13 +228,13 @@ int update_configuration(int id, Configuration *config) {
     sqlite3_bind_int(stmt, param_position, id);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
-        printf("Erreur lors de l'execution de la requete : %s\n", sqlite3_errmsg(db));
-    } else {
-        printf("Configuration mise a jour \n");
+        sqlite3_close(db);
+        error_content(101);
     }
 
     sqlite3_finalize(stmt);
     sqlite3_free(sql);
+    sqlite3_close(db);
 
     return 0;}
     
@@ -252,40 +246,19 @@ int delete_configuration(int id_configuration) {
         return 1;
 
     if (sqlite3_prepare_v2(db, "DELETE FROM configuration WHERE id = ?", -1, &stmt, NULL) != SQLITE_OK) {
-        printf("Erreur de preparation de la requete : %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        return 1;
+        error_content(101);
     }
 
     sqlite3_bind_int(stmt, 1, id_configuration);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
-        printf("Erreur lors de l'exécution de la requête : %s\n", sqlite3_errmsg(db));
-    } else {
-        printf("Configuration supprimee\n");
+        sqlite3_close(db);
+        error_content(101);
     }
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
-    return 0;
-}
-
-int main(){
-    int id_profile = 1;
-    int id_configuration = 1;
-    Configuration config;
-
-    config.name = "Config de thuthur";
-    config.move_forward = NULL;
-    config.move_backward = NULL;
-    config.move_left = NULL;
-    config.move_right = NULL;
-    config.max_speed_first_step = "3.01";
-    config.max_speed_second_step = "6.000";
-    config.change_step_button = NULL;
-
-    update_configuration(id_configuration, &config);
 
     return 0;
 }
