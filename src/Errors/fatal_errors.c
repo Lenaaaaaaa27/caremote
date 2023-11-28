@@ -20,9 +20,9 @@ void error_content(int code){
     switch (code) {
         case 101 :
             content = "Error 101 : Echec SQL\n";
-            error_message = line_formatting(content);
             break;
     }
+    error_message = line_formatting(content);
     handle_error(error_message);
 }
 
