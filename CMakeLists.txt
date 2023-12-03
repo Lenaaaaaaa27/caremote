@@ -11,7 +11,9 @@ link_directories(${GTK4_LIBRARY_DIRS})
 
 add_definitions(${GTK4_CFLAGS_OTHER})
 
-add_executable(caremote main.c)
+add_executable(caremote
+                src/control/control.c
+                main.c)
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 
 target_sources(caremote PRIVATE lib/sqlite-amalgamation-3440000/sqlite3.c)
