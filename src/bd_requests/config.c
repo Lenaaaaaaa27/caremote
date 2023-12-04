@@ -3,19 +3,9 @@
 // CRUD for configurations
 //
 #include<sqlite3.h>
-#include "../Errors/fatal_errors.c"
+#include"../../includes/define.h"
 
-typedef struct {
-    char *name;
-    char *move_forward;
-    char *move_backward;
-    char *move_left;
-    char *move_right;
-    char *max_speed_first_step;
-    char *max_speed_second_step;
-    char *change_step_button;
 
-} Configuration;
 
 int create_configuration(int id_profile){
 

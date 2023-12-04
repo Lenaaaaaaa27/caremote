@@ -5,7 +5,7 @@
 
 #include<sqlite3.h>
 #include<stdio.h>
-#include "../Errors/fatal_errors.c"
+#include"../../includes/define.h"
 
 int create_session(char name[40], int duration, int distance, double max_speed, double average_speed, char time_start[20], int id_configuration, int id_profile){
     sqlite3 *db;

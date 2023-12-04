@@ -3,6 +3,7 @@
 //
 
 #include<sqlite3.h>
+#include"../../includes/define.h"
 int create_profile(char username[20]){
 
     sqlite3 *db;
