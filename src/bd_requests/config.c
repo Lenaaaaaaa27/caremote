@@ -5,8 +5,6 @@
 #include<sqlite3.h>
 #include"../../includes/define.h"
 
-
-
 int create_configuration(int id_profile){
 
     sqlite3 *db;
@@ -51,14 +49,22 @@ int create_configuration(int id_profile){
     return 0;
 }
 
-int get_configurations(int id_profile){
+/**
+@brief Cette fonction permet de get toutes les configurations.
+Une allocation dynamique est faite il faut donc free la mémoire allouer
+@return Retourne un tableau dynamique de type Configuration
+@endcode
+*/
+Configuration * get_configurations(int id_profile){
     sqlite3 *db;
     sqlite3_stmt *stmt;
+    Configuration *array;
+    int size = 0;
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *req = "SELECT name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button FROM configuration WHERE id_profile = ?";
+    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button, id_profile FROM configuration WHERE id_profile = ?";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);
@@ -67,40 +73,42 @@ int get_configurations(int id_profile){
     sqlite3_bind_int(stmt, 1, id_profile);
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        const char *nom = (const char *)sqlite3_column_text(stmt, 0);
-        const char *move_forward = (const char *)sqlite3_column_text(stmt, 1);
-        const char *move_backward = (const char *)sqlite3_column_text(stmt, 2);
-        const char *move_left = (const char *)sqlite3_column_text(stmt, 3);
-        const char *move_right = (const char *)sqlite3_column_text(stmt, 4);
-        double max_speed_first_step = sqlite3_column_double(stmt, 5);
-        double max_speed_second_step = sqlite3_column_double(stmt, 6);
-        const char *change_step_button = (const char *)sqlite3_column_text(stmt, 7);
-
-        printf("Name: %s\n", nom);
-        printf("Move Forward: %s\n", move_forward);
-        printf("Move Backward: %s\n", move_backward);
-        printf("Move Left: %s\n", move_left);
-        printf("Move Right: %s\n", move_right);
-        printf("Max Speed First Step: %d\n", max_speed_first_step);
-        printf("Max Speed Second Step: %d\n", max_speed_second_step);
-        printf("Change Step Button: %s\n", change_step_button);
-        printf("\n");
+        ++size;
     }
 
+    array = malloc ((size+1) * sizeof(Configuration));
+    size = 0;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        array[size].id = sqlite3_column_int(stmt, 0);
+        strcpy(array[size].name, (const char *)sqlite3_column_text(stmt, 1));
+        array[size].move_forward = (char) sqlite3_column_text(stmt, 2)[0];
+        array[size].move_backward = (char) sqlite3_column_text(stmt, 3)[0];
+        array[size].move_left = (char) sqlite3_column_text(stmt, 4)[0];
+        array[size].move_right = (char)sqlite3_column_text(stmt, 5)[0];
+        array[size].max_speed_first_step = sqlite3_column_double(stmt, 6);
+        array[size].max_speed_second_step = sqlite3_column_double(stmt, 7);
+        array[size].change_step_button = (char) sqlite3_column_text(stmt, 8)[0];
+        array[size].id_profile = sqlite3_column_int(stmt, 9);
+        ++size;
+    }
+
+    array[size].id = -1;
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 
-    return 0;
+    return array;
 }
 
-int get_configuration(int id_configuration){
+Configuration get_configuration(int id_configuration){
     sqlite3 *db;
     sqlite3_stmt *stmt;
+    Configuration array;
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *req = "SELECT name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button FROM configuration WHERE id = ?";
+    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button, id_profile FROM configuration WHERE id = ?";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);
@@ -109,85 +117,35 @@ int get_configuration(int id_configuration){
     sqlite3_bind_int(stmt, 1, id_configuration);
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        const char *nom = (const char *)sqlite3_column_text(stmt, 0);
-        const char *move_forward = (const char *)sqlite3_column_text(stmt, 1);
-        const char *move_backward = (const char *)sqlite3_column_text(stmt, 2);
-        const char *move_left = (const char *)sqlite3_column_text(stmt, 3);
-        const char *move_right = (const char *)sqlite3_column_text(stmt, 4);
-        double max_speed_first_step = sqlite3_column_double(stmt, 5);
-        double max_speed_second_step = sqlite3_column_double(stmt, 6);
-        const char *change_step_button = (const char *)sqlite3_column_text(stmt, 7);
-
-        printf("Name: %s\n", nom);
-        printf("Move Forward: %s\n", move_forward);
-        printf("Move Backward: %s\n", move_backward);
-        printf("Move Left: %s\n", move_left);
-        printf("Move Right: %s\n", move_right);
-        printf("Max Speed First Step: %lf\n", max_speed_first_step);
-        printf("Max Speed Second Step: %lf\n", max_speed_second_step);
-        printf("Change Step Button: %s\n", change_step_button);
-        printf("\n");
+        array.id = sqlite3_column_int(stmt, 0);
+        strcpy(array.name, (const char *) sqlite3_column_text(stmt, 1));
+        array.move_forward = (char) sqlite3_column_text(stmt, 2)[0];
+        array.move_backward = (char) sqlite3_column_text(stmt, 3)[0];
+        array.move_left = (char) sqlite3_column_text(stmt, 4)[0];
+        array.move_right = (char)sqlite3_column_text(stmt, 5)[0];
+        array.max_speed_first_step = sqlite3_column_double(stmt, 6);
+        array.max_speed_second_step = sqlite3_column_double(stmt, 7);
+        array.change_step_button = (char) sqlite3_column_text(stmt, 8)[0];
+        array.id_profile = sqlite3_column_int(stmt, 9);
     }
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    return 0;
+    return array;
 }
 
-int update_configuration(int id, Configuration *config) {
+int update_configuration(Configuration configuration) {
 
     sqlite3 *db;
     sqlite3_stmt *stmt;
-    int parameters_count = 0;
-    char *sql = "UPDATE configuration SET";
+    char *sql = "UPDATE configuration SET name = ?, move_forward = ?, move_backward = ?, move_left = ?,"
+                "move_right = ?, max_speed_first_step = ?, max_speed_second_step = ?, change_step_button = ? "
+                "WHERE id = ?";
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
         error_content(101);
         sqlite3_free(sql);
     }
-
-    if (config->name != NULL) {
-        sql = sqlite3_mprintf("%s name = ?,", sql);
-        parameters_count++;
-    }
-
-    if (config->move_forward != NULL) {
-        sql = sqlite3_mprintf("%s move_forward = ?,", sql);
-        parameters_count++;
-    }
-    if (config->move_backward != NULL) {
-        sql = sqlite3_mprintf("%s move_backward = ?,", sql);
-        parameters_count++;
-    }
-    if (config->move_left != NULL) {
-        sql = sqlite3_mprintf("%s move_left = ?,", sql);
-        parameters_count++;
-    }
-    if (config->move_right != NULL) {
-        sql = sqlite3_mprintf("%s move_right = ?,", sql);
-        parameters_count++;
-    }
-    if (config->max_speed_first_step != NULL) {
-        sql = sqlite3_mprintf("%s max_speed_first_step = ?,", sql);
-        parameters_count++;
-    }
-    if (config->max_speed_second_step != NULL) {
-
-        sql = sqlite3_mprintf("%s max_speed_second_step = ?,", sql);
-        parameters_count++;
-    }
-
-    if (config->change_step_button != NULL) {
-        sql = sqlite3_mprintf("%s change_step_button = ?,", sql);
-        parameters_count++;
-    }
-
-    if (parameters_count == 0)
-        return 0;
-
-    sql[strlen(sql) - 1] = '\0';
-
-    sql = sqlite3_mprintf("%s WHERE id = ?", sql);
 
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
         error_content(101);
@@ -196,26 +154,15 @@ int update_configuration(int id, Configuration *config) {
         return 1;
     }
 
-    int param_position = 1;
-
-    if (config->name != NULL)
-        sqlite3_bind_text(stmt, param_position++, config->name, -1, SQLITE_STATIC);
-    if (config->move_forward != NULL)
-        sqlite3_bind_text(stmt, param_position++, config->move_forward, -1, SQLITE_STATIC);
-    if(config->move_backward != NULL)
-        sqlite3_bind_text(stmt, param_position++, config->move_backward, -1, SQLITE_STATIC);
-    if (config->move_left != NULL)
-        sqlite3_bind_text(stmt, param_position++, config->move_left, -1, SQLITE_STATIC);
-    if (config->move_right != NULL)
-        sqlite3_bind_text(stmt, param_position++, config->move_right, -1, SQLITE_STATIC);
-    if (config->max_speed_first_step != NULL)
-        sqlite3_bind_double(stmt, param_position++, atof(config->max_speed_first_step));
-    if (config->max_speed_second_step != NULL)
-        sqlite3_bind_double(stmt, param_position++, atof(config->max_speed_second_step));
-    if (config->change_step_button != NULL)
-        sqlite3_bind_text(stmt, param_position++, config->change_step_button, -1, SQLITE_STATIC);
-
-    sqlite3_bind_int(stmt, param_position, id);
+    sqlite3_bind_text(stmt, 1, configuration.name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, &configuration.move_forward, 1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, &configuration.move_backward, 1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, &configuration.move_left, 1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, &configuration.move_right, 1, SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 6, configuration.max_speed_first_step);
+    sqlite3_bind_double(stmt, 7, configuration.max_speed_second_step);
+    sqlite3_bind_text(stmt, 8, &configuration.change_step_button, 1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 9, configuration.id);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_close(db);
@@ -223,11 +170,11 @@ int update_configuration(int id, Configuration *config) {
     }
 
     sqlite3_finalize(stmt);
-    sqlite3_free(sql);
     sqlite3_close(db);
 
-    return 0;}
-    
+    return 0;
+}
+
 int delete_configuration(int id_configuration) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -252,3 +199,4 @@ int delete_configuration(int id_configuration) {
 
     return 0;
 }
+

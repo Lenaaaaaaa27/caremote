@@ -60,7 +60,7 @@ Profile * get_profiles(){
     size = 0;
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        array[size].id = atoi(sqlite3_column_text(stmt, 0));
+        array[size].id = sqlite3_column_int(stmt, 0);
         strcpy(array[size].username, sqlite3_column_text(stmt, 1));
         ++size;
     }
@@ -93,7 +93,7 @@ Profile get_profile(int id_profile){
         error_content(101);
     }
 
-    profile.id = atoi(sqlite3_column_text(stmt, 0));
+    profile.id = sqlite3_column_int(stmt, 0);
     strcpy(profile.username, sqlite3_column_text(stmt, 1));
 
     sqlite3_close(db);

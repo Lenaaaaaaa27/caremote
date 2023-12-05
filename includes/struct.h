@@ -8,6 +8,7 @@ typedef struct {
     double max_speed_first_step;
     double max_speed_second_step;
     char change_step_button;
+    int id_profile;
 
 } Configuration;
 
