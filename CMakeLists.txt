@@ -16,3 +16,8 @@ target_link_libraries(caremote ${GTK4_LIBRARIES})
 
 target_sources(caremote PRIVATE lib/sqlite-amalgamation-3440000/sqlite3.c)
 target_include_directories(caremote PRIVATE lib/sqlite-amalgamation-3440000/)
+
+# Ajouter le support de Winsock
+if(WIN32)
+    target_link_libraries(caremote ws2_32)
+endif()

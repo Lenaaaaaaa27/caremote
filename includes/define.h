@@ -9,6 +9,7 @@
 #include<stdlib.h>
 #include "struct.h"
 #include "../src/Errors/fatal_errors.c"
+#include "../src/connexion/connexion.c"
 
 #define LINK "../caremote"
 #endif //CAREMOTE_DEFINE_H
