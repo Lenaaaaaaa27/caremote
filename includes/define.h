@@ -23,6 +23,8 @@ void on_profile_activate(GtkWidget *, gpointer);
 void on_session_activate(GtkWidget *, gpointer);
 void on_configuration_activate(GtkWidget *, gpointer);
 void activate(GtkApplication *, gpointer);
+void on_add_profile_activate();
+static gboolean on_window_button_press_event();
 int create_profile(char username[20]);
 Profile *get_profiles();
 Profile get_profile(int id_profile);
