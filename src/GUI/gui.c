@@ -1,6 +1,3 @@
-//
-// Created by vince on 30/12/2023.
-//
 #include "../../includes/define.h"
 
 static GtkWidget *globalProfileSubmenu = NULL;
@@ -10,18 +7,27 @@ static gboolean is_profile_submenu_created = FALSE;
 static gboolean is_session_submenu_created = FALSE;
 static gboolean is_configuration_submenu_created = FALSE;
 
-void on_profile_activate(GtkWidget *widget, gpointer user_data) {
+// Fonction pour fermer les sous-menus s'ils sont ouverts
+static void close_submenus() {
+    if (is_profile_submenu_created) {
+        gtk_widget_destroy(globalProfileSubmenu);
+        is_profile_submenu_created = FALSE;
+    }
+
     if (is_session_submenu_created) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(globalSessionSubmenu), G_CALLBACK(on_session_activate), NULL);
         gtk_widget_destroy(globalSessionSubmenu);
         is_session_submenu_created = FALSE;
     }
 
     if (is_configuration_submenu_created) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(globalConfigurationSubmenu), G_CALLBACK(on_configuration_activate), NULL);
         gtk_widget_destroy(globalConfigurationSubmenu);
         is_configuration_submenu_created = FALSE;
     }
+}
+
+void on_profile_activate(GtkWidget *widget, gpointer user_data) {
+    // Fermer les sous-menus s'ils sont ouverts
+    close_submenus();
 
     Profile *profiles = get_profiles();
 
@@ -40,21 +46,12 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
 
     free(profiles);
 
-    gtk_menu_popup_at_widget(GTK_MENU(globalProfileSubmenu), widget, GDK_GRAVITY_SOUTH, GDK_GRAVITY_NORTH, NULL);
+    gtk_menu_popup_at_pointer(GTK_MENU(globalProfileSubmenu), NULL);
 }
 
 void on_session_activate(GtkWidget *widget, gpointer user_data) {
-    if (is_profile_submenu_created) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(globalProfileSubmenu), G_CALLBACK(on_profile_activate), NULL);
-        gtk_widget_destroy(globalProfileSubmenu);
-        is_profile_submenu_created = FALSE;
-    }
-
-    if (is_configuration_submenu_created) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(globalConfigurationSubmenu), G_CALLBACK(on_configuration_activate), NULL);
-        gtk_widget_destroy(globalConfigurationSubmenu);
-        is_configuration_submenu_created = FALSE;
-    }
+    // Fermer les sous-menus s'ils sont ouverts
+    close_submenus();
 
     Session *sessions = get_sessions_by_profile_id(1);
 
@@ -73,21 +70,12 @@ void on_session_activate(GtkWidget *widget, gpointer user_data) {
 
     free(sessions);
 
-    gtk_menu_popup_at_widget(GTK_MENU(globalSessionSubmenu), widget, GDK_GRAVITY_SOUTH, GDK_GRAVITY_NORTH, NULL);
+    gtk_menu_popup_at_pointer(GTK_MENU(globalSessionSubmenu), NULL);
 }
 
 void on_configuration_activate(GtkWidget *widget, gpointer user_data) {
-    if (is_profile_submenu_created) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(globalProfileSubmenu), G_CALLBACK(on_profile_activate), NULL);
-        gtk_widget_destroy(globalProfileSubmenu);
-        is_profile_submenu_created = FALSE;
-    }
-
-    if (is_session_submenu_created) {
-        g_signal_handlers_disconnect_by_func(G_OBJECT(globalSessionSubmenu), G_CALLBACK(on_session_activate), NULL);
-        gtk_widget_destroy(globalSessionSubmenu);
-        is_session_submenu_created = FALSE;
-    }
+    // Fermer les sous-menus s'ils sont ouverts
+    close_submenus();
 
     Configuration *configuration = get_configurations(1);
 
@@ -106,7 +94,13 @@ void on_configuration_activate(GtkWidget *widget, gpointer user_data) {
 
     free(configuration);
 
-    gtk_menu_popup_at_widget(GTK_MENU(globalConfigurationSubmenu), widget, GDK_GRAVITY_SOUTH, GDK_GRAVITY_NORTH, NULL);
+    gtk_menu_popup_at_pointer(GTK_MENU(globalConfigurationSubmenu), NULL);
+}
+
+// Gestionnaire d'événements pour fermer les sous-menus lorsqu'un clic est effectué ailleurs
+static gboolean on_window_button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
+    close_submenus();
+    return FALSE;
 }
 
 void activate(GtkApplication *app, gpointer user_data) {
@@ -120,6 +114,7 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), user_data);
+    g_signal_connect(window, "button-press-event", G_CALLBACK(on_window_button_press_event), NULL);
 
     gtk_builder_connect_signals(builder, user_data);
 
@@ -127,9 +122,10 @@ void activate(GtkApplication *app, gpointer user_data) {
     session = GTK_WIDGET(gtk_builder_get_object(builder, "sessions"));
     configuration = GTK_WIDGET(gtk_builder_get_object(builder, "configuration"));
 
-    g_signal_connect(profile, "activate", G_CALLBACK(on_profile_activate), user_data);
-    g_signal_connect(session, "activate", G_CALLBACK(on_session_activate), user_data);
-    g_signal_connect(configuration, "activate", G_CALLBACK(on_configuration_activate), user_data);
+    g_signal_connect(profile, "button_press_event", G_CALLBACK(on_profile_activate), window);
+    g_signal_connect(session, "button_press_event", G_CALLBACK(on_session_activate), window);
+    g_signal_connect(configuration, "button_press_event", G_CALLBACK(on_configuration_activate), window);
+
     g_object_unref(builder);
 
     gtk_widget_show_all(window);
