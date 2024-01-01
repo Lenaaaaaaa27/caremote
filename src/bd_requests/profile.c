@@ -103,7 +103,7 @@ Profile get_profile(int id_profile){
     return profile;
 }
 
-int update_profile(int id, char username[30]){
+int update_profile(int id, char username[20]){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 

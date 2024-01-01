@@ -26,6 +26,12 @@ static void close_submenus() {
     }
 }
 
+// Gestionnaire d'événements pour fermer les sous-menus lorsqu'un clic est effectué ailleurs
+static gboolean on_window_button_press_event() {
+    close_submenus();
+    return FALSE;
+}
+
 void on_profile_activate(GtkWidget *widget, gpointer user_data) {
     // Fermer les sous-menus s'ils sont ouverts
     close_submenus();
@@ -59,6 +65,47 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
     free(profiles);
 
     gtk_menu_popup_at_pointer(GTK_MENU(globalProfileSubmenu), NULL);
+}
+
+void on_add_profile_activate() {
+    GtkBuilder *builder = gtk_builder_new_from_file("index.glade");
+    GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "addProfile"));
+
+    if (addProfileWindow != NULL) {
+        gtk_widget_show_all(addProfileWindow);
+
+        // Récupérer l'entrée de l'utilisateur
+        GtkEntry *entry = GTK_ENTRY(gtk_builder_get_object(builder, "Addprofileinput"));
+
+        // Vérifier si l'objet entry est non nul
+        if (entry != NULL) {
+            // Connecter le signal "activate" du champ d'entrée à la fonction de création de profil
+            g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), NULL);
+        } else {
+            g_warning("Objet entry est NULL.");
+        }
+    } else {
+        g_warning("Impossible de charger la fenetre addProfile depuis le fichier Glade.");
+    }
+
+    g_object_unref(builder);
+}
+
+void on_create_profile_clicked(GtkWidget *widget, gpointer user_data) {
+
+    GtkEntry *entry = GTK_ENTRY(widget);
+    const gchar *username = gtk_entry_get_text(entry);
+
+    char *username_copy = g_strdup(username);
+
+    create_profile(username_copy);
+
+    g_free(username_copy);
+
+    GtkWidget *addProfileWindow = gtk_widget_get_toplevel(GTK_WIDGET(widget));
+    if (GTK_IS_WIDGET(addProfileWindow)) {
+        gtk_widget_destroy(addProfileWindow);
+    }
 }
 
 
@@ -110,26 +157,6 @@ void on_configuration_activate(GtkWidget *widget, gpointer user_data) {
     gtk_menu_popup_at_pointer(GTK_MENU(globalConfigurationSubmenu), NULL);
 }
 
-// Gestionnaire d'événements pour fermer les sous-menus lorsqu'un clic est effectué ailleurs
-static gboolean on_window_button_press_event() {
-    close_submenus();
-    return FALSE;
-}
-
-void on_add_profile_activate() {
-    // Vous pouvez charger la fenêtre "addProfile" depuis le fichier Glade
-    GtkBuilder *builder = gtk_builder_new_from_file("index.glade");
-    GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "addProfile"));
-
-    if (addProfileWindow != NULL) {
-        gtk_widget_show_all(addProfileWindow);
-    } else {
-        g_warning("Impossible de charger la fenetre addProfile depuis le fichier Glade.");
-    }
-
-    g_object_unref(builder);
-}
-
 void arraySession(GtkBuilder *builder) {
     GtkWidget *viewportsession;
     GtkWidget *label;
@@ -141,14 +168,6 @@ void arraySession(GtkBuilder *builder) {
     GtkWidget *grid = gtk_grid_new();
     gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
     Session *sessions = get_sessions_by_profile_id(1);
-
-    // Créer un label pour indiquer les sessions
-    label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label), "<b><span size='large'>YOUR SESSIONS</span></b>");
-    gtk_widget_set_margin_top(label, 10);
-    gtk_widget_set_margin_bottom(label, 10);
-    gtk_widget_set_halign(label, GTK_ALIGN_CENTER);
-    gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
 
     int row = 1;  // Commencer à la deuxième ligne pour les boutons
 
@@ -174,7 +193,6 @@ void arraySession(GtkBuilder *builder) {
 
 void arrayConfigurations(GtkBuilder *builder) {
     GtkWidget *viewportconfiguration;
-    GtkWidget *label;
     GtkWidget *button;
 
     viewportconfiguration = GTK_WIDGET(gtk_builder_get_object(builder, "viewportconfiguration"));
@@ -184,13 +202,6 @@ void arrayConfigurations(GtkBuilder *builder) {
     gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
     Configuration *configurations = get_configurations(1);
 
-    // Créer un label pour indiquer les sessions
-    label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label), "<b><span size='large'>YOUR CONFIGURATIONS</span></b>");
-    gtk_widget_set_margin_top(label, 10);
-    gtk_widget_set_margin_bottom(label, 10);
-    gtk_widget_set_halign(label, GTK_ALIGN_CENTER);
-    gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
 
     int row = 1;  // Commencer à la deuxième ligne pour les boutons
 
@@ -221,12 +232,10 @@ void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *configuration;
     GtkBuilder *builder;
 
-
     builder = gtk_builder_new_from_file("index.glade");
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "window"));
 
-    // Load the icon from file
     GError *error = NULL;
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("car.png", &error);
 
@@ -234,7 +243,6 @@ void activate(GtkApplication *app, gpointer user_data) {
         g_printerr("Error loading icon: %s\n", error->message);
         g_error_free(error);
     } else {
-        // Set the application icon
         gtk_window_set_icon(GTK_WINDOW(window), icon);
     }
 
