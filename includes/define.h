@@ -11,6 +11,7 @@
 #include "struct.h"
 #include "../src/Errors/fatal_errors.c"
 #include "../src/connexion/connexion.c"
+#include "../src/connexion/connexion.c"
 //control
 void init_control(Control *);
 void control();
