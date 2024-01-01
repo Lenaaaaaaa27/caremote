@@ -72,15 +72,9 @@ int connexion() {
     // Boucle de saisie utilisateur
     char user_input[BUFFER_SIZE];
     while (1) {
-        int random_number = rand() % 501 + 500;
-        if(random_number < 500 || random_number > 1000)
-            printf("\n%d",random_number);
 
-       // Convertir le nombre en une chaîne de caractères
-        snprintf(user_input, sizeof(user_input), "%d", random_number);
+        //valeur a envoyer
 
-        // Envoyer le message au serveur
-        send(clientSocket, user_input, strlen(user_input), 0);
         usleep(200000);
     }
 
