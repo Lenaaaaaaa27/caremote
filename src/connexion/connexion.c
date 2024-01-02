@@ -35,7 +35,7 @@ int initConnexion() {
     // Résolution de nom
     int res = getaddrinfo(hostname, NULL, &hints, &result);
     if (res != 0) {
-        fprintf(stderr, "Erreur lors de la résolution de nom: %s\n", gai_strerror(res));
+        fprintf(stderr, "Erreur lors de la resolution de nom: %s\n", gai_strerror(res));
         WSACleanup();
         return EXIT_FAILURE;
     }
