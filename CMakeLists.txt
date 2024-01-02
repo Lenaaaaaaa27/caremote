@@ -12,10 +12,10 @@ link_directories(${GTK4_LIBRARY_DIRS})
 add_definitions(${GTK4_CFLAGS_OTHER})
 
 add_executable(caremote
-                src/control/control.c
-                src/connexion/connexion.c
-                src/Errors/fatal_errors.c
-                main.c)
+        src/control/control.c
+        src/connexion/connexion.c
+        src/Errors/fatal_errors.c
+        main.c)
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 
 target_sources(caremote PRIVATE lib/sqlite-amalgamation-3440000/sqlite3.c)
@@ -24,4 +24,7 @@ target_include_directories(caremote PRIVATE lib/sqlite-amalgamation-3440000/)
 # Ajouter le support de Winsock
 if(WIN32)
     target_link_libraries(caremote ws2_32)
+
+    # Ajouter la bibliothèque XInput
+    target_link_libraries(caremote -lXinput)
 endif()

@@ -5,13 +5,15 @@
 #ifndef CAREMOTE_DEFINE_H
 #define CAREMOTE_DEFINE_H
 #include "../../includes/struct_control.h"
-
+#include <Xinput.h>  // Bibliothèque pour la gestion des manettes Xbox
 #include<string.h>
 #include<stdlib.h>
 #include "struct.h"
 //control
+
 void init_control(Control *);
 void control();
+
 
 //connexion
 int initConnexion();

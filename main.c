@@ -2,7 +2,6 @@
 #include "src/Database.c"
 
 int main() {
-    if(verification_database()) create_database();
-
+    control();
     return 0;
 }
