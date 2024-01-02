@@ -16,7 +16,8 @@
 #define PORT 5555
 #define BUFFER_SIZE 1024
 
-int connexion() {
+
+int initConnexion() {
     // Initialiser Winsock pour les systèmes Windows
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -39,13 +40,10 @@ int connexion() {
         return EXIT_FAILURE;
     }
 
-    struct in_addr *address = &((struct sockaddr_in *)result->ai_addr)->sin_addr;
+    struct in_addr *address = &((struct sockaddr_in *) result->ai_addr)->sin_addr;
     const char *ip_address = inet_ntoa(*address);
 
     freeaddrinfo(result);
-
-
-
 
     // Création de la socket client
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -62,27 +60,20 @@ int connexion() {
     serverAddr.sin_port = htons(PORT);
 
     // Tentative de connexion au serveur
-    if (connect(clientSocket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0) {
+    if (connect(clientSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
         perror("Erreur lors de la connexion au serveur");
         closesocket(clientSocket);
         WSACleanup();
         return EXIT_FAILURE;
     }
-    srand(time(NULL));
-    // Boucle de saisie utilisateur
-    char user_input[BUFFER_SIZE];
-    while (1) {
 
-        //valeur a envoyer
+    return clientSocket;
+}
 
-        usleep(200000);
-    }
-
+void closeConnexion(int clientSocket) {
     // Fermer la socket
     closesocket(clientSocket);
 
     // Libérer Winsock pour les systèmes Windows
     WSACleanup();
-
-    return 0;
 }

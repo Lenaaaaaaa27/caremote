@@ -6,11 +6,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-
-
-void handle_error(const char*);
-void write_log(const char*);
-char * line_formatting(const char*);
+#include "../../includes/define.h"
 
 // by Lena
 //returns the error message associated with the error set in parameter

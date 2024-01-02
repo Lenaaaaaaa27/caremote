@@ -1,52 +1,52 @@
-//
-// Created by Arthur on 03/12/2023.
-// Car control management (acceleration, steering)
-//
 #include <stdio.h>
-#include <windows.h>
-#include <mmsystem.h>
+#include <windows.h>  // Pour GetAsyncKeyState
 #include "../../includes/define.h"
 
-
-
 void init_control(Control *control) {
-    control->speed_up = 'z';
-    control->speed_down = 's';
-    control->right = 'd';
-    control->left = 'q';
+    control->speed_up = 'Z';
+    control->speed_down = 'S';
+    control->right = 'D';
+    control->left = 'Q';
 }
 
 void control() {
     Control control;
     init_control(&control);
     int axe_X = 0;
-    int axe_Z= 50;
-    boolean fin = 1;
+    int axe_Z = 750;
+    int fin = 1;
+
+    int clientSocket = initConnexion();
+
     while (fin) {
-        if (GetAsyncKeyState('Z') & 0x8001) {
-            if(axe_X < 100)
-                axe_X = axe_X + 5;
+        axe_X = 0;
+        if (GetAsyncKeyState(control.speed_up) & 0x8001) {
+            axe_X = 1;
         }
-        if (GetAsyncKeyState('S') & 0x8001) {
-            if(axe_X > 0)
-                axe_X = axe_X - 5;
+        if (GetAsyncKeyState(control.speed_down) & 0x8001) {
         }
-        if (GetAsyncKeyState('D') & 0x8001) {
-            if(axe_Z < 100)
-                axe_Z = axe_Z + 5;
+        if (GetAsyncKeyState(control.right) & 0x8001) {
+            if (axe_Z < 1000) {
+                axe_Z += 50;
+            }
         }
-        if (GetAsyncKeyState('Q') & 0x8001) {
-            if(axe_Z > 0)
-                axe_Z = axe_Z - 5;
+        if (GetAsyncKeyState(control.left) & 0x8001) {
+            if (axe_Z > 500) {
+                axe_Z -= 50;
+            }
         }
         if (GetAsyncKeyState(VK_ESCAPE) & 0x8001) {
             fin = 0;
         }
 
-        printf("axe Z : %d\n",axe_Z);
-        printf("axe X : %d\n",axe_X);
+            char buffer[256];
+            sprintf(buffer, "d%d", axe_Z);
+            send(clientSocket, buffer, strlen(buffer), 0);
 
-        // Un court délai pour ne pas surcharger le processeur
-        Sleep(100);
+            sprintf(buffer, "m%d", axe_X);
+            send(clientSocket, buffer, strlen(buffer), 0);
+            // Un court délai pour ne pas surcharger le processeur
+        Sleep(30);
     }
+    closeConnexion(clientSocket);
 }

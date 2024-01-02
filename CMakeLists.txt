@@ -13,6 +13,8 @@ add_definitions(${GTK4_CFLAGS_OTHER})
 
 add_executable(caremote
                 src/control/control.c
+                src/connexion/connexion.c
+                src/Errors/fatal_errors.c
                 main.c)
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 

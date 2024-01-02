@@ -9,12 +9,18 @@
 #include<string.h>
 #include<stdlib.h>
 #include "struct.h"
-#include "../src/Errors/fatal_errors.c"
-#include "../src/connexion/connexion.c"
-#include "../src/connexion/connexion.c"
 //control
 void init_control(Control *);
 void control();
+
+//connexion
+int initConnexion();
+void closeConnexion(int);
+
+//Error
+void handle_error(const char*);
+void write_log(const char*);
+char * line_formatting(const char*);
 
 #define LINK "../caremote"
 #endif //CAREMOTE_DEFINE_H
