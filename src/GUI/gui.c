@@ -40,10 +40,8 @@ void cleanup() {
 }
 
 void on_profile_menu_item_hover(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    // Cette fonction est appelée lorsque l'utilisateur survole un élément du menu
 
     submenuProfile = gtk_menu_new();
-    // Ajouter les sous-menus "Switch On", "Edit", "Delete"
     GtkWidget *switch_on_item = gtk_menu_item_new_with_label("Switch On");
     GtkWidget *edit_item = gtk_menu_item_new_with_label("Edit");
     GtkWidget *delete_item = gtk_menu_item_new_with_label("Delete");
@@ -60,17 +58,16 @@ void on_profile_menu_item_hover(GtkWidget *widget, GdkEvent *event, gpointer use
     gtk_widget_show(edit_item);
     gtk_widget_show(delete_item);
 
-    // Afficher le sous-menu
     gtk_menu_popup_at_pointer(GTK_MENU(submenuProfile), NULL);
 }
 
 void on_profile_menu_item_activate(GtkMenuItem *menu_item, gpointer user_data) {
-    // Récupérer l'ID du profil associé à l'élément de menu
+
     gint profile_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(menu_item), "user_id"));
 
     current_profile_id = profile_id;
 
-    // Rafraîchir la vue des sessions avec le nouvel ID de profil
+    update_current_profile_label();
     refresh_sessions_view(current_profile_id);
     refresh_configurations_view(current_profile_id);
 }
@@ -85,8 +82,6 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
         for (int i = 0; profiles[i].id != -1; ++i) {
             GtkWidget *profile_item = gtk_menu_item_new_with_label(profiles[i].username);
             g_object_set_data(G_OBJECT(profile_item), "user_id", GINT_TO_POINTER(profiles[i].id));
-
-            // Connecter l'événement "activate" à la nouvelle fonction
             g_signal_connect(profile_item, "activate", G_CALLBACK(on_profile_menu_item_activate), user_data);
 
             gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), profile_item);
@@ -237,12 +232,11 @@ void arraySessions(int profile_id) {
 
     viewportsession = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "viewportsession"));
 
-    // Créer un GtkGrid pour contenir le label et les boutons de session
     GtkWidget *grid = gtk_grid_new();
     gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
     Session *sessions = get_sessions_by_profile_id(profile_id);
 
-    int row = 1;  // Commencer à la deuxième ligne pour les boutons
+    int row = 1;
 
     for (int i = 0; sessions[i].id != -1; ++i) {
         button = gtk_button_new_with_label(sessions[i].name);
@@ -267,7 +261,6 @@ void arraySessions(int profile_id) {
 void refresh_configurations_view(int profile_id) {
     GtkWidget *viewportconfiguration = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "viewportconfiguration"));
 
-    // Supprimer tous les enfants du conteneur
     GList *children, *iter;
     children = gtk_container_get_children(GTK_CONTAINER(viewportconfiguration));
     for (iter = children; iter != NULL; iter = g_list_next(iter)) {
@@ -275,12 +268,11 @@ void refresh_configurations_view(int profile_id) {
     }
     g_list_free(children);
 
-    // Créer un GtkGrid pour contenir les nouveaux boutons de configuration
     GtkWidget *grid = gtk_grid_new();
     gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
     Configuration *configurations = get_configurations(profile_id);
 
-    int row = 1;  // Commencer à la deuxième ligne pour les boutons
+    int row = 1;
 
     for (int i = 0; configurations[i].id != -1; ++i) {
         GtkWidget *button = gtk_button_new_with_label(configurations[i].name);
@@ -330,6 +322,25 @@ void destroyWindow(GtkWidget *widget, gpointer user_data){
     g_object_unref(globalBuilder);
 }
 
+void update_current_profile_label() {
+    GtkWidget *currentProfileLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "currentProfile"));
+
+    if (currentProfileLabel == NULL || !GTK_IS_LABEL(currentProfileLabel)) {
+        g_print("Erreur : Label introuvable ou n'est pas un GtkLabel\n");
+        return;
+    }
+
+    Profile current_profile = get_profile(current_profile_id);
+
+    if (current_profile.id != -1) {
+        const char *profile_name = current_profile.username;
+
+        gtk_label_set_text(GTK_LABEL(currentProfileLabel), profile_name);
+    } else {
+        g_print("Erreur : Profil introuvable\n");
+    }
+}
+
 void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
     GtkWidget *profile;
@@ -355,6 +366,7 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     arraySessions(current_profile_id);
     arrayConfigurations(current_profile_id);
+    update_current_profile_label();
 
     g_signal_connect(profile, "button_press_event", G_CALLBACK(on_profile_activate), window);
 
