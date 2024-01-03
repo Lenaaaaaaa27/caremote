@@ -27,6 +27,8 @@ void on_edit_session_button_clicked(GtkButton *button, gpointer user_data);
 void on_session_button_clicked(GtkButton *button, gpointer user_data);
 void on_create_profile_clicked(GtkWidget *widget, gpointer user_data);
 void on_delete_session_button_clicked(GtkButton *button, gpointer user_data);
+void refresh_sessions_view(int profile_id);
+void refresh_configurations_view(int profile_id);
 void arrayConfigurations(int id_profile);
 void arraySessions(int id_profile);
 static gboolean on_window_button_press_event();

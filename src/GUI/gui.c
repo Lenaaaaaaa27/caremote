@@ -64,6 +64,17 @@ void on_profile_menu_item_hover(GtkWidget *widget, GdkEvent *event, gpointer use
     gtk_menu_popup_at_pointer(GTK_MENU(submenuProfile), NULL);
 }
 
+void on_profile_menu_item_activate(GtkMenuItem *menu_item, gpointer user_data) {
+    // Récupérer l'ID du profil associé à l'élément de menu
+    gint profile_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(menu_item), "user_id"));
+
+    current_profile_id = profile_id;
+
+    // Rafraîchir la vue des sessions avec le nouvel ID de profil
+    refresh_sessions_view(current_profile_id);
+    refresh_configurations_view(current_profile_id);
+}
+
 void on_profile_activate(GtkWidget *widget, gpointer user_data) {
     close_submenus();
     Profile *profiles = get_profiles();
@@ -75,7 +86,8 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
             GtkWidget *profile_item = gtk_menu_item_new_with_label(profiles[i].username);
             g_object_set_data(G_OBJECT(profile_item), "user_id", GINT_TO_POINTER(profiles[i].id));
 
-            g_signal_connect(profile_item, "activate", G_CALLBACK(on_profile_menu_item_hover), user_data);
+            // Connecter l'événement "activate" à la nouvelle fonction
+            g_signal_connect(profile_item, "activate", G_CALLBACK(on_profile_menu_item_activate), user_data);
 
             gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), profile_item);
             gtk_widget_show(profile_item);
@@ -157,12 +169,15 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_widget_show(sessionWindow);
 }
 
+
+
 void on_delete_session_button_clicked(GtkButton *button, gpointer user_data) {
     gint session_id = GPOINTER_TO_INT(user_data);
 
     g_print("%d", session_id);
     delete_session(session_id);
 
+    refresh_sessions_view(current_profile_id);
     gtk_widget_hide(sessionWindow);
 }
 
@@ -176,7 +191,44 @@ void on_edit_session_button_clicked(GtkButton *button, gpointer user_data) {
     g_strlcpy(session.name, new_session_name, sizeof(session.name));
 
     update_session(session);
+    refresh_sessions_view(current_profile_id);
     gtk_widget_hide(sessionWindow);
+}
+
+void refresh_sessions_view(int profile_id) {
+    GtkWidget *viewportsession = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "viewportsession"));
+
+    GList *children, *iter;
+    children = gtk_container_get_children(GTK_CONTAINER(viewportsession));
+    for (iter = children; iter != NULL; iter = g_list_next(iter)) {
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    }
+    g_list_free(children);
+
+    GtkWidget *grid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+    Session *sessions = get_sessions_by_profile_id(profile_id);
+
+    int row = 1;
+
+    for (int i = 0; sessions[i].id != -1; ++i) {
+        GtkWidget *button = gtk_button_new_with_label(sessions[i].name);
+
+        gtk_widget_set_size_request(button, 360, 120);
+
+        g_object_set_data(G_OBJECT(button), "session_id", GINT_TO_POINTER(sessions[i].id));
+
+        g_signal_connect(button, "clicked", G_CALLBACK(on_session_button_clicked), NULL);
+
+        gtk_grid_attach(GTK_GRID(grid), button, 0, row, 1, 1);
+
+        row++;
+    }
+
+    gtk_container_add(GTK_CONTAINER(viewportsession), grid);
+
+    gtk_widget_show_all(viewportsession);
+    free(sessions);
 }
 
 void arraySessions(int profile_id) {
@@ -210,6 +262,40 @@ void arraySessions(int profile_id) {
 
     gtk_widget_show_all(viewportsession);
     free(sessions);
+}
+
+void refresh_configurations_view(int profile_id) {
+    GtkWidget *viewportconfiguration = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "viewportconfiguration"));
+
+    // Supprimer tous les enfants du conteneur
+    GList *children, *iter;
+    children = gtk_container_get_children(GTK_CONTAINER(viewportconfiguration));
+    for (iter = children; iter != NULL; iter = g_list_next(iter)) {
+        gtk_widget_destroy(GTK_WIDGET(iter->data));
+    }
+    g_list_free(children);
+
+    // Créer un GtkGrid pour contenir les nouveaux boutons de configuration
+    GtkWidget *grid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+    Configuration *configurations = get_configurations(profile_id);
+
+    int row = 1;  // Commencer à la deuxième ligne pour les boutons
+
+    for (int i = 0; configurations[i].id != -1; ++i) {
+        GtkWidget *button = gtk_button_new_with_label(configurations[i].name);
+
+        gtk_widget_set_size_request(button, 360, 120);
+
+        gtk_grid_attach(GTK_GRID(grid), button, 0, row, 1, 1);
+
+        row++;
+    }
+
+    gtk_container_add(GTK_CONTAINER(viewportconfiguration), grid);
+
+    gtk_widget_show_all(viewportconfiguration);
+    free(configurations);
 }
 
 void arrayConfigurations(int profile_id) {
