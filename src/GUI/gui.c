@@ -141,6 +141,7 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     GtkWidget *sessionTimeStartLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "sessionTimeStart"));
     GtkWidget *sessionConfigurationLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "sessionConfiguration"));
     GtkWidget *editSessionButton = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "editSessionButton"));
+    GtkWidget *deleteSessionButton = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "deleteSessionButton"));
 
     gtk_entry_set_text(GTK_ENTRY(sessionNameInput), session.name);
     gtk_label_set_text(GTK_LABEL(sessionDurationLabel), g_strdup_printf("%d", session.duration));
@@ -150,10 +151,19 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_label_set_text(GTK_LABEL(sessionTimeStartLabel), session.time_start);
     gtk_label_set_text(GTK_LABEL(sessionConfigurationLabel), config.name);
 
-    g_signal_handlers_disconnect_by_func(editSessionButton, G_CALLBACK(on_edit_session_button_clicked), NULL);
     g_signal_connect(editSessionButton, "clicked", G_CALLBACK(on_edit_session_button_clicked), GINT_TO_POINTER(session_id));
+    g_signal_connect(deleteSessionButton, "clicked", G_CALLBACK(on_delete_session_button_clicked), GINT_TO_POINTER(session_id));
 
     gtk_widget_show(sessionWindow);
+}
+
+void on_delete_session_button_clicked(GtkButton *button, gpointer user_data) {
+    gint session_id = GPOINTER_TO_INT(user_data);
+
+    g_print("%d", session_id);
+    delete_session(session_id);
+
+    gtk_widget_hide(sessionWindow);
 }
 
 void on_edit_session_button_clicked(GtkButton *button, gpointer user_data) {
@@ -168,9 +178,6 @@ void on_edit_session_button_clicked(GtkButton *button, gpointer user_data) {
     update_session(session);
     gtk_widget_hide(sessionWindow);
 }
-
-
-
 
 void arraySessions(int profile_id) {
     GtkWidget *viewportsession;
@@ -257,7 +264,6 @@ void activate(GtkApplication *app, gpointer user_data) {
     g_signal_connect(window, "destroy", G_CALLBACK(destroyWindow), user_data);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), user_data);
     g_signal_connect(window, "button-press-event", G_CALLBACK(on_window_button_press_event), NULL);
-
 
     profile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "profile"));
 

@@ -30,7 +30,7 @@ int create_session(Session session){
     sqlite3_bind_double(stmt, 5, session.average_speed);
     sqlite3_bind_text(stmt, 6, session.time_start, 20, SQLITE_STATIC);
     sqlite3_bind_int(stmt, 7, session.id_configuration);
-    sqlite3_bind_int(stmt, 8, session.id_configuration);
+    sqlite3_bind_int(stmt, 8, session.id_profile);
 
     rc = sqlite3_step(stmt);
 
