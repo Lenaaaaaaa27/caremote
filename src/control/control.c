@@ -21,18 +21,16 @@ void control() {
     int clientSocket = initConnexion();
 
     while (fin) {
-        axe_X = 0;
         XINPUT_STATE state;
         if (XInputGetState(0, &state) == 0) {
             thumbLX = state.Gamepad.sThumbLX;
-
-            if (state.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD){
-                axe_X = 1;
-            }
-
-            if (state.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) {
-            }
-
+            axe_X = 0;
+            if(state.Gamepad.bRightTrigger) {
+                    axe_X = state.Gamepad.bRightTrigger > 100?state.Gamepad.bRightTrigger:0;
+                }
+                if(state.Gamepad.bLeftTrigger) {
+                    axe_X = state.Gamepad.bLeftTrigger > 100?state.Gamepad.bLeftTrigger * -1:0;
+                }
             if (thumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || thumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) {
                 if (thumbLX > 0) {
                     if (axe_Z < 1000)
@@ -40,13 +38,24 @@ void control() {
                 } else
                     if (axe_Z > 500)
                         axe_Z -= 50;
+            } else {
+                axe_Z = 750;
             }
 
         } else {
             if (GetAsyncKeyState(control.speed_up) & 0x8001) {
-                axe_X = 1;
+                if(axe_X < 255)
+                    axe_X += 10;
             }
 
+            if (GetAsyncKeyState(control.speed_down) & 0x8001) {
+                if(axe_X > -255)
+                    axe_X -= 10;
+            }
+
+            if(!(GetAsyncKeyState(control.speed_down) & 0x8001) && !((GetAsyncKeyState(control.speed_up) & 0x8001))) {
+                axe_X = 0;
+            }
             if (GetAsyncKeyState(control.right) & 0x8001) {
                 if (axe_Z < 1000) {
                     axe_Z += 50;
@@ -60,7 +69,7 @@ void control() {
             }
         }
             char buffer[256];
-            sprintf(buffer, "d%d", axe_Z);
+            sprintf(buffer, "c%d", axe_Z);
             send(clientSocket, buffer, strlen(buffer), 0);
 
             sprintf(buffer, "m%d", axe_X);
