@@ -2,16 +2,15 @@
 
 static GtkBuilder *globalBuilder = NULL;
 static int current_profile_id = 1;
-
-gboolean is_session_window_destroyed = FALSE;
 static GtkWidget *globalProfileSubmenu = NULL;
-GtkWidget *submenuProfile = NULL;
 static gboolean is_profile_submenu_created = FALSE;
 
+GtkWidget *editProfileWindow = NULL;
+GtkWidget *editProfileInput = NULL;
+
+static GtkWidget *editConfigWindow = NULL;
 static GtkWidget *addProfileWindow = NULL;
 static GtkWidget *sessionWindow = NULL;
-static GtkEntry *entry = NULL;
-gboolean enterPressed = FALSE;
 
 static void close_submenus() {
     if (is_profile_submenu_created) {
@@ -28,49 +27,62 @@ static gboolean on_window_button_press_event() {
 void cleanup() {
     if(addProfileWindow !=NULL){
         gtk_widget_hide(addProfileWindow);
-        entry = NULL;
-        g_clear_pointer(&addProfileWindow, gtk_widget_destroy);
-        enterPressed = FALSE;
+        addProfileWindow = NULL;
     }
 
     if(sessionWindow != NULL){
         gtk_widget_hide(sessionWindow);
-        sessionWindow = NULL;
+    }
+
+    if(editConfigWindow != NULL){
+        gtk_widget_hide(editConfigWindow);
     }
 }
 
-void on_profile_menu_item_hover(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-
-    submenuProfile = gtk_menu_new();
-    GtkWidget *switch_on_item = gtk_menu_item_new_with_label("Switch On");
-    GtkWidget *edit_item = gtk_menu_item_new_with_label("Edit");
-    GtkWidget *delete_item = gtk_menu_item_new_with_label("Delete");
-
-    //g_signal_connect(switch_on_item, "activate", G_CALLBACK(on_switch_on_activate), user_data);
-    //g_signal_connect(edit_item, "activate", G_CALLBACK(on_edit_activate), user_data);
-    //g_signal_connect(delete_item, "activate", G_CALLBACK(on_delete_activate), user_data);
-
-    gtk_menu_shell_append(GTK_MENU_SHELL(submenuProfile), switch_on_item);
-    gtk_menu_shell_append(GTK_MENU_SHELL(submenuProfile), edit_item);
-    gtk_menu_shell_append(GTK_MENU_SHELL(submenuProfile), delete_item);
-
-    gtk_widget_show(switch_on_item);
-    gtk_widget_show(edit_item);
-    gtk_widget_show(delete_item);
-
-    gtk_menu_popup_at_pointer(GTK_MENU(submenuProfile), NULL);
-}
-
 void on_profile_menu_item_activate(GtkMenuItem *menu_item, gpointer user_data) {
-
     gint profile_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(menu_item), "user_id"));
-
     current_profile_id = profile_id;
-
     update_current_profile_label();
     refresh_sessions_view(current_profile_id);
     refresh_configurations_view(current_profile_id);
 }
+
+const gchar *get_edit_profile_input() {
+    if (editProfileInput != NULL) {
+        return gtk_entry_get_text(GTK_ENTRY(editProfileInput));
+    } else {
+        return NULL;
+    }
+}
+
+void on_edit_profile(GtkButton *button, gpointer user_data) {
+    const gchar *editedText = get_edit_profile_input();
+    if (editedText != NULL) {
+        g_print("Edited Text: %s\n", editedText);
+
+    }
+
+    gtk_widget_hide(editProfileWindow);
+}
+
+void load_edit_profile_window() {
+    editProfileWindow = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "editProfile"));
+
+    if (editProfileWindow != NULL) {
+        editProfileInput = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "editProfileinput"));
+        if (editProfileInput == NULL) {
+            g_printerr("Le widget editProfileinput n'a pas été trouvé dans l'interface utilisateur.\n");
+        }
+    } else {
+        g_printerr("La fenêtre editProfile n'a pas été trouvée dans l'interface utilisateur.\n");
+    }
+}
+
+void on_edit_profile_activate(GtkWidget *widget, gpointer user_data) {
+    load_edit_profile_window();
+    gtk_widget_show_all(editProfileWindow);
+}
+
 
 void on_profile_activate(GtkWidget *widget, gpointer user_data) {
     close_submenus();
@@ -92,6 +104,11 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), separator);
         gtk_widget_show(separator);
 
+        GtkWidget *edit_profile_item = gtk_menu_item_new_with_label("Edit your current profile");
+        gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), edit_profile_item);
+        g_signal_connect(edit_profile_item, "activate", G_CALLBACK(on_edit_profile_activate), user_data);
+        gtk_widget_show(edit_profile_item);
+
         GtkWidget *add_profile_item = gtk_menu_item_new_with_label("Add a profile");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), add_profile_item);
         g_signal_connect(add_profile_item, "activate", G_CALLBACK(on_add_profile_activate), user_data);
@@ -109,20 +126,19 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
 void on_add_profile_activate(GtkWidget *widget, gpointer user_data) {
 
     if (addProfileWindow == NULL) {
-        addProfileWindow = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "addProfile"));
-        if (entry == NULL) {
-            entry = GTK_ENTRY(gtk_builder_get_object(globalBuilder, "Addprofileinput"));
-        }
-        gtk_entry_set_text(GTK_ENTRY(entry), "");
-        g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), NULL);
+        addProfileWindow =  GTK_WIDGET(gtk_builder_get_object(globalBuilder, "addProfile"));
     }
 
+    GtkEntry *entry = GTK_ENTRY(gtk_builder_get_object(globalBuilder, "Addprofileinput"));
+    gtk_entry_set_text(GTK_ENTRY(entry), "");
+    g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), NULL);
+    g_signal_connect(addProfileWindow, "delete-event", G_CALLBACK(cleanup), NULL);
     gtk_widget_show_all(addProfileWindow);
 }
 
 void on_create_profile_clicked(GtkWidget *widget, gpointer user_data) {
 
-    const gchar *username = gtk_entry_get_text(entry);
+    const gchar *username = gtk_entry_get_text(GTK_ENTRY(widget));
     char *username_copy = g_strdup(username);
 
     create_profile(username_copy);
@@ -131,10 +147,8 @@ void on_create_profile_clicked(GtkWidget *widget, gpointer user_data) {
 }
 
 void on_session_button_clicked(GtkButton *button, gpointer user_data) {
-    if (sessionWindow == NULL) {
+    if (sessionWindow == NULL)
         sessionWindow = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "sessionWindow"));
-        g_signal_connect(sessionWindow, "destroy", G_CALLBACK(cleanup), NULL);
-    }
 
     gint session_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button), "session_id"));
     Session session = get_session(session_id);
@@ -157,19 +171,19 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_label_set_text(GTK_LABEL(sessionAverageSpeedLabel), g_strdup_printf("%.2lf",session.average_speed));
     gtk_label_set_text(GTK_LABEL(sessionTimeStartLabel), session.time_start);
     gtk_label_set_text(GTK_LABEL(sessionConfigurationLabel), config.name);
+    g_print("%d", session_id);
 
     g_signal_connect(editSessionButton, "clicked", G_CALLBACK(on_edit_session_button_clicked), GINT_TO_POINTER(session_id));
     g_signal_connect(deleteSessionButton, "clicked", G_CALLBACK(on_delete_session_button_clicked), GINT_TO_POINTER(session_id));
+    g_signal_connect(sessionWindow, "delete-event", G_CALLBACK(cleanup), NULL);
 
     gtk_widget_show(sessionWindow);
 }
 
-
-
 void on_delete_session_button_clicked(GtkButton *button, gpointer user_data) {
+
     gint session_id = GPOINTER_TO_INT(user_data);
 
-    g_print("%d", session_id);
     delete_session(session_id);
 
     refresh_sessions_view(current_profile_id);
@@ -184,7 +198,7 @@ void on_edit_session_button_clicked(GtkButton *button, gpointer user_data) {
 
     const gchar *new_session_name = gtk_entry_get_text(GTK_ENTRY(sessionNameInput));
     g_strlcpy(session.name, new_session_name, sizeof(session.name));
-
+    g_print("%d", session.id);
     update_session(session);
     refresh_sessions_view(current_profile_id);
     gtk_widget_hide(sessionWindow);
@@ -278,7 +292,9 @@ void refresh_configurations_view(int profile_id) {
         GtkWidget *button = gtk_button_new_with_label(configurations[i].name);
 
         gtk_widget_set_size_request(button, 360, 120);
+        g_object_set_data(G_OBJECT(button), "config_id", GINT_TO_POINTER(configurations[i].id));
 
+        g_signal_connect(button, "clicked", G_CALLBACK(on_configuration_button_clicked), NULL);
         gtk_grid_attach(GTK_GRID(grid), button, 0, row, 1, 1);
 
         row++;
@@ -307,6 +323,10 @@ void arrayConfigurations(int profile_id) {
 
         gtk_widget_set_size_request(button, 360, 120);
 
+        g_object_set_data(G_OBJECT(button), "config_id", GINT_TO_POINTER(configurations[i].id));
+
+        g_signal_connect(button, "clicked", G_CALLBACK(on_configuration_button_clicked), NULL);
+
         gtk_grid_attach(GTK_GRID(grid), button, 0, row, 1, 1);
 
         row++;
@@ -318,34 +338,58 @@ void arrayConfigurations(int profile_id) {
     free(configurations);
 }
 
+void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
+
+    editConfigWindow = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "editConfig"));
+    g_signal_connect(editConfigWindow, "delete-event", G_CALLBACK(cleanup), NULL);
+    gint config_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button), "config_id"));
+    Configuration configuration = get_configuration(config_id);
+
+    GtkWidget *getNameConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getNameConfig"));
+    GtkWidget *getMoveForwardConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveForwardConfig"));
+    GtkWidget *getMoveBackwardConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveBackwardConfig"));
+    GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveleftConfig"));
+    GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoverightConfig"));
+    GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getChangeStepConfig"));
+    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMaxFirstStep"));
+    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "addMaxSecondStep"));
+
+
+    gtk_entry_set_text(GTK_ENTRY(getNameConfig), configuration.name);
+    gtk_entry_set_text(GTK_ENTRY(getMoveForwardConfig), g_strdup_printf("%c", configuration.move_forward));
+    gtk_entry_set_text(GTK_ENTRY(getMoveBackwardConfig), g_strdup_printf("%c", configuration.move_backward));
+    gtk_entry_set_text(GTK_ENTRY(getMoveleftConfig), g_strdup_printf("%c", configuration.move_left));
+    gtk_entry_set_text(GTK_ENTRY(getMoverightConfig), g_strdup_printf("%c", configuration.move_right));
+    gtk_entry_set_text(GTK_ENTRY(getChangeStepConfig), g_strdup_printf("%c", configuration.change_step_button));
+    gtk_entry_set_text(GTK_ENTRY(getMaxFirstStep), g_strdup_printf("%.2lf", configuration.max_speed_first_step));
+    gtk_entry_set_text(GTK_ENTRY(getMaxSecondStep), g_strdup_printf("%.2lf", configuration.max_speed_second_step));
+
+    g_signal_connect(editConfigWindow, "delete-event", G_CALLBACK(cleanup), NULL);
+    gtk_widget_show(editConfigWindow);
+}
+
+void on_create_config_button_clicked(GtkButton *button, gpointer user_data) {
+    create_configuration(current_profile_id);
+    refresh_configurations_view(current_profile_id);
+}
 void destroyWindow(GtkWidget *widget, gpointer user_data){
     g_object_unref(globalBuilder);
 }
 
 void update_current_profile_label() {
     GtkWidget *currentProfileLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "currentProfile"));
-
-    if (currentProfileLabel == NULL || !GTK_IS_LABEL(currentProfileLabel)) {
-        g_print("Erreur : Label introuvable ou n'est pas un GtkLabel\n");
-        return;
-    }
-
     Profile current_profile = get_profile(current_profile_id);
 
-    if (current_profile.id != -1) {
-        const char *profile_name = current_profile.username;
-
-        gtk_label_set_text(GTK_LABEL(currentProfileLabel), profile_name);
-    } else {
-        g_print("Erreur : Profil introuvable\n");
-    }
+    const char *profile_name = current_profile.username;
+    gtk_label_set_text(GTK_LABEL(currentProfileLabel), profile_name);
 }
 
 void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
     GtkWidget *profile;
+    GtkWidget *addConfigButton;
 
-    globalBuilder = gtk_builder_new_from_file("index.glade");
+    globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
     window = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "window"));
 
     GError *error = NULL;
@@ -369,7 +413,7 @@ void activate(GtkApplication *app, gpointer user_data) {
     update_current_profile_label();
 
     g_signal_connect(profile, "button_press_event", G_CALLBACK(on_profile_activate), window);
-
+    g_signal_connect(GTK_BUTTON(gtk_builder_get_object(globalBuilder, "addConfigButton")), "clicked", G_CALLBACK(on_create_config_button_clicked), NULL);
     gtk_widget_show_all(window);
     gtk_main();
 }
