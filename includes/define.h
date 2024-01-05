@@ -35,6 +35,7 @@ void update_current_profile_label();
 void on_profile_menu_item_activate(GtkMenuItem *menu_item, gpointer user_data);
 void refresh_configurations_view(int profile_id);
 void arrayConfigurations(int id_profile);
+void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data);
 void arraySessions(int id_profile);
 static gboolean on_window_button_press_event();
 int create_profile(char username[20]);
