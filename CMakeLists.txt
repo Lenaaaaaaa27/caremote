@@ -17,7 +17,9 @@ add_executable(caremote main.c
         src/bd_requests/config.c
         src/bd_requests/profile.c
         src/bd_requests/session.c
-        src/Errors/fatal_errors.c)
+        src/Errors/fatal_errors.c
+        includes/ui.h
+)
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 
 

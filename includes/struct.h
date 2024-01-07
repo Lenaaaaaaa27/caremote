@@ -30,3 +30,7 @@ typedef struct{
 } Session;
 
 
+typedef struct{
+    GtkBuilder *builder;
+    gint id_session;
+} GetSession;
