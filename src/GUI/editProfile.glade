@@ -12,7 +12,7 @@
         <property name="can-focus">False</property>
         <child>
           <object class="GtkLabel" id="editProfileLabel1">
-            <property name="width-request">158</property>
+            <property name="width-request">244</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -23,7 +23,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">70</property>
+            <property name="x">28</property>
           </packing>
         </child>
         <child>

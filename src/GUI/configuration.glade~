@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkWindow" id="editConfig">
+  <object class="GtkWindow" id="configWindow">
     <property name="can-focus">False</property>
     <child>
       <object class="GtkFixed" id="getConfig1">
@@ -270,6 +270,26 @@
           <packing>
             <property name="x">373</property>
             <property name="y">400</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="chosenConfiguration">
+            <property name="width-request">52</property>
+            <property name="height-request">50</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-apply</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">377</property>
+            <property name="y">12</property>
           </packing>
         </child>
       </object>

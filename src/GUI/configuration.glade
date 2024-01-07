@@ -272,6 +272,26 @@
             <property name="y">400</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkButton" id="chosenConfigurationButton">
+            <property name="width-request">52</property>
+            <property name="height-request">50</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-apply</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="x">377</property>
+            <property name="y">12</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
