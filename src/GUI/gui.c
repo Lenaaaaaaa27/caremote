@@ -2,12 +2,9 @@
 
 static GtkBuilder *globalBuilder = NULL;
 static int current_profile_id = 1;
-static int current_config_id = 1;
+static int chosen_config_id = 1;
 static GtkWidget *globalProfileSubmenu = NULL;
 static gboolean is_profile_submenu_created = FALSE;
-
-static GtkWidget *editConfigWindow = NULL;
-static GtkWidget *addProfileWindow = NULL;
 static void close_submenus() {
     if (is_profile_submenu_created) {
         gtk_widget_destroy(globalProfileSubmenu);
@@ -26,10 +23,8 @@ gboolean cleanupConfig(GtkWidget *widget, GdkEvent *event, gpointer user_data){
 }
 
 gboolean cleanupProfileWindow(GtkWidget *widget, GdkEvent *event, gpointer user_data){
-    if(addProfileWindow !=NULL){
-        gtk_widget_hide(addProfileWindow);
-    }
-
+    GetSession *getsession = (GetSession *)user_data;
+    g_object_unref(getsession->builder);
     return FALSE;
 }
 
@@ -66,11 +61,11 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
         GtkWidget *separator = gtk_separator_menu_item_new();
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), separator);
         gtk_widget_show(separator);
-/*
+
         GtkWidget *edit_profile_item = gtk_menu_item_new_with_label("Edit your current profile");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), edit_profile_item);
         g_signal_connect(edit_profile_item, "activate", G_CALLBACK(on_edit_profile_activate), user_data);
-        gtk_widget_show(edit_profile_item);*/
+        gtk_widget_show(edit_profile_item);
 
         GtkWidget *add_profile_item = gtk_menu_item_new_with_label("Add a profile");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), add_profile_item);
@@ -85,29 +80,46 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
     gtk_menu_popup_at_pointer(GTK_MENU(globalProfileSubmenu), NULL);
 }
 
+void on_edit_profile_activate(GtkWidget *widget, gpointer user_data){
+    GetSession *addUser = (GetSession *)malloc(sizeof(GetSession));
+    addUser->builder = gtk_builder_new_from_file("../src/GUI/editProfile.glade");
+
+    GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(addUser->builder, "addProfile"));
+
+    GtkWidget *entry = GTK_WIDGET(gtk_builder_get_object(addUser->builder, "Addprofileinput"));
+    gtk_entry_set_text(GTK_ENTRY(entry), "");
+    g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), addUser);
+    g_signal_connect(addProfileWindow, "delete-event", G_CALLBACK(cleanupProfileWindow), addUser);
+    gtk_widget_show(GTK_WIDGET(addProfileWindow));
+}
 void on_add_profile_activate(GtkWidget *widget, gpointer user_data) {
 
-    if (!GTK_IS_WINDOW(addProfileWindow)) {
-        addProfileWindow = GTK_WINDOW(gtk_builder_get_object(globalBuilder, "addProfile"));
-        g_signal_connect(addProfileWindow, "delete-event", G_CALLBACK(cleanupProfileWindow), NULL);
-    }
+    GetSession *addUser = (GetSession *)malloc(sizeof(GetSession));
+    addUser->builder = gtk_builder_new_from_file("../src/GUI/addProfile.glade");
 
-    GtkWidget *entry = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "Addprofileinput"));
+    GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(addUser->builder, "addProfile"));
+
+    GtkWidget *entry = GTK_WIDGET(gtk_builder_get_object(addUser->builder, "Addprofileinput"));
     gtk_entry_set_text(GTK_ENTRY(entry), "");
-    g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), NULL);
-    g_signal_connect(addProfileWindow, "delete-event", G_CALLBACK(cleanupProfileWindow), NULL);
+    g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), addUser);
+    g_signal_connect(addProfileWindow, "delete-event", G_CALLBACK(cleanupProfileWindow), addUser);
     gtk_widget_show(GTK_WIDGET(addProfileWindow));
 }
 
 void on_create_profile_clicked(GtkWidget *widget, gpointer user_data) {
+    GetSession *getUsername = (GetSession *)user_data;
+    GtkBuilder *builder = getUsername->builder;
 
-    const gchar *username = gtk_entry_get_text(GTK_ENTRY(widget));
+    GtkWidget *entry = GTK_WIDGET(gtk_builder_get_object(builder, "Addprofileinput"));
+    const gchar *username = gtk_entry_get_text(GTK_ENTRY(entry));
     char *username_copy = g_strdup(username);
 
     create_profile(username_copy);
     g_free(username_copy);
-    gtk_widget_hide(GTK_WIDGET(addProfileWindow));
-    addProfileWindow = NULL;
+
+    GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "addProfile"));
+    gtk_widget_destroy(addProfileWindow);
+    free(getUsername);
 }
 
 void on_session_button_clicked(GtkButton *button, gpointer user_data) {
