@@ -29,3 +29,8 @@ typedef struct{
     int id_profile;
 } Session;
 
+
+typedef struct{
+    GtkBuilder *builder;
+    gint id_session;
+} GetSession;
