@@ -123,7 +123,6 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     Configuration config = get_configuration(session.id_configuration);
 
     GtkWidget *sessionNameInput = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionName"));
-
     GtkWidget *sessionDurationLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionDuration"));
     GtkWidget *sessionDistanceLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionDistance"));
     GtkWidget *sessionMaxSpeedLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionMaxSpeed"));
@@ -316,18 +315,18 @@ void arrayConfigurations(int profile_id) {
     free(configurations);
 }
 
-
 void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data) {
-    gint config_id = GPOINTER_TO_INT(user_data);
+    GetSession *getConfig = (GetSession *)user_data;
+    GtkBuilder *builder = getConfig->builder;
 
-    GtkWidget *getNameConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getNameConfig"));
-    GtkWidget *getMoveForwardConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveForwardConfig"));
-    GtkWidget *getMoveBackwardConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveBackwardConfig"));
-    GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveleftConfig"));
-    GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoverightConfig"));
-    GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getChangeStepConfig"));
-    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMaxFirstStep"));
-    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMaxSecondStep"));
+    GtkWidget *getNameConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getNameConfig"));
+    GtkWidget *getMoveForwardConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoveForwardConfig"));
+    GtkWidget *getMoveBackwardConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoveBackwardConfig"));
+    GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoveleftConfig"));
+    GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoverightConfig"));
+    GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getChangeStepConfig"));
+    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(builder, "getMaxFirstStep"));
+    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(builder, "getMaxSecondStep"));
 
     const gchar *name = gtk_entry_get_text(GTK_ENTRY(getNameConfig));
     const gchar *moveForward = gtk_entry_get_text(GTK_ENTRY(getMoveForwardConfig));
@@ -368,39 +367,51 @@ void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data)
     else
         editedConfiguration.change_step_button = '&';
 
-    editedConfiguration.id = config_id;
+    editedConfiguration.id = getConfig->id_session;
     editedConfiguration.max_speed_first_step = g_ascii_strtod(maxFirstStep, NULL);
     editedConfiguration.max_speed_second_step = g_ascii_strtod(maxSecondStep, NULL);
 
     update_configuration(editedConfiguration);
-    gtk_widget_hide(editConfigWindow);
     refresh_configurations_view(current_profile_id);
+    GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(builder, "configWindow"));
+    gtk_widget_destroy(configWindow);
+    free(getConfig);
 }
 
-void on_delete_configuration_button_clicked(GtkButton *button, gpointer user_data, GtkBuilder *builder) {
-    gint config_id = GPOINTER_TO_INT(user_data);
-    delete_configuration(config_id);
-    //cleanupConfig(builder);
-    refresh_sessions_view(current_profile_id);
+void on_delete_configuration_button_clicked(GtkButton *button, gpointer user_data) {
+    GetSession *getConfig = (GetSession *)user_data;
+    GtkBuilder *builder = getConfig->builder;
+
+    delete_configuration(getConfig->id_session);
+    refresh_configurations_view(current_profile_id);
+
+    GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(builder, "configWindow"));
+    gtk_widget_destroy(configWindow);
+
+    free(getConfig);
 }
 
 void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
 
-    editConfigWindow = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "editConfig"));
-    g_signal_connect(editConfigWindow, "delete-event", G_CALLBACK(cleanupConfig), NULL);
+    GetSession *getConfig = (GetSession *)malloc(sizeof(GetSession));
     gint config_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button), "config_id"));
+
+    getConfig->builder = gtk_builder_new_from_file("../src/GUI/configuration.glade");
+    getConfig->id_session = config_id;
+
+    GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "configWindow"));
     Configuration configuration = get_configuration(config_id);
 
-    GtkWidget *getNameConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getNameConfig"));
-    GtkWidget *getMoveForwardConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveForwardConfig"));
-    GtkWidget *getMoveBackwardConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveBackwardConfig"));
-    GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoveleftConfig"));
-    GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMoverightConfig"));
-    GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getChangeStepConfig"));
-    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "getMaxFirstStep"));
-    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "addMaxSecondStep"));
-    GtkWidget *deleteConfigButton = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "deleteConfig"));
-    GtkWidget *editConfigButton = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "editConfig1"));
+    GtkWidget *getNameConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getNameConfig"));
+    GtkWidget *getMoveForwardConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoveForwardConfig"));
+    GtkWidget *getMoveBackwardConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoveBackwardConfig"));
+    GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoveleftConfig"));
+    GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoverightConfig"));
+    GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getChangeStepConfig"));
+    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMaxFirstStep"));
+    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMaxSecondStep"));
+    GtkWidget *deleteConfigButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "deleteConfig"));
+    GtkWidget *editConfigButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "editConfig1"));
 
     gtk_entry_set_text(GTK_ENTRY(getNameConfig), configuration.name);
     gtk_entry_set_text(GTK_ENTRY(getMoveForwardConfig), g_strdup_printf("%c", configuration.move_forward));
@@ -412,10 +423,11 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_entry_set_text(GTK_ENTRY(getMaxSecondStep), g_strdup_printf("%.2lf", configuration.max_speed_second_step));
 
 
-    g_signal_connect(deleteConfigButton, "clicked", G_CALLBACK(on_delete_configuration_button_clicked), GINT_TO_POINTER(config_id));
-    g_signal_connect(editConfigButton, "clicked", G_CALLBACK(on_edit_configuration_button_clicked), GINT_TO_POINTER(config_id));
-    g_signal_connect(editConfigWindow, "delete-event", G_CALLBACK(cleanupConfig), NULL);
-    gtk_widget_show(editConfigWindow);
+    g_signal_connect(deleteConfigButton, "clicked", G_CALLBACK(on_delete_configuration_button_clicked), getConfig);
+    g_signal_connect(editConfigButton, "clicked", G_CALLBACK(on_edit_configuration_button_clicked), getConfig);
+    g_signal_connect(configWindow, "delete-event", G_CALLBACK(cleanupConfig), getConfig);
+
+    gtk_widget_show(configWindow);
 }
 
 void on_create_config_button_clicked(GtkButton *button, gpointer user_data) {

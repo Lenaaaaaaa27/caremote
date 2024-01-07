@@ -27,7 +27,6 @@ int delete_profile(int id);
 int create_configuration(int id_profile);
 Configuration *get_configurations(int id_profile);
 Configuration get_configuration(int id_configuration);
-void on_delete_configuration_button_clicked(GtkButton *button, gpointer user_data, GtkBuilder *);
 int update_configuration(Configuration configuration);
 int delete_configuration(int id_configuration);
 int create_session(Session session);
