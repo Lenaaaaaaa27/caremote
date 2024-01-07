@@ -350,14 +350,12 @@
             </child>
             <child>
               <object class="GtkLabel" id="chosenConfigurationLabel">
-                <property name="width-request">100</property>
-                <property name="height-request">80</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
               </object>
               <packing>
                 <property name="x">930</property>
-                <property name="y">670</property>
+                <property name="y">702</property>
               </packing>
             </child>
           </object>
