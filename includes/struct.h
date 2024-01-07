@@ -5,7 +5,7 @@ typedef struct {
     char move_backward;
     char move_left;
     char move_right;
-    double max_speed_first_step;
+    int max_speed_first_step;
     double max_speed_second_step;
     char change_step_button;
     int id_profile;
