@@ -401,6 +401,7 @@ void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data)
 
     update_configuration(editedConfiguration);
     refresh_configurations_view(current_profile_id);
+    updateChosenConfiguration();
     GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(builder, "configWindow"));
     gtk_widget_destroy(configWindow);
     free(getConfig);
@@ -415,7 +416,8 @@ void on_delete_configuration_button_clicked(GtkButton *button, gpointer user_dat
 
     GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(builder, "configWindow"));
     gtk_widget_destroy(configWindow);
-
+    chosen_config_id = 1;
+    updateChosenConfiguration();
     free(getConfig);
 }
 
