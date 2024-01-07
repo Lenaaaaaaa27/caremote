@@ -496,12 +496,21 @@ void updateChosenConfiguration(){
     const char *configuration_name = configuration.name;
     gtk_label_set_text(GTK_LABEL(currentConfigLabel), configuration_name);
 }
+
+void on_start_session_clicked(GtkButton *button, gpointer user_data){
+    int clientSocket = initConnexion();
+    Configuration configuration = get_configuration(chosen_config_id);
+    control(&configuration, clientSocket);
+    closeConnexion(clientSocket);
+}
 void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
     GtkWidget *profile;
+    GtkButton *startSession;
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
     window = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "window"));
+    startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
 
     GError *error = NULL;
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
@@ -514,12 +523,14 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     profile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "profile"));
 
+
     arraySessions(current_profile_id);
     arrayConfigurations(current_profile_id);
     update_current_profile_label();
 
     g_signal_connect(profile, "button_press_event", G_CALLBACK(on_profile_activate), window);
     g_signal_connect(GTK_BUTTON(gtk_builder_get_object(globalBuilder, "addConfigButton")), "clicked", G_CALLBACK(on_create_config_button_clicked), NULL);
+    g_signal_connect(startSession, "clicked", G_CALLBACK(on_start_session_clicked), NULL);
     gtk_widget_show_all(window);
     gtk_main();
 }
