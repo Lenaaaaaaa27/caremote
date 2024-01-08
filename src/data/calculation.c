@@ -13,6 +13,7 @@ int distance(int duration, int avg_speed) {
     return duration * avg_speed;
 }
 
-double avg_speed(int speed,double duration) {
-return (double)speed/duration;
+double avg_speed(int speed, int loop) {
+int avg_pulse = speed/loop;
+return (double)(50*avg_pulse)/255;
 }

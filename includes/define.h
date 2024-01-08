@@ -23,6 +23,6 @@ char * line_formatting(const char*);
 
 //Data
 double duration(time_t,time_t);
-double avg_speed(int speed,double duration);
+double avg_speed(int, int);
 #define LINK "../caremote"
 #endif //CAREMOTE_DEFINE_H
