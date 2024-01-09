@@ -8,14 +8,13 @@
 #include<string.h>
 #include<stdlib.h>
 #include<gtk/gtk.h>
+#include <time.h>
 #include "struct.h"
 #include "ui.h"
 //toolbox.c
 char * truncated_string(char*,int);
 //control
-
 void control(Configuration *, int);
-
 
 //connexion
 int initConnexion();
@@ -25,6 +24,12 @@ void closeConnexion(int);
 void handle_error(const char*);
 void write_log(const char*);
 char * line_formatting(const char*);
+
+//Data
+double duration(time_t,time_t);
+int distance(int, int);
+double avg_speed(int, int);
+double speed(int);
 
 //fatal_errors.c
 void control();

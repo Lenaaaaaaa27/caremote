@@ -21,6 +21,7 @@ add_executable(caremote main.c
         includes/ui.h
         src/control/control.c
         src/connexion/connexion.c
+        src/data/calculation.c
 )
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 

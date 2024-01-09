@@ -9,9 +9,9 @@
 
 #define MAX_AXE_X 255
 #define MIN_AXE_X 0
-#define VAR_AXE_X 10
+#define VAR_AXE_X 15
 
-#define TIME_LOOP 30
+#define TIME_LOOP 50
 
 void control(Configuration *configuration, int clientSocket) {
     int axe_X = MIN_AXE_X;
@@ -21,6 +21,12 @@ void control(Configuration *configuration, int clientSocket) {
     int vMax = configuration->max_speed_first_step;
     int previousSpeedSwitchState = 0;
     char buffer[256];
+    time_t start_date, end_date;
+
+    int avg_X = 0;
+    int loop = 0;
+
+    time(&start_date);
     while (fin) {
 
         //Joystick control
@@ -102,9 +108,9 @@ void control(Configuration *configuration, int clientSocket) {
             previousSpeedSwitchState = GetAsyncKeyState(configuration->change_step_button);
         }
 
+        if(axe_X < 5 || axe_X > 100) avg_X += abs(axe_X);
         sprintf(buffer, "c%d", axe_Z);
         send(clientSocket, buffer, strlen(buffer), 0);
-
         sprintf(buffer, "m%d", axe_X);
         send(clientSocket, buffer, strlen(buffer), 0);
 
@@ -114,5 +120,7 @@ void control(Configuration *configuration, int clientSocket) {
         if (GetAsyncKeyState(VK_ESCAPE) & 0x8001) {
             fin = 0;
         }
+        loop +=1;
     }
+    time(&end_date);
 }
