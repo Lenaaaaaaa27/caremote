@@ -110,7 +110,7 @@
             </child>
             <child>
               <object class="GtkButton" id="startsession">
-                <property name="label" translatable="yes">Start Session</property>
+                <property name="label" translatable="yes">START SESSION</property>
                 <property name="width-request">377</property>
                 <property name="height-request">115</property>
                 <property name="visible">True</property>
@@ -118,8 +118,8 @@
                 <property name="receives-default">True</property>
               </object>
               <packing>
-                <property name="x">1145</property>
-                <property name="y">751</property>
+                <property name="x">1000</property>
+                <property name="y">753</property>
               </packing>
             </child>
             <child>
@@ -128,17 +128,6 @@
                 <property name="height-request">200</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkProgressBar" id="speedProgress">
-                    <property name="width-request">600</property>
-                    <property name="height-request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="y">97</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="width-request">196</property>
@@ -193,6 +182,19 @@
                   <packing>
                     <property name="x">321</property>
                     <property name="y">96</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkProgressBar" id="speedProgress">
+                    <property name="width-request">600</property>
+                    <property name="height-request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                  <packing>
+                    <property name="y">97</property>
                   </packing>
                 </child>
               </object>
@@ -316,6 +318,21 @@
               <packing>
                 <property name="x">930</property>
                 <property name="y">700</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="stopSession">
+                <property name="label" translatable="yes">STOP SESSION</property>
+                <property name="width-request">377</property>
+                <property name="height-request">115</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="is-focus">True</property>
+                <property name="receives-default">False</property>
+              </object>
+              <packing>
+                <property name="x">1436</property>
+                <property name="y">753</property>
               </packing>
             </child>
           </object>

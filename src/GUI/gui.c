@@ -2,7 +2,10 @@
 
 static GtkBuilder *globalBuilder = NULL;
 
+int fin = 0;
+pthread_mutex_t fin_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int current_profile_id = 1;
+static int session_profile_id = 1;
 int chosen_config_id = -1;
 
 static GtkWidget *globalProfileSubmenu = NULL;
@@ -559,11 +562,32 @@ void* control_thread_function(void* data) {
     control(configuration, clientSocket);
     return NULL;
 }
+void on_stop_session_clicked(GtkButton *button, gpointer user_data){
+    GtkButton *stopSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder, "stopSession"));
+    GtkButton *startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
+    gtk_widget_set_sensitive(GTK_WIDGET(stopSession), FALSE);
+    gtk_widget_set_sensitive(GTK_WIDGET(startSession), TRUE);
+    // ENREGISTREMENT SESSION BDD AVEC SESSION_ID_PROFILE
+
+    pthread_mutex_lock(&fin_mutex);
+    fin = 0;
+    pthread_mutex_unlock(&fin_mutex);
+
+}
 
 void on_start_session_clicked(GtkButton *button, gpointer user_data){
     pthread_t control_thread;
     pthread_join(control_thread, NULL);
+
+    GtkButton *stopSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder, "stopSession"));
+    GtkButton *startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
+    gtk_widget_set_sensitive(GTK_WIDGET(stopSession), TRUE);
+    gtk_widget_set_sensitive(GTK_WIDGET(startSession), FALSE);
+    g_signal_connect(stopSession, "clicked", G_CALLBACK(on_stop_session_clicked), NULL);
+
     int clientSocket = initConnexion();
+    session_profile_id = current_profile_id;
+
     if(chosen_config_id == -1){
         // Ecrire un code erreur pour éviter que ça lance le programme sans config sélectionnée;
         closeConnexion(clientSocket);
@@ -575,6 +599,10 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
     control_data->configuration = configuration;
     control_data->clientSocket = clientSocket;
 
+    pthread_mutex_lock(&fin_mutex);
+    fin = 1;
+    pthread_mutex_unlock(&fin_mutex);
+
     pthread_create(&control_thread, NULL, control_thread_function, control_data);
 
     pthread_detach(control_thread);
@@ -585,11 +613,14 @@ void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *profile;
     GtkWidget *deleteProfile;
     GtkButton *startSession;
-    GtkWidget *speedLabel;
+    GtkButton *stopSession;
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
     window = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "window"));
+
     startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
+    stopSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder, "stopSession"));
+    gtk_widget_set_sensitive(GTK_WIDGET(stopSession), FALSE);
 
     GError *error = NULL;
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
@@ -602,7 +633,6 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     profile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "profile"));
     deleteProfile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "deleteProfiles"));
-    speedLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "instantSpeed"));
 
     arraySessions(current_profile_id);
     arrayConfigurations(current_profile_id);

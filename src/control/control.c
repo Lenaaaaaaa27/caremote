@@ -16,7 +16,6 @@
 void control(Configuration *configuration, int clientSocket) {
     int axe_X = MIN_AXE_X;
     int axe_Z = AVG_AXE_Z;
-    int fin = 1;
     int thumbLX;
     int vMax = configuration->max_speed_first_step;
     int previousSpeedSwitchState = 0;
@@ -127,4 +126,5 @@ void control(Configuration *configuration, int clientSocket) {
         update_speed_label(fabs(instantSpeed));
     }
     time(&end_date);
+    closeConnexion(clientSocket);
 }

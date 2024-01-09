@@ -35,6 +35,8 @@ double speed(int);
 
 //fatal_errors.c
 void control();
+
+//db
 int create_profile(char username[20]);
 Profile *get_profiles();
 Profile get_profile(int id_profile);
@@ -51,5 +53,9 @@ Session get_session(int id_session);
 int update_session(Session session);
 int delete_session(int id);
 void error_content(int);
-#define LINK "../caremote"
+
+//variable stop
+extern int fin;
+extern pthread_mutex_t fin_mutex;
+
 #endif //CAREMOTE_DEFINE_H

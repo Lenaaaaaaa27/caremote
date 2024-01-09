@@ -31,4 +31,6 @@ gboolean cleanup(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static gboolean on_window_button_press_event();
 void update_speed_label(gdouble instantSpeed);
 void* control_thread_function(void* data);
+void on_start_session_clicked(GtkButton *button, gpointer user_data);
+void on_stop_session_clicked(GtkButton *button, gpointer user_data);
 #endif //CAREMOTE_UI_H
