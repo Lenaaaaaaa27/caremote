@@ -27,6 +27,7 @@ void control(Configuration *configuration, int clientSocket) {
     int loop = 0;
 
     time(&start_date);
+
     while (fin) {
 
         //Joystick control
@@ -121,6 +122,9 @@ void control(Configuration *configuration, int clientSocket) {
             fin = 0;
         }
         loop +=1;
+        gdouble instantSpeed = speed(axe_X);
+
+        update_speed_label(fabs(instantSpeed));
     }
     time(&end_date);
 }

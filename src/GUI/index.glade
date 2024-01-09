@@ -129,7 +129,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <object class="GtkProgressBar">
+                  <object class="GtkProgressBar" id="speedProgress">
                     <property name="width-request">600</property>
                     <property name="height-request">80</property>
                     <property name="visible">True</property>
@@ -147,19 +147,52 @@
                     <property name="can-focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
-                    <property name="label" translatable="yes">VITESSE MOYENNE</property>
+                    <property name="label" translatable="yes">VITESSE INSTANTANEE</property>
                     <property name="justify">center</property>
                     <attributes>
                       <attribute name="style" value="normal"/>
                       <attribute name="weight" value="bold"/>
                       <attribute name="variant" value="normal"/>
-                      <attribute name="foreground" value="#ffffffffffff"/>
+                      <attribute name="foreground" value="#000000000000"/>
                       <attribute name="size" value="13312"/>
                     </attributes>
                   </object>
                   <packing>
                     <property name="x">212</property>
                     <property name="y">58</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="instantSpeed">
+                    <property name="width-request">100</property>
+                    <property name="height-request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                      <attribute name="size" value="16384"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="x">234</property>
+                    <property name="y">96</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="width-request">100</property>
+                    <property name="height-request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">cm/s</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                      <attribute name="size" value="16384"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="x">321</property>
+                    <property name="y">96</property>
                   </packing>
                 </child>
               </object>

@@ -6,11 +6,13 @@
 #define CAREMOTE_DEFINE_H
 #include <Xinput.h>  // Bibliothèque pour la gestion des manettes Xbox
 #include<string.h>
+#include<math.h>
 #include<stdlib.h>
 #include<gtk/gtk.h>
 #include <time.h>
 #include "struct.h"
 #include "ui.h"
+#include <pthread.h>
 //toolbox.c
 char * truncated_string(char*,int);
 //control

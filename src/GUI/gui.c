@@ -541,21 +541,51 @@ void updateChosenConfiguration(){
     gtk_label_set_text(GTK_LABEL(currentConfigLabel), configuration_name);
 }
 
+
+
+void update_speed_label(gdouble instantSpeed) {
+    GtkWidget *speedLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "instantSpeed"));
+    gtk_label_set_text(GTK_LABEL(speedLabel), g_strdup_printf("%.2f", instantSpeed));
+    GtkWidget *speedBar = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "speedProgress"));
+    double fraction = instantSpeed / 50.0;
+    gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(speedBar), fraction);
+}
+
+
+void* control_thread_function(void* data) {
+    ControlData* control_data = (ControlData*)data;
+    Configuration* configuration = &(control_data->configuration);
+    int clientSocket = control_data->clientSocket;
+    control(configuration, clientSocket);
+    return NULL;
+}
+
 void on_start_session_clicked(GtkButton *button, gpointer user_data){
+    pthread_t control_thread;
+    pthread_join(control_thread, NULL);
     int clientSocket = initConnexion();
     if(chosen_config_id == -1){
-        //Ecrire un code erreur pour eviter que ça lance le programme sans config selectionnee;
+        // Ecrire un code erreur pour éviter que ça lance le programme sans config sélectionnée;
+        closeConnexion(clientSocket);
         return;
     }
     Configuration configuration = get_configuration(chosen_config_id);
-    control(&configuration, clientSocket);
-    closeConnexion(clientSocket);
+
+    ControlData *control_data = g_new(ControlData, 1);
+    control_data->configuration = configuration;
+    control_data->clientSocket = clientSocket;
+
+    pthread_create(&control_thread, NULL, control_thread_function, control_data);
+
+    pthread_detach(control_thread);
 }
+
 void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
     GtkWidget *profile;
     GtkWidget *deleteProfile;
     GtkButton *startSession;
+    GtkWidget *speedLabel;
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
     window = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "window"));
@@ -572,11 +602,11 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     profile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "profile"));
     deleteProfile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "deleteProfiles"));
+    speedLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "instantSpeed"));
 
     arraySessions(current_profile_id);
     arrayConfigurations(current_profile_id);
     update_current_profile_label();
-
 
     g_signal_connect(deleteProfile, "button_press_event", G_CALLBACK(on_delete_profile_activate), window);
     g_signal_connect(profile, "button_press_event", G_CALLBACK(on_profile_activate), window);
