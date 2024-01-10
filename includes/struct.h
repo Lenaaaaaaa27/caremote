@@ -35,5 +35,6 @@ typedef struct{
 
 typedef struct {
     Configuration configuration;
+    int clientSocket;
     int id_profile;
 } ControlData;

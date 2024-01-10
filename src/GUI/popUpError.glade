@@ -4,7 +4,7 @@
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkWindow" id="popUpError">
     <property name="can-focus">False</property>
-    <property name="default-width">440</property>
+    <property name="default-width">350</property>
     <property name="default-height">250</property>
     <child>
       <object class="GtkFixed">
@@ -12,7 +12,7 @@
         <property name="can-focus">False</property>
         <child>
           <object class="GtkLabel" id="errorContent">
-            <property name="width-request">440</property>
+            <property name="width-request">350</property>
             <property name="height-request">200</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -32,7 +32,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">350</property>
+            <property name="x">260</property>
             <property name="y">210</property>
           </packing>
         </child>

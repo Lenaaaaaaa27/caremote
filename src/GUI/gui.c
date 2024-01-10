@@ -2,6 +2,7 @@
 
 static GtkBuilder *globalBuilder = NULL;
 
+int clientSocket;
 int fin = 0;
 pthread_mutex_t fin_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int current_profile_id = 1;
@@ -562,24 +563,53 @@ void update_duration_label(int duration){
 void* control_thread_function(void* data) {
     ControlData* control_data = (ControlData*)data;
     Configuration* configuration = &(control_data->configuration);
-    control(configuration, control_data->id_profile);
+    control(configuration, control_data->id_profile, control_data->clientSocket);
     return NULL;
 }
+
 void on_stop_session_clicked(GtkButton *button, gpointer user_data){
     GtkButton *stopSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder, "stopSession"));
     GtkButton *startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
     gtk_widget_set_sensitive(GTK_WIDGET(stopSession), FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(startSession), TRUE);
-    // ENREGISTREMENT SESSION BDD AVEC SESSION_ID_PROFILE
 
     pthread_mutex_lock(&fin_mutex);
     fin = 0;
     pthread_mutex_unlock(&fin_mutex);
+    closeConnexion(clientSocket);
     Sleep(2000);
 
 }
 
+void on_ok_button_clicked(GtkButton *button, gpointer user_data){
+    GtkBuilder *builder = (GtkBuilder *)user_data;
+    GtkWidget *errorWindow = GTK_WIDGET(gtk_builder_get_object(builder, "popUpError"));
+    gtk_widget_hide(errorWindow);
+    g_object_unref(builder);
+}
+
+void errorPopUp(char *errorContent){
+    GtkBuilder *builder = gtk_builder_new_from_file("../src/GUI/popUpError.glade");
+    GtkWidget *errorWindow = GTK_WIDGET(gtk_builder_get_object(builder, "popUpError"));
+    GtkWidget *errorLabel = GTK_WIDGET(gtk_builder_get_object(builder, "errorContent"));
+    GtkButton *errorButton = GTK_BUTTON(gtk_builder_get_object(builder, "errorValidation"));
+
+    gtk_label_set_text(GTK_LABEL(errorLabel), errorContent);
+    g_signal_connect(errorButton, "clicked", G_CALLBACK(on_ok_button_clicked), builder);
+    gtk_widget_show_all(errorWindow);
+}
 void on_start_session_clicked(GtkButton *button, gpointer user_data){
+
+    if(chosen_config_id == -1){
+        errorPopUp("You must choose a configuration to start a session !");
+        return;
+    }
+    clientSocket = initConnexion();
+    if(clientSocket == 1){
+        errorPopUp("Connexion issues with the car !");
+        return;
+    }
+
     pthread_t control_thread;
     pthread_join(control_thread, NULL);
 
@@ -594,6 +624,7 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
     ControlData *control_data = g_new(ControlData, 1);
     control_data->configuration = configuration;
     control_data->id_profile = current_profile_id;
+    control_data->clientSocket = clientSocket;
 
     pthread_mutex_lock(&fin_mutex);
     fin = 1;

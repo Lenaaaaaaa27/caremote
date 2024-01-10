@@ -19,7 +19,7 @@
 //toolbox.c
 char * truncated_string(char*,int);
 //control
-void control(Configuration *, int);
+int control(Configuration *, int, int);
 
 //connexion
 int initConnexion();
@@ -34,9 +34,6 @@ char * line_formatting(const char*);
 int distance(int, int);
 double avg_speed(int, int);
 double speed(int);
-
-//fatal_errors.c
-void control();
 
 //database
 int create_database();
@@ -61,5 +58,6 @@ void error_content(int);
 //variable stop
 extern int fin;
 extern pthread_mutex_t fin_mutex;
+
 
 #endif //CAREMOTE_DEFINE_H

@@ -13,10 +13,9 @@
 #define TIME_LOOP 50
 #define VMAXPULSE (configuration->speed_step*255)/100
 
-void control(Configuration *configuration, int id_user) {
+int control(Configuration *configuration, int id_user, int clientSocket){
     int axe_X = MIN_AXE_X;
     int axe_Z = AVG_AXE_Z;
-    int clientSocket = initConnexion();
     int thumbLX;
     int vMax = VMAXPULSE;
     int previousSpeedSwitchState = 0;
@@ -35,6 +34,8 @@ void control(Configuration *configuration, int id_user) {
     tempsStruct = localtime(&t);
     strftime(tempsStr, sizeof(tempsStr), "%Y-%m-%d %H:%M:%S", tempsStruct);
     strcat(name, tempsStr);
+
+
     while (fin) {
 
         //Joystick control
@@ -147,6 +148,5 @@ void control(Configuration *configuration, int id_user) {
     strcpy(session.time_start, tempsStr);
     create_session(session);
     refresh_sessions_view(id_user);
-
-    closeConnexion(clientSocket);
+    return 0;
 }
