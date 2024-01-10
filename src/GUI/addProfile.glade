@@ -74,5 +74,8 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="window"/>
+    </style>
   </object>
 </interface>

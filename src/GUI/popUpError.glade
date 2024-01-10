@@ -30,6 +30,9 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <style>
+              <class name="editbutton"/>
+            </style>
           </object>
           <packing>
             <property name="x">350</property>
@@ -38,5 +41,8 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="window"/>
+    </style>
   </object>
 </interface>

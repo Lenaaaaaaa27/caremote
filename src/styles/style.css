@@ -1,18 +1,29 @@
-* {
-
-    color: inherit;
-    background-color: inherit;
-    border-style: none;
-    font: inherit;
-}
-
 button {
     margin: 5px;
-    border-radius: 5px;
-    font-size: 32px;
-    color:#282A36;
-    background: #191A23;
+    border-radius: 20px;
+    font-size: 24px;
+    color:#fff;
+    background-color: #282A36;
     border: none;
+}
+
+.currentProfile{
+    font-size: 18px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+label{
+    color : white;
+}
+
+.cadre{
+    background-color: #282A36;
+    border-radius : 20px;
+}
+
+.editbutton, .deletebutton{
+    font-size: 20px;
 }
 
 .startsession{
@@ -21,8 +32,12 @@ button {
 .startsession:hover{
     background: #306e37;
 }
-.fixed2 {
-    background: #282A36;
+.fixed2, .window {
+    background-color: #191A23;
+}
+.scrolledWindow{
+    border-style: none; /* Supprime la bordure */
+    box-shadow: none;
 }
 
 .stopsession{
@@ -34,6 +49,7 @@ button {
 .stopsession:hover{
     background: #b02d2d;
 }
-#speedProgress {
-    min-height: 20px; /* Ajustez la valeur selon vos besoins */
+.speedProgress {
+    min-height: 20px;
+    color: #b02d2d;
 }

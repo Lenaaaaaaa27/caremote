@@ -2,79 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkWindow" id="editProfile">
-    <property name="can-focus">False</property>
-    <child>
-      <object class="GtkFixed" id="fixedEditProfile1">
-        <property name="width-request">300</property>
-        <property name="height-request">150</property>
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkLabel" id="editProfileLabel1">
-            <property name="width-request">158</property>
-            <property name="height-request">80</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Edit a profile</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-              <attribute name="size" value="13312"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="x">70</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="editProfileinput">
-            <property name="width-request">168</property>
-            <property name="height-request">30</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="max-length">20</property>
-            <property name="width-chars">20</property>
-          </object>
-          <packing>
-            <property name="x">116</property>
-            <property name="y">107</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkAccelLabel">
-            <property name="width-request">100</property>
-            <property name="height-request">25</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Username :</property>
-            <attributes>
-              <attribute name="size" value="11264"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="x">8</property>
-            <property name="y">110</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="width-request">191</property>
-            <property name="height-request">21</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Only 20 characters maximum</property>
-            <attributes>
-              <attribute name="foreground" value="#3333d1d17a7a"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="x">54</property>
-            <property name="y">67</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkApplicationWindow" id="window">
     <property name="can-focus">False</property>
     <property name="hexpand">True</property>
@@ -99,10 +26,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="sessions">
+              <object class="GtkMenuItem" id="deleteProfiles">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Sessions</property>
+                <property name="label" translatable="yes">Delete a profile</property>
                 <property name="use-underline">True</property>
               </object>
             </child>
@@ -141,6 +68,9 @@
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="scrolledWindow"/>
+                </style>
               </object>
               <packing>
                 <property name="x">10</property>
@@ -179,66 +109,6 @@
               <packing>
                 <property name="x">750</property>
                 <property name="y">650</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="startsession">
-                <property name="label" translatable="yes">Start Session</property>
-                <property name="width-request">377</property>
-                <property name="height-request">115</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-              </object>
-              <packing>
-                <property name="x">1145</property>
-                <property name="y">751</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkFixed" id="fixedProgressSpeed">
-                <property name="width-request">600</property>
-                <property name="height-request">200</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkProgressBar">
-                    <property name="width-request">600</property>
-                    <property name="height-request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="y">97</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="width-request">196</property>
-                    <property name="height-request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="valign">start</property>
-                    <property name="label" translatable="yes">VITESSE MOYENNE</property>
-                    <property name="justify">center</property>
-                    <attributes>
-                      <attribute name="style" value="normal"/>
-                      <attribute name="weight" value="bold"/>
-                      <attribute name="variant" value="normal"/>
-                      <attribute name="foreground" value="#ffffffffffff"/>
-                      <attribute name="size" value="13312"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="x">212</property>
-                    <property name="y">58</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="x">1055</property>
-                <property name="y">82</property>
               </packing>
             </child>
             <child>
@@ -325,27 +195,16 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="currentProfile">
-                <property name="width-request">100</property>
-                <property name="height-request">80</property>
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-              </object>
-              <packing>
-                <property name="x">1720</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel">
                 <property name="width-request">152</property>
-                <property name="height-request">80</property>
+                <property name="height-request">21</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Chosen configuration : </property>
               </object>
               <packing>
-                <property name="x">771</property>
-                <property name="y">670</property>
+                <property name="x">786</property>
+                <property name="y">700</property>
               </packing>
             </child>
             <child>
@@ -354,10 +213,210 @@
                 <property name="can-focus">False</property>
               </object>
               <packing>
-                <property name="x">930</property>
-                <property name="y">702</property>
+                <property name="x">945</property>
+                <property name="y">700</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkButton" id="startsession">
+                <property name="label" translatable="yes">START SESSION</property>
+                <property name="width-request">377</property>
+                <property name="height-request">115</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="relief">none</property>
+                <style>
+                  <class name="startsession"/>
+                </style>
+              </object>
+              <packing>
+                <property name="x">1000</property>
+                <property name="y">753</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="currentProfile">
+                <property name="width-request">100</property>
+                <property name="height-request">80</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <style>
+                  <class name="currentProfile"/>
+                </style>
+              </object>
+              <packing>
+                <property name="x">1720</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="stopSession">
+                <property name="label" translatable="yes">STOP SESSION</property>
+                <property name="width-request">377</property>
+                <property name="height-request">115</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="is-focus">True</property>
+                <property name="receives-default">False</property>
+                <property name="relief">none</property>
+                <style>
+                  <class name="stopsession"/>
+                </style>
+              </object>
+              <packing>
+                <property name="x">1436</property>
+                <property name="y">753</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkAspectFrame">
+                <property name="width-request">1000</property>
+                <property name="height-request">500</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">none</property>
+                <child>
+                  <object class="GtkFixed" id="fixedProgressSpeed">
+                    <property name="width-request">100</property>
+                    <property name="height-request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="width-request">196</property>
+                        <property name="height-request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">VITESSE INSTANTANEE</property>
+                        <property name="justify">center</property>
+                        <attributes>
+                          <attribute name="style" value="normal"/>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="variant" value="normal"/>
+                          <attribute name="size" value="13312"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="x">200</property>
+                        <property name="y">58</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="instantSpeed">
+                        <property name="width-request">100</property>
+                        <property name="height-request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="size" value="16384"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="x">234</property>
+                        <property name="y">96</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkProgressBar" id="speedProgress">
+                        <property name="width-request">600</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">center</property>
+                        <property name="hexpand">False</property>
+                        <property name="vexpand">False</property>
+                      </object>
+                      <packing>
+                        <property name="y">168</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="width-request">100</property>
+                        <property name="height-request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Timer :</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="size" value="13312"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="x">3</property>
+                        <property name="y">248</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="distance">
+                        <property name="width-request">100</property>
+                        <property name="height-request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="size" value="13312"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="x">447</property>
+                        <property name="y">251</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="timerSession">
+                        <property name="width-request">100</property>
+                        <property name="height-request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="foreground" value="#000000000000"/>
+                          <attribute name="size" value="13312"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="x">111</property>
+                        <property name="y">248</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="width-request">100</property>
+                        <property name="height-request">80</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Distance :</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="size" value="13312"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="x">330</property>
+                        <property name="y">251</property>
+                      </packing>
+                    </child>
+                    <style>
+                      <class name="test"/>
+                    </style>
+                  </object>
+                </child>
+                <style>
+                  <class name="cadre"/>
+                </style>
+              </object>
+              <packing>
+                <property name="x">824</property>
+                <property name="y">94</property>
+              </packing>
+            </child>
+            <style>
+              <class name="test"/>
+            </style>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -367,5 +426,8 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="fixed2"/>
+    </style>
   </object>
 </interface>

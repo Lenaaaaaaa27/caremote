@@ -22,6 +22,9 @@
               <attribute name="size" value="13312"/>
             </attributes>
           </object>
+          <packing>
+            <property name="x">28</property>
+          </packing>
         </child>
         <child>
           <object class="GtkEntry" id="editProfileinput">
@@ -69,6 +72,9 @@
             <property name="y">67</property>
           </packing>
         </child>
+        <style>
+          <class name="window"/>
+        </style>
       </object>
     </child>
   </object>

@@ -23,19 +23,25 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="errorValidation">
             <property name="label" translatable="yes">Ok</property>
             <property name="width-request">80</property>
             <property name="height-request">29</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <style>
+              <class name="editbutton"/>
+            </style>
           </object>
           <packing>
             <property name="x">350</property>
             <property name="y">210</property>
           </packing>
         </child>
+        <style>
+          <class name="window"/>
+        </style>
       </object>
     </child>
   </object>

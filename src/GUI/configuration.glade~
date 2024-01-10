@@ -204,7 +204,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="getMaxSecondStep">
+          <object class="GtkEntry" id="getSpeedStep">
             <property name="width-request">32</property>
             <property name="height-request">30</property>
             <property name="visible">True</property>
@@ -226,6 +226,9 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <style>
+              <class name="editbutton"/>
+            </style>
           </object>
           <packing>
             <property name="x">270</property>
@@ -240,6 +243,9 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <style>
+              <class name="deletebutton"/>
+            </style>
           </object>
           <packing>
             <property name="x">373</property>
@@ -266,6 +272,9 @@
             <property name="y">12</property>
           </packing>
         </child>
+        <style>
+          <class name="window"/>
+        </style>
       </object>
     </child>
   </object>
