@@ -473,7 +473,7 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoveleftConfig"));
     GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoverightConfig"));
     GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getChangeStepConfig"));
-    GtkWidget *speedStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "speedStep"));
+    GtkWidget *speedStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getSpeedStep"));
     GtkWidget *deleteConfigButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "deleteConfig"));
     GtkWidget *editConfigButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "editConfig1"));
     GtkWidget *chosenConfigurationButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "chosenConfigurationButton"));

@@ -11,7 +11,7 @@
 #define VAR_AXE_X 15
 
 #define TIME_LOOP 50
-#define VMAXPULSE (configuration->max_speed_first_step*255)/100
+#define VMAXPULSE (configuration->speed_step*255)/100
 
 void control(Configuration *configuration, int id_user) {
     int axe_X = MIN_AXE_X;
