@@ -18,7 +18,7 @@ void control(Configuration *configuration, int clientSocket) {
     int axe_Z = AVG_AXE_Z;
     int fin = 1;
     int thumbLX;
-    int vMax = configuration->max_speed_first_step;
+    int vMax = configuration->speed_step;
     int previousSpeedSwitchState = 0;
     char buffer[256];
     time_t start_date, end_date;
@@ -57,10 +57,10 @@ void control(Configuration *configuration, int clientSocket) {
             if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
                 if (!previousSpeedSwitchState) {
                     previousSpeedSwitchState = 1;
-                    if (vMax == configuration->max_speed_first_step) {
+                    if (vMax == configuration->speed_step) {
                         vMax = MAX_AXE_X;
                     } else {
-                        vMax = configuration->max_speed_first_step;
+                        vMax = configuration->speed_step;
                     }
                 }
             } else {
@@ -98,10 +98,10 @@ void control(Configuration *configuration, int clientSocket) {
             }
 
             if ((GetAsyncKeyState(configuration->change_step_button) & 0x8001) && !(previousSpeedSwitchState & 0x8001)) {
-                if(vMax == configuration->max_speed_first_step) {
+                if(vMax == configuration->speed_step) {
                     vMax = MAX_AXE_X;
                 } else {
-                    vMax = configuration->max_speed_first_step;
+                    vMax = configuration->speed_step;
                 }
             }
 

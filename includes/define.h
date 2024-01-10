@@ -6,9 +6,11 @@
 #define CAREMOTE_DEFINE_H
 #include <Xinput.h>  // Bibliothèque pour la gestion des manettes Xbox
 #include<string.h>
+#include<unistd.h>
 #include<stdlib.h>
 #include<gtk/gtk.h>
-#include <time.h>
+#include<time.h>
+#include<sqlite3.h>
 #include "struct.h"
 #include "ui.h"
 //toolbox.c
@@ -33,6 +35,10 @@ double speed(int);
 
 //fatal_errors.c
 void control();
+
+//database
+int create_database();
+int verification_database();
 int create_profile(char username[20]);
 Profile *get_profiles();
 Profile get_profile(int id_profile);

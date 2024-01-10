@@ -201,7 +201,6 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_entry_set_text(GTK_ENTRY(sessionNameInput), session.name);
     gtk_label_set_text(GTK_LABEL(sessionDurationLabel), g_strdup_printf("%d", session.duration));
     gtk_label_set_text(GTK_LABEL(sessionDistanceLabel), g_strdup_printf("%d", session.distance));
-    gtk_label_set_text(GTK_LABEL(sessionMaxSpeedLabel), g_strdup_printf("%.2lf",session.max_speed));
     gtk_label_set_text(GTK_LABEL(sessionAverageSpeedLabel), g_strdup_printf("%.2lf",session.average_speed));
     gtk_label_set_text(GTK_LABEL(sessionTimeStartLabel), session.time_start);
     gtk_label_set_text(GTK_LABEL(sessionConfigurationLabel), config.name);
@@ -390,8 +389,7 @@ void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data)
     GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoveleftConfig"));
     GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoverightConfig"));
     GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getChangeStepConfig"));
-    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(builder, "getMaxFirstStep"));
-    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(builder, "getMaxSecondStep"));
+    GtkWidget *getSpeedStep = GTK_WIDGET(gtk_builder_get_object(builder, "getSpeedStep"));
 
     const gchar *name = gtk_entry_get_text(GTK_ENTRY(getNameConfig));
     const gchar *moveForward = gtk_entry_get_text(GTK_ENTRY(getMoveForwardConfig));
@@ -399,8 +397,7 @@ void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data)
     const gchar *moveLeft = gtk_entry_get_text(GTK_ENTRY(getMoveleftConfig));
     const gchar *moveRight = gtk_entry_get_text(GTK_ENTRY(getMoverightConfig));
     const gchar *changeStep = gtk_entry_get_text(GTK_ENTRY(getChangeStepConfig));
-    const gchar *maxFirstStep = gtk_entry_get_text(GTK_ENTRY(getMaxFirstStep));
-    const gchar *maxSecondStep = gtk_entry_get_text(GTK_ENTRY(getMaxSecondStep));
+    const gchar *speedStep = gtk_entry_get_text(GTK_ENTRY(getSpeedStep));
 
     Configuration editedConfiguration;
 
@@ -433,8 +430,7 @@ void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data)
         editedConfiguration.change_step_button = '&';
 
     editedConfiguration.id = getConfig->id_session;
-    editedConfiguration.max_speed_first_step = g_ascii_strtod(maxFirstStep, NULL);
-    editedConfiguration.max_speed_second_step = g_ascii_strtod(maxSecondStep, NULL);
+    editedConfiguration.speed_step = atoi(speedStep);
 
     update_configuration(editedConfiguration);
     refresh_configurations_view(current_profile_id);
@@ -475,8 +471,7 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     GtkWidget *getMoveleftConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoveleftConfig"));
     GtkWidget *getMoverightConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMoverightConfig"));
     GtkWidget *getChangeStepConfig = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getChangeStepConfig"));
-    GtkWidget *getMaxFirstStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMaxFirstStep"));
-    GtkWidget *getMaxSecondStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "getMaxSecondStep"));
+    GtkWidget *speedStep = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "speedStep"));
     GtkWidget *deleteConfigButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "deleteConfig"));
     GtkWidget *editConfigButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "editConfig1"));
     GtkWidget *chosenConfigurationButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "chosenConfigurationButton"));
@@ -487,8 +482,7 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_entry_set_text(GTK_ENTRY(getMoveleftConfig), g_strdup_printf("%c", configuration.move_left));
     gtk_entry_set_text(GTK_ENTRY(getMoverightConfig), g_strdup_printf("%c", configuration.move_right));
     gtk_entry_set_text(GTK_ENTRY(getChangeStepConfig), g_strdup_printf("%c", configuration.change_step_button));
-    gtk_entry_set_text(GTK_ENTRY(getMaxFirstStep), g_strdup_printf("%.2lf", configuration.max_speed_first_step));
-    gtk_entry_set_text(GTK_ENTRY(getMaxSecondStep), g_strdup_printf("%.2lf", configuration.max_speed_second_step));
+    gtk_entry_set_text(GTK_ENTRY(speedStep), g_strdup_printf("%d", configuration.speed_step));
 
 
     g_signal_connect(deleteConfigButton, "clicked", G_CALLBACK(on_delete_configuration_button_clicked), getConfig);
@@ -543,10 +537,7 @@ void updateChosenConfiguration(){
 
 void on_start_session_clicked(GtkButton *button, gpointer user_data){
     int clientSocket = initConnexion();
-    if(chosen_config_id == -1){
-        //Ecrire un code erreur pour eviter que ça lance le programme sans config selectionnee;
-        return;
-    }
+
     Configuration configuration = get_configuration(chosen_config_id);
     control(&configuration, clientSocket);
     closeConnexion(clientSocket);

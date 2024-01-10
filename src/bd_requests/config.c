@@ -2,7 +2,6 @@
 // Created by Lena on 22/11/2023.
 // CRUD for configurations
 //
-#include<sqlite3.h>
 #include"../../includes/define.h"
 
 int create_configuration(int id_profile){
@@ -18,25 +17,23 @@ int create_configuration(int id_profile){
                                "move_backward,"
                                "move_left,"
                                "move_right,"
-                               "max_speed_first_step,"
-                               "max_speed_second_step,"
+                               "speed_step,"
                                "change_step_button,"
                                "id_profile)"
-                               "VALUES (?,?,?,?,?,?,?,?,?)",
+                               "VALUES (?,?,?,?,?,?,?,?)",
                                -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);
     }
 
     sqlite3_bind_text(stmt, 1, "Nouvelle configuration", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, "z", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, "s", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, "q", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, "d", -1, SQLITE_STATIC);
-    sqlite3_bind_double(stmt, 6, 3.0);
-    sqlite3_bind_double(stmt, 7, 6.0);
-    sqlite3_bind_text(stmt, 8, "&", -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 9, id_profile);
+    sqlite3_bind_text(stmt, 2, "Z", -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, "S", -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, "Q", -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, "D", -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 6, 150);
+    sqlite3_bind_text(stmt, 7, "A", -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 8, id_profile);
 
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
@@ -64,7 +61,7 @@ Configuration * get_configurations(int id_profile){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button, id_profile FROM configuration WHERE id_profile = ?";
+    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, speed_step, change_step_button, id_profile FROM configuration WHERE id_profile = ?";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);
@@ -86,10 +83,9 @@ Configuration * get_configurations(int id_profile){
         array[size].move_backward = (char) sqlite3_column_text(stmt, 3)[0];
         array[size].move_left = (char) sqlite3_column_text(stmt, 4)[0];
         array[size].move_right = (char)sqlite3_column_text(stmt, 5)[0];
-        array[size].max_speed_first_step = sqlite3_column_double(stmt, 6);
-        array[size].max_speed_second_step = sqlite3_column_double(stmt, 7);
-        array[size].change_step_button = (char) sqlite3_column_text(stmt, 8)[0];
-        array[size].id_profile = sqlite3_column_int(stmt, 9);
+        array[size].speed_step = sqlite3_column_int(stmt, 6);
+        array[size].change_step_button = (char) sqlite3_column_text(stmt, 7)[0];
+        array[size].id_profile = sqlite3_column_int(stmt, 8);
         ++size;
     }
 
@@ -108,7 +104,7 @@ Configuration get_configuration(int id_configuration){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, max_speed_first_step, max_speed_second_step, change_step_button, id_profile FROM configuration WHERE id = ?";
+    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, speed_step, change_step_button, id_profile FROM configuration WHERE id = ?";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);
@@ -123,10 +119,9 @@ Configuration get_configuration(int id_configuration){
         array.move_backward = (char) sqlite3_column_text(stmt, 3)[0];
         array.move_left = (char) sqlite3_column_text(stmt, 4)[0];
         array.move_right = (char)sqlite3_column_text(stmt, 5)[0];
-        array.max_speed_first_step = sqlite3_column_double(stmt, 6);
-        array.max_speed_second_step = sqlite3_column_double(stmt, 7);
-        array.change_step_button = (char) sqlite3_column_text(stmt, 8)[0];
-        array.id_profile = sqlite3_column_int(stmt, 9);
+        array.speed_step = sqlite3_column_int(stmt, 6);
+        array.change_step_button = (char) sqlite3_column_text(stmt, 7)[0];
+        array.id_profile = sqlite3_column_int(stmt, 8);
     }
 
     sqlite3_finalize(stmt);
@@ -139,7 +134,7 @@ int update_configuration(Configuration configuration) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
     char *sql = "UPDATE configuration SET name = ?, move_forward = ?, move_backward = ?, move_left = ?,"
-                "move_right = ?, max_speed_first_step = ?, max_speed_second_step = ?, change_step_button = ? "
+                "move_right = ?, speed_step = ?, change_step_button = ? "
                 "WHERE id = ?";
 
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
@@ -159,10 +154,9 @@ int update_configuration(Configuration configuration) {
     sqlite3_bind_text(stmt, 3, &configuration.move_backward, 1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 4, &configuration.move_left, 1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 5, &configuration.move_right, 1, SQLITE_STATIC);
-    sqlite3_bind_double(stmt, 6, configuration.max_speed_first_step);
-    sqlite3_bind_double(stmt, 7, configuration.max_speed_second_step);
-    sqlite3_bind_text(stmt, 8, &configuration.change_step_button, 1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 9, configuration.id);
+    sqlite3_bind_int(stmt, 6, configuration.speed_step);
+    sqlite3_bind_text(stmt, 7, &configuration.change_step_button, 1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 8, configuration.id);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_close(db);

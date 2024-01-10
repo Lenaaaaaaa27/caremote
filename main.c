@@ -4,6 +4,10 @@ int main(int argc, char *argv[]) {
     GtkApplication *app;
     int status;
 
+    if(verification_database()){
+        create_database();
+    }
+
     app = gtk_application_new("caremote.first.version", G_APPLICATION_DEFAULT_FLAGS);
 
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);

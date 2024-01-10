@@ -2,10 +2,7 @@
 // Created by Léna on 19/11/2023.
 //
 
-#include <sqlite3.h>
-#include <unistd.h>
-#include "bd_requests/config.c"
-#include "bd_requests/profile.c"
+#include "../../includes/define.h"
 
 // To create the database
 int create_database() {
@@ -15,7 +12,6 @@ int create_database() {
     if (sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
         error_content(101);
     }
-
 
     const char *create_table_sql =
             "CREATE TABLE profile("
@@ -37,8 +33,7 @@ int create_database() {
             "move_backward CHAR,"
             "move_left CHAR,"
             "move_right CHAR,"
-            "max_speed_first_step DOUBLE,"
-            "max_speed_second_step DOUBLE,"
+            "speed_step INTEGER,"
             "change_step_button CHAR,"
             "id_profile INTEGER,"
             "FOREIGN KEY (id_profile) REFERENCES profile(id)"
@@ -56,7 +51,6 @@ int create_database() {
             "name VARCHAR(40),"
             "duration INTEGER,"
             "distance INTEGER,"
-            "max_speed DOUBLE,"
             "average_speed DOUBLE,"
             "time_start TEXT,"
             "id_configuration INTEGER,"

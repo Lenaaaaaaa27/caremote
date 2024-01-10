@@ -15,7 +15,7 @@ int create_session(Session session){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    const char *sql_requests = "INSERT INTO session (name, duration, distance, max_speed, average_speed, time_start, id_configuration, id_profile) VALUES (?,?,?,?,?,?,?,?)";
+    const char *sql_requests = "INSERT INTO session (name, duration, distance, average_speed, time_start, id_configuration, id_profile) VALUES (?,?,?,?,?,?,?)";
     rc = sqlite3_prepare_v2(db, sql_requests, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
@@ -26,11 +26,10 @@ int create_session(Session session){
     sqlite3_bind_text(stmt, 1, session.name, -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt, 2, session.duration);
     sqlite3_bind_int(stmt, 3, session.distance);
-    sqlite3_bind_double(stmt, 4, session.max_speed);
-    sqlite3_bind_double(stmt, 5, session.average_speed);
-    sqlite3_bind_text(stmt, 6, session.time_start, 20, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 7, session.id_configuration);
-    sqlite3_bind_int(stmt, 8, session.id_profile);
+    sqlite3_bind_double(stmt, 4, session.average_speed);
+    sqlite3_bind_text(stmt, 5, session.time_start, 20, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 6, session.id_configuration);
+    sqlite3_bind_int(stmt, 7, session.id_profile);
 
     rc = sqlite3_step(stmt);
 
@@ -61,7 +60,7 @@ Session * get_sessions_by_profile_id(int id_profile){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *sql_requests = "SELECT id, name, duration, distance, max_speed, average_speed, time_start, id_configuration, id_profile FROM session WHERE id_profile = ?";
+    char *sql_requests = "SELECT id, name, duration, distance, average_speed, time_start, id_configuration, id_profile FROM session WHERE id_profile = ?";
 
     if (sqlite3_prepare_v2(db, sql_requests, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
@@ -81,11 +80,10 @@ Session * get_sessions_by_profile_id(int id_profile){
         strcpy(array[size].name, (char *) sqlite3_column_text(stmt, 1));
         array[size].duration = sqlite3_column_int(stmt, 2);
         array[size].distance = sqlite3_column_int(stmt, 3);
-        array[size].max_speed = sqlite3_column_double(stmt, 4);
-        array[size].average_speed = sqlite3_column_double(stmt, 5);
-        strcpy(array[size].time_start, (char *) sqlite3_column_text(stmt, 6));
-        array[size].id_configuration = sqlite3_column_int(stmt, 7);
-        array[size].id_profile = sqlite3_column_int(stmt, 8);
+        array[size].average_speed = sqlite3_column_double(stmt, 4);
+        strcpy(array[size].time_start, (char *) sqlite3_column_text(stmt, 5));
+        array[size].id_configuration = sqlite3_column_int(stmt, 6);
+        array[size].id_profile = sqlite3_column_int(stmt, 7);
         ++size;
     }
 
@@ -105,7 +103,7 @@ Session get_session(int id_session){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *sql_requests = "SELECT id, name, duration, distance, max_speed, average_speed, time_start, id_configuration, id_profile FROM session WHERE id = ?";
+    char *sql_requests = "SELECT id, name, duration, distance, average_speed, time_start, id_configuration, id_profile FROM session WHERE id = ?";
     rc = sqlite3_prepare_v2(db, sql_requests, -1, &stmt, NULL);
 
     if (rc != SQLITE_OK) {
@@ -121,11 +119,10 @@ Session get_session(int id_session){
         strcpy(array.name, (char *) sqlite3_column_text(stmt, 1));
         array.duration = sqlite3_column_int(stmt, 2);
         array.distance = sqlite3_column_int(stmt, 3);
-        array.max_speed = sqlite3_column_double(stmt, 4);
-        array.average_speed = sqlite3_column_double(stmt, 5);
-        strcpy(array.time_start, (char *) sqlite3_column_text(stmt, 6));
-        array.id_configuration = sqlite3_column_int(stmt, 7);
-        array.id_profile = sqlite3_column_int(stmt, 8);
+        array.average_speed = sqlite3_column_double(stmt, 4);
+        strcpy(array.time_start, (char *) sqlite3_column_text(stmt, 5));
+        array.id_configuration = sqlite3_column_int(stmt, 6);
+        array.id_profile = sqlite3_column_int(stmt, 7);
     }
 
     if (rc != SQLITE_DONE && rc != SQLITE_ROW) {
@@ -146,7 +143,7 @@ int update_session(Session session){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *sql_request = "UPDATE session SET name = ?, duration = ?, distance = ?, max_speed = ?, average_speed = ?, time_start = ?, id_configuration = ?, id_profile = ? WHERE id = ?";
+    char *sql_request = "UPDATE session SET name = ?, duration = ?, distance = ?, average_speed = ?, time_start = ?, id_configuration = ?, id_profile = ? WHERE id = ?";
     if (sqlite3_prepare_v2(db,sql_request, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);
@@ -155,12 +152,11 @@ int update_session(Session session){
     sqlite3_bind_text(stmt, 1, session.name, -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt, 2, session.duration);
     sqlite3_bind_int(stmt, 3, session.distance);
-    sqlite3_bind_double(stmt, 4, session.max_speed);
-    sqlite3_bind_double(stmt, 5, session.average_speed);
-    sqlite3_bind_text(stmt, 6, session.time_start, -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 7, session.id_configuration);
-    sqlite3_bind_int(stmt, 8, session.id_profile);
-    sqlite3_bind_int(stmt, 9, session.id);
+    sqlite3_bind_double(stmt, 4, session.average_speed);
+    sqlite3_bind_text(stmt, 5, session.time_start, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 6, session.id_configuration);
+    sqlite3_bind_int(stmt, 7, session.id_profile);
+    sqlite3_bind_int(stmt, 8, session.id);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_close(db);

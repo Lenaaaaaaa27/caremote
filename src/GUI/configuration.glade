@@ -74,7 +74,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">1</property>
-            <property name="width-chars">1</property>
+            <property name="width-chars">5</property>
             <property name="max-width-chars">1</property>
           </object>
           <packing>
@@ -102,7 +102,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">1</property>
-            <property name="width-chars">1</property>
+            <property name="width-chars">5</property>
             <property name="max-width-chars">1</property>
           </object>
           <packing>
@@ -128,7 +128,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">1</property>
-            <property name="width-chars">1</property>
+            <property name="width-chars">4</property>
             <property name="max-width-chars">1</property>
           </object>
           <packing>
@@ -145,7 +145,7 @@
             <property name="label" translatable="yes">Move right :</property>
           </object>
           <packing>
-            <property name="x">159</property>
+            <property name="x">190</property>
             <property name="y">220</property>
           </packing>
         </child>
@@ -156,23 +156,12 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">1</property>
-            <property name="width-chars">1</property>
+            <property name="width-chars">5</property>
             <property name="max-width-chars">1</property>
           </object>
           <packing>
-            <property name="x">249</property>
-            <property name="y">218</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">max speed first step :  </property>
-          </object>
-          <packing>
-            <property name="x">20</property>
-            <property name="y">290</property>
+            <property name="x">278</property>
+            <property name="y">216</property>
           </packing>
         </child>
         <child>
@@ -184,8 +173,8 @@
             <property name="label" translatable="yes">change step :</property>
           </object>
           <packing>
-            <property name="x">304</property>
-            <property name="y">221</property>
+            <property name="x">20</property>
+            <property name="y">280</property>
           </packing>
         </child>
         <child>
@@ -195,34 +184,19 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">1</property>
-            <property name="width-chars">1</property>
+            <property name="width-chars">5</property>
             <property name="max-width-chars">1</property>
           </object>
           <packing>
-            <property name="x">401</property>
-            <property name="y">218</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="getMaxFirstStep">
-            <property name="width-request">20</property>
-            <property name="height-request">30</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="max-length">3</property>
-            <property name="width-chars">3</property>
-            <property name="max-width-chars">3</property>
-          </object>
-          <packing>
-            <property name="x">176</property>
-            <property name="y">288</property>
+            <property name="x">120</property>
+            <property name="y">277</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">max speed second step :</property>
+            <property name="label" translatable="yes">speed step (%) :</property>
           </object>
           <packing>
             <property name="x">20</property>
@@ -230,18 +204,18 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="getMaxSecondStep">
+          <object class="GtkEntry" id="getSpeedStep">
             <property name="width-request">32</property>
             <property name="height-request">30</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">3</property>
-            <property name="width-chars">3</property>
+            <property name="width-chars">7</property>
             <property name="max-width-chars">3</property>
           </object>
           <packing>
-            <property name="x">197</property>
-            <property name="y">358</property>
+            <property name="x">137</property>
+            <property name="y">357</property>
           </packing>
         </child>
         <child>
