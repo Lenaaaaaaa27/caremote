@@ -1,0 +1,39 @@
+* {
+
+    color: inherit;
+    background-color: inherit;
+    border-style: none;
+    font: inherit;
+}
+
+button {
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 32px;
+    color:#282A36;
+    background: #191A23;
+    border: none;
+}
+
+.startsession{
+    background: #3e9849;
+}
+.startsession:hover{
+    background: #306e37;
+}
+.fixed2 {
+    background: #282A36;
+}
+
+.stopsession{
+    background: #ce3838;
+}
+.stopsession:focus-visible{
+    background-color: #dcd6d6;
+}
+.stopsession:hover{
+    background: #b02d2d;
+}
+#speedProgress {
+    min-height: 20px; /* Ajustez la valeur selon vos besoins */
+}

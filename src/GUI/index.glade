@@ -116,6 +116,10 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="relief">none</property>
+                <style>
+                  <class name="startsession"/>
+                </style>
               </object>
               <packing>
                 <property name="x">1000</property>
@@ -164,23 +168,6 @@
                   </object>
                   <packing>
                     <property name="x">234</property>
-                    <property name="y">96</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="width-request">100</property>
-                    <property name="height-request">80</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">cm/s</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                      <attribute name="size" value="16384"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="x">321</property>
                     <property name="y">96</property>
                   </packing>
                 </child>
@@ -329,6 +316,10 @@
                 <property name="can-focus">False</property>
                 <property name="is-focus">True</property>
                 <property name="receives-default">False</property>
+                <property name="relief">none</property>
+                <style>
+                  <class name="stopsession"/>
+                </style>
               </object>
               <packing>
                 <property name="x">1436</property>
@@ -408,5 +399,8 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="fixed2"/>
+    </style>
   </object>
 </interface>

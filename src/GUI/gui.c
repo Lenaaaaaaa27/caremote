@@ -539,7 +539,7 @@ void updateChosenConfiguration(){
 
 void update_speed_label(gdouble instantSpeed) {
     GtkWidget *speedLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "instantSpeed"));
-    gtk_label_set_text(GTK_LABEL(speedLabel), g_strdup_printf("%.2f", instantSpeed));
+    gtk_label_set_text(GTK_LABEL(speedLabel), g_strdup_printf("%.2f cm/s", instantSpeed));
     GtkWidget *speedBar = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "speedProgress"));
     double fraction = instantSpeed / 50.0;
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(speedBar), fraction);
@@ -613,6 +613,13 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
     window = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "window"));
+
+    GtkCssProvider *cssProvider = gtk_css_provider_new();
+    gtk_css_provider_load_from_path(cssProvider, "../src/styles/style.css", NULL);
+
+    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
+                                              GTK_STYLE_PROVIDER(cssProvider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
     stopSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder, "stopSession"));
