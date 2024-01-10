@@ -13,6 +13,7 @@
 #include "struct.h"
 #include "ui.h"
 #include <pthread.h>
+#include <windows.h>
 //toolbox.c
 char * truncated_string(char*,int);
 //control
@@ -28,13 +29,9 @@ void write_log(const char*);
 char * line_formatting(const char*);
 
 //Data
-double duration(time_t,time_t);
 int distance(int, int);
 double avg_speed(int, int);
 double speed(int);
-
-//fatal_errors.c
-void control();
 
 //db
 int create_profile(char username[20]);

@@ -299,15 +299,15 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="width-request">152</property>
-                <property name="height-request">80</property>
+                <property name="width-request">123</property>
+                <property name="height-request">20</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Chosen configuration : </property>
               </object>
               <packing>
-                <property name="x">771</property>
-                <property name="y">670</property>
+                <property name="x">786</property>
+                <property name="y">700</property>
               </packing>
             </child>
             <child>
@@ -333,6 +333,70 @@
               <packing>
                 <property name="x">1436</property>
                 <property name="y">753</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="width-request">57</property>
+                <property name="height-request">24</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Timer :</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                  <attribute name="foreground" value="#000000000000"/>
+                  <attribute name="size" value="13312"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="x">963</property>
+                <property name="y">428</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="timerSession">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                  <attribute name="foreground" value="#000000000000"/>
+                  <attribute name="size" value="13312"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="x">1033</property>
+                <property name="y">428</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Distance :</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                  <attribute name="foreground" value="#000000000000"/>
+                  <attribute name="size" value="13312"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="x">1534</property>
+                <property name="y">428</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="distance">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                  <attribute name="foreground" value="#000000000000"/>
+                  <attribute name="size" value="13312"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="x">1623</property>
+                <property name="y">428</property>
               </packing>
             </child>
           </object>

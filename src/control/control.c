@@ -1,6 +1,5 @@
 #include "../../includes/define.h"
-#include <stdio.h>
-#include <windows.h>
+
 
 #define MAX_AXE_Z 1000
 #define AVG_AXE_Z 750
@@ -12,21 +11,30 @@
 #define VAR_AXE_X 15
 
 #define TIME_LOOP 50
+#define VMAXPULSE (configuration->max_speed_first_step*255)/100
 
-void control(Configuration *configuration, int clientSocket) {
+void control(Configuration *configuration, int id_user) {
     int axe_X = MIN_AXE_X;
     int axe_Z = AVG_AXE_Z;
+    int clientSocket = initConnexion();
     int thumbLX;
-    int vMax = configuration->max_speed_first_step;
+    int vMax = VMAXPULSE;
     int previousSpeedSwitchState = 0;
     char buffer[256];
-    time_t start_date, end_date;
-
+    int duration = 0;
     int avg_X = 0;
     int loop = 0;
-
-    time(&start_date);
-
+    int pulse = 0;
+    int distanceCovered = 0;
+    Session session;
+    time_t t;
+    char name[40] = "Session of ";
+    struct tm *tempsStruct;
+    char tempsStr[20];
+    time(&t);
+    tempsStruct = localtime(&t);
+    strftime(tempsStr, sizeof(tempsStr), "%Y-%m-%d %H:%M:%S", tempsStruct);
+    strcat(name, tempsStr);
     while (fin) {
 
         //Joystick control
@@ -57,10 +65,10 @@ void control(Configuration *configuration, int clientSocket) {
             if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
                 if (!previousSpeedSwitchState) {
                     previousSpeedSwitchState = 1;
-                    if (vMax == configuration->max_speed_first_step) {
+                    if (vMax == VMAXPULSE) {
                         vMax = MAX_AXE_X;
                     } else {
-                        vMax = configuration->max_speed_first_step;
+                        vMax = VMAXPULSE;
                     }
                 }
             } else {
@@ -98,14 +106,21 @@ void control(Configuration *configuration, int clientSocket) {
             }
 
             if ((GetAsyncKeyState(configuration->change_step_button) & 0x8001) && !(previousSpeedSwitchState & 0x8001)) {
-                if(vMax == configuration->max_speed_first_step) {
+                if(vMax == VMAXPULSE) {
                     vMax = MAX_AXE_X;
                 } else {
-                    vMax = configuration->max_speed_first_step;
+                    vMax = VMAXPULSE;
                 }
             }
 
             previousSpeedSwitchState = GetAsyncKeyState(configuration->change_step_button);
+        }
+
+        pulse+= axe_X;
+        if(loop%(1000/TIME_LOOP) == 0) {
+            duration += 1;
+            distanceCovered += abs(distance(1,(int)avg_speed(pulse,1000/TIME_LOOP)));
+            pulse = 0;
         }
 
         if(axe_X < 5 || axe_X > 100) avg_X += abs(axe_X);
@@ -114,17 +129,24 @@ void control(Configuration *configuration, int clientSocket) {
         sprintf(buffer, "m%d", axe_X);
         send(clientSocket, buffer, strlen(buffer), 0);
 
-        // Un court délai pour ne pas surcharger le processeur
         Sleep(TIME_LOOP);
-
-        if (GetAsyncKeyState(VK_ESCAPE) & 0x8001) {
-            fin = 0;
-        }
         loop +=1;
-        gdouble instantSpeed = speed(axe_X);
+        gdouble instantSpeed = fabs(speed(axe_X));
 
-        update_speed_label(fabs(instantSpeed));
+        update_speed_label(instantSpeed);
+        update_duration_label(duration);
+        update_distance_label(distanceCovered);
     }
-    time(&end_date);
+
+    session.id_profile = id_user;
+    session.id_configuration = configuration->id;
+    strcpy(session.name, name);
+    session.duration = duration;
+    session.distance = distanceCovered;
+    session.average_speed = distanceCovered/(double)duration;
+    strcpy(session.time_start, tempsStr);
+    create_session(session);
+    refresh_sessions_view(id_user);
+
     closeConnexion(clientSocket);
 }

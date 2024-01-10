@@ -5,7 +5,6 @@ static GtkBuilder *globalBuilder = NULL;
 int fin = 0;
 pthread_mutex_t fin_mutex = PTHREAD_MUTEX_INITIALIZER;
 static int current_profile_id = 1;
-static int session_profile_id = 1;
 int chosen_config_id = -1;
 
 static GtkWidget *globalProfileSubmenu = NULL;
@@ -544,8 +543,6 @@ void updateChosenConfiguration(){
     gtk_label_set_text(GTK_LABEL(currentConfigLabel), configuration_name);
 }
 
-
-
 void update_speed_label(gdouble instantSpeed) {
     GtkWidget *speedLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "instantSpeed"));
     gtk_label_set_text(GTK_LABEL(speedLabel), g_strdup_printf("%.2f", instantSpeed));
@@ -554,12 +551,24 @@ void update_speed_label(gdouble instantSpeed) {
     gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(speedBar), fraction);
 }
 
+void update_distance_label(int distance){
+    GtkWidget *distanceLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "distance"));
+    gtk_label_set_text(GTK_LABEL(distanceLabel), g_strdup_printf("%d cm", distance));
+}
+
+void update_duration_label(int duration){
+
+    int hours = duration / 3600;  // 3600 secondes dans une heure
+    int minutes = (duration % 3600) / 60;  // 60 secondes dans une minute
+    int secondes = duration % 60;  // Res
+    GtkWidget *durationLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "timerSession"));
+    gtk_label_set_text(GTK_LABEL(durationLabel), g_strdup_printf("%dh %dmin %ds", hours, minutes, secondes));
+}
 
 void* control_thread_function(void* data) {
     ControlData* control_data = (ControlData*)data;
     Configuration* configuration = &(control_data->configuration);
-    int clientSocket = control_data->clientSocket;
-    control(configuration, clientSocket);
+    control(configuration, control_data->id_profile);
     return NULL;
 }
 void on_stop_session_clicked(GtkButton *button, gpointer user_data){
@@ -572,6 +581,7 @@ void on_stop_session_clicked(GtkButton *button, gpointer user_data){
     pthread_mutex_lock(&fin_mutex);
     fin = 0;
     pthread_mutex_unlock(&fin_mutex);
+    Sleep(2000);
 
 }
 
@@ -585,19 +595,11 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
     gtk_widget_set_sensitive(GTK_WIDGET(startSession), FALSE);
     g_signal_connect(stopSession, "clicked", G_CALLBACK(on_stop_session_clicked), NULL);
 
-    int clientSocket = initConnexion();
-    session_profile_id = current_profile_id;
-
-    if(chosen_config_id == -1){
-        // Ecrire un code erreur pour éviter que ça lance le programme sans config sélectionnée;
-        closeConnexion(clientSocket);
-        return;
-    }
     Configuration configuration = get_configuration(chosen_config_id);
 
     ControlData *control_data = g_new(ControlData, 1);
     control_data->configuration = configuration;
-    control_data->clientSocket = clientSocket;
+    control_data->id_profile = current_profile_id;
 
     pthread_mutex_lock(&fin_mutex);
     fin = 1;
@@ -626,7 +628,9 @@ void activate(GtkApplication *app, gpointer user_data) {
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
     gtk_window_set_icon(GTK_WINDOW(window), icon);
 
-
+    if(fin == 1){
+        g_signal_connect(window, "destroy", G_CALLBACK(on_stop_session_clicked), NULL);
+    }
     g_signal_connect(window, "destroy", G_CALLBACK(destroyWindow), user_data);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), user_data);
     g_signal_connect(window, "button-press-event", G_CALLBACK(on_window_button_press_event), NULL);
