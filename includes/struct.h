@@ -32,3 +32,8 @@ typedef struct{
     GtkBuilder *builder;
     gint id_session;
 } GetSession;
+
+typedef struct {
+    Configuration configuration;
+    int id_profile;
+} ControlData;

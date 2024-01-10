@@ -4,11 +4,6 @@
 
 #include "../../includes/define.h"
 
-
-double duration(time_t start_date,time_t end_date) {
-    return difftime(end_date, start_date);
-}
-
 int distance(int duration, int avg_speed) {
     return duration * avg_speed;
 }
