@@ -31,7 +31,7 @@ int create_configuration(int id_profile){
     sqlite3_bind_text(stmt, 3, "S", -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 4, "Q", -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 5, "D", -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 6, 150);
+    sqlite3_bind_int(stmt, 6, 50);
     sqlite3_bind_text(stmt, 7, "A", -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt, 8, id_profile);
 
@@ -61,7 +61,7 @@ Configuration * get_configurations(int id_profile){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, speed_step, change_step_button, id_profile FROM configuration WHERE id_profile = ?";
+    char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, speed_step, change_step_button, id_profile FROM configuration WHERE id_profile = ? ORDER BY id DESC";
     if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);
         error_content(101);

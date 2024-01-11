@@ -60,7 +60,7 @@ Session * get_sessions_by_profile_id(int id_profile){
     if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
-    char *sql_requests = "SELECT id, name, duration, distance, average_speed, time_start, id_configuration, id_profile FROM session WHERE id_profile = ?";
+    char *sql_requests = "SELECT id, name, duration, distance, average_speed, time_start, id_configuration, id_profile FROM session WHERE id_profile = ? ORDER BY id DESC";
 
     if (sqlite3_prepare_v2(db, sql_requests, -1, &stmt, NULL) != SQLITE_OK) {
         sqlite3_close(db);

@@ -35,4 +35,6 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data);
 void on_stop_session_clicked(GtkButton *button, gpointer user_data);
 void update_distance_label(int distance);
 void update_duration_label(int duration);
+void errorPopUp(char *errorContent);
+void on_ok_button_clicked(GtkButton *button, gpointer user_data);
 #endif //CAREMOTE_UI_H
