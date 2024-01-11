@@ -201,7 +201,7 @@
                         </style>
                       </object>
                       <packing>
-                        <property name="x">518</property>
+                        <property name="x">522</property>
                         <property name="y">24</property>
                       </packing>
                     </child>
@@ -429,6 +429,18 @@
               <packing>
                 <property name="x">1275</property>
                 <property name="y">677</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinner" id="spinnerStartStop">
+                <property name="width-request">100</property>
+                <property name="height-request">80</property>
+                <property name="can-focus">False</property>
+                <property name="active">True</property>
+              </object>
+              <packing>
+                <property name="x">1171</property>
+                <property name="y">669</property>
               </packing>
             </child>
             <style>

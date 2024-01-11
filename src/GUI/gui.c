@@ -553,12 +553,13 @@ void update_distance_label(int distance){
 
 void update_duration_label(int duration){
 
-    int hours = duration / 3600;  // 3600 secondes dans une heure
-    int minutes = (duration % 3600) / 60;  // 60 secondes dans une minute
-    int secondes = duration % 60;  // Res
+    int hours = duration / 3600;
+    int minutes = (duration % 3600) / 60;
+    int secondes = duration % 60;
     GtkWidget *durationLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "timerSession"));
     gtk_label_set_text(GTK_LABEL(durationLabel), g_strdup_printf("%dh %dmin %ds", hours, minutes, secondes));
 }
+
 
 void* control_thread_function(void* data) {
     ControlData* control_data = (ControlData*)data;
@@ -577,8 +578,6 @@ void on_stop_session_clicked(GtkButton *button, gpointer user_data){
     fin = 0;
     pthread_mutex_unlock(&fin_mutex);
     closeConnexion(clientSocket);
-    Sleep(2000);
-
 }
 
 void on_ok_button_clicked(GtkButton *button, gpointer user_data){
