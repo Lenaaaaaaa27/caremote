@@ -188,22 +188,6 @@
             <property name="y">340</property>
           </packing>
         </child>
-        <child>
-          <object class="GtkLabel" id="warningSessionName">
-            <property name="width-request">207</property>
-            <property name="height-request">21</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">You must write in Session name</property>
-            <style>
-              <class name="warningSessionName"/>
-            </style>
-          </object>
-          <packing>
-            <property name="x">140</property>
-            <property name="y">68</property>
-          </packing>
-        </child>
       </object>
     </child>
     <style>

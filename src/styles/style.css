@@ -57,10 +57,6 @@ label{
     color: #b02d2d;
 }
 
-.warningSessionName{
-    color: rgba(255, 198, 0, 1);
-}
-
 #sessionFrame{
     background-color: #414450;
     margin:20px;
@@ -74,3 +70,4 @@ label{
 #sessionFrame button{
     background-color: #9388A2;
 }
+
