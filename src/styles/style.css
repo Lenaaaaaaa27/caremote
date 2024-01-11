@@ -18,8 +18,13 @@ label{
 }
 
 .cadre{
-    background-color: #282A36;
+    background-color: #414450;
     border-radius : 20px;
+    margin:20px;
+}
+
+.cadre label{
+    color: white;
 }
 
 .editbutton, .deletebutton{
@@ -33,7 +38,7 @@ label{
     background: #306e37;
 }
 .fixed2, .window {
-    background-color: #191A23;
+    background-color: #282A36;
 }
 .scrolledWindow{
     border-style: none; /* Supprime la bordure */
@@ -43,9 +48,7 @@ label{
 .stopsession{
     background: #ce3838;
 }
-.stopsession:focus-visible{
-    background-color: #dcd6d6;
-}
+
 .stopsession:hover{
     background: #b02d2d;
 }
@@ -56,4 +59,18 @@ label{
 
 .warningSessionName{
     color: rgba(255, 198, 0, 1);
+}
+
+#sessionFrame{
+    background-color: #414450;
+    margin:20px;
+    border-radius: 20px;
+}
+
+#sessionFrame label{
+    color:white;
+}
+
+#sessionFrame button{
+    background-color: #9388A2;
 }
