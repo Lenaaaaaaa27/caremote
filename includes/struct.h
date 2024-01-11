@@ -27,7 +27,6 @@ typedef struct{
     int id_profile;
 } Session;
 
-
 typedef struct{
     GtkBuilder *builder;
     gint id_session;
@@ -38,3 +37,8 @@ typedef struct {
     int clientSocket;
     int id_profile;
 } ControlData;
+
+typedef struct {
+    int forceFeedback;
+    char * carName;
+} Setting;
