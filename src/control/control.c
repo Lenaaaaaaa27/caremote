@@ -19,7 +19,6 @@ int control(Configuration *configuration, int id_user, int clientSocket){
     int thumbLX;
     int vMax = VMAXPULSE;
     int previousSpeedSwitchState = 0;
-    char buffer[256];
     int duration = 0;
     int avg_X = 0;
     int loop = 0;
@@ -27,14 +26,17 @@ int control(Configuration *configuration, int id_user, int clientSocket){
     int distanceCovered = 0;
     Session session;
     time_t t;
+    char buffer[256];
     char name[40] = "Session of ";
-    struct tm *tempsStruct;
     char tempsStr[20];
+
+    struct tm *tempsStruct;
     time(&t);
     tempsStruct = localtime(&t);
     strftime(tempsStr, sizeof(tempsStr), "%Y-%m-%d %H:%M:%S", tempsStruct);
     strcat(name, tempsStr);
 
+    configuration->speed_step < 0?0:configuration->speed_step > 100?100:configuration->speed_step; // 0 <= speed_step <= 100 
 
     while (fin) {
 
