@@ -53,3 +53,7 @@ label{
     min-height: 20px;
     color: #b02d2d;
 }
+
+.warningSessionName{
+    color: rgba(255, 198, 0, 1);
+}
