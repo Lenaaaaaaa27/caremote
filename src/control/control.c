@@ -78,35 +78,34 @@ int control(Configuration *configuration, int id_user, int clientSocket){
         } else {
             // Keyboard control
 
-            if (GetAsyncKeyState(configuration->move_forward) & 0x8001) {
+            if (GetAsyncKeyState(toupper(configuration->move_forward)) & 0x8001) {
                 axe_X = abs(axe_X) > vMax?vMax:axe_X;
                 if (axe_X < vMax)
                     axe_X += VAR_AXE_X;
             }
 
-            if (GetAsyncKeyState(configuration->move_backward) & 0x8001) {
+            if (GetAsyncKeyState(toupper(configuration->move_backward)) & 0x8001) {
                 axe_X = abs(axe_X) > vMax?-vMax:axe_X;
                 if (axe_X > -vMax)
                     axe_X -= VAR_AXE_X;
             }
 
-            if (!(GetAsyncKeyState(configuration->move_backward) & 0x8001) && !(GetAsyncKeyState(configuration->move_forward) & 0x8001)) {
+            if (!(GetAsyncKeyState(toupper(configuration->move_backward)) & 0x8001) && !(GetAsyncKeyState(toupper(configuration->move_forward)) & 0x8001)) {
                 axe_X = MIN_AXE_X;
             }
 
-            if (GetAsyncKeyState(configuration->move_right) & 0x8001) {
+            if (GetAsyncKeyState(toupper(configuration->move_right)) & 0x8001) {
                 if (axe_Z < MAX_AXE_Z) {
                     axe_Z += VAR_AXE_Z;
                 }
             }
-
-            if (GetAsyncKeyState(configuration->move_left) & 0x8001) {
+            if (GetAsyncKeyState(toupper(configuration->move_left)) & 0x8001) {
                 if (axe_Z > MIN_AXE_Z) {
                     axe_Z -= VAR_AXE_Z;
                 }
             }
 
-            if ((GetAsyncKeyState(configuration->change_step_button) & 0x8001) && !(previousSpeedSwitchState & 0x8001)) {
+            if ((GetAsyncKeyState(toupper(configuration->change_step_button)) & 0x8001) && !(previousSpeedSwitchState & 0x8001)) {
                 if(vMax == VMAXPULSE) {
                     vMax = MAX_AXE_X;
                 } else {
@@ -114,7 +113,7 @@ int control(Configuration *configuration, int id_user, int clientSocket){
                 }
             }
 
-            previousSpeedSwitchState = GetAsyncKeyState(configuration->change_step_button);
+            previousSpeedSwitchState = GetAsyncKeyState(toupper(configuration->change_step_button));
         }
 
         pulse+= axe_X;
