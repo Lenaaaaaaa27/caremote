@@ -55,7 +55,7 @@ int update_session(Session session);
 int delete_session(int id);
 void error_content(int);
 
-void setConfig(const char *,Setting *);
+int setConfig(const char *,Setting *);
 //variable stop
 extern int fin;
 extern pthread_mutex_t fin_mutex;

@@ -6,7 +6,7 @@
 #include "../../includes/define.h"
 
 
-void setConfig(const char *nomFichier, Setting *setting) {
+int setConfig(const char *nomFichier, Setting *setting) {
     FILE *fichier = fopen(nomFichier, "r");
 
     if (fichier == NULL) {
@@ -15,19 +15,42 @@ void setConfig(const char *nomFichier, Setting *setting) {
     }
 
     char ligne[TAILLE_MAX_LIGNE]; // Vous pouvez ajuster la taille selon vos besoins
-
+    char *endptr;
     while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
         char *token = strtok(ligne, ":");
         char *valeur = strtok(NULL, "\n");
 
+
         if (token != NULL && valeur != NULL) {
-            if (strcmp(token, "forceFeedback") == 0) {
-                setting->forceFeedback = atoi(valeur);
-            } else if (strcmp(token, "carName") == 0) {
+            if (strcmp(token, "ForceFeedback") == 0) {
+                setting->forceFeedback = strtol(valeur, &endptr, 10);
+                if (*endptr != '\0') {
+                    return EXIT_FAILURE;
+                }
+            } else if (strcmp(token, "CarName") == 0) {
+                setting->carName = (char *)malloc(strlen(valeur) + 1);  // +1 pour le caractère nul
+                if (setting->carName == NULL) {
+                    return EXIT_FAILURE;
+                }
                 strcpy(setting->carName, valeur);
+            } else if (strcmp(token, "DefaultUserId") == 0) {
+                setting->defaultUserId = strtol(valeur, &endptr, 10);
+                if (*endptr != '\0') {
+                    return EXIT_FAILURE;
+                }
+            } else if (strcmp(token, "DefaultConfigId") == 0) {
+                setting->defaultConfigId = strtol(valeur, &endptr, 10);
+                if (*endptr != '\0') {
+                    return EXIT_FAILURE;
+                }
+            } else if (strcmp(token, "MaxSessionTime") == 0) {
+                setting->maxSessionTime = strtol(valeur, &endptr, 10);
+                if (*endptr != '\0') {
+                    return EXIT_FAILURE;
+                }
             }
         }
     }
-
     fclose(fichier);
+    return EXIT_SUCCESS;
 }

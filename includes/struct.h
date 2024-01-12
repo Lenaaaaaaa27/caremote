@@ -41,4 +41,7 @@ typedef struct {
 typedef struct {
     int forceFeedback;
     char * carName;
+    int defaultUserId;
+    int defaultConfigId;
+    int maxSessionTime;
 } Setting;
