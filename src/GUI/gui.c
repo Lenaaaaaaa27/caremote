@@ -15,6 +15,9 @@ static gboolean is_profile_submenu_created = FALSE;
 static GtkWidget *globalDeleteProfileSubmenu = NULL;
 static gboolean is_delete_profile_submenu_created = FALSE;
 
+static GtkWidget *globalExportSubmenu = NULL;
+static gboolean is_export_submenu_created = FALSE;
+
 static void close_submenus() {
     if (is_profile_submenu_created) {
         gtk_widget_destroy(globalProfileSubmenu);
@@ -29,9 +32,17 @@ static void close_deleted_submenus() {
     }
 }
 
+static void close_exportation_submenus(){
+    if (is_export_submenu_created) {
+        gtk_widget_destroy(globalExportSubmenu);
+        is_export_submenu_created = FALSE;
+    }
+}
+
 static gboolean on_window_button_press_event() {
     close_submenus();
     close_deleted_submenus();
+    close_exportation_submenus();
     return FALSE;
 }
 
@@ -54,6 +65,44 @@ void on_profile_menu_item_activate(GtkMenuItem *menu_item, gpointer user_data) {
     refresh_configurations_view(current_profile_id);
 }
 
+void on_exportations_activate(GtkWidget *widget, gpointer user_data){
+    close_submenus();
+    close_deleted_submenus();
+    close_exportation_submenus();
+
+    if (!is_export_submenu_created) {
+        globalExportSubmenu = gtk_menu_new();
+        gtk_style_context_add_class(gtk_widget_get_style_context(globalExportSubmenu), "MenuBar");
+
+
+        GtkWidget *importation = gtk_menu_item_new_with_label("Import a configuration");
+        gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), importation);
+        gtk_style_context_add_class(gtk_widget_get_style_context(importation), "MenuBar");
+        g_signal_connect(importation, "activate", G_CALLBACK(on_edit_profile_activate), user_data);
+        gtk_widget_show(importation);
+
+        GtkWidget *exportation = gtk_menu_item_new_with_label("Export your chosen configuration");
+        gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), exportation);
+        gtk_style_context_add_class(gtk_widget_get_style_context(exportation), "MenuBar");
+        g_signal_connect(exportation, "activate", G_CALLBACK(on_add_profile_activate), NULL);
+        gtk_widget_show(exportation);
+
+        GtkWidget *separator = gtk_separator_menu_item_new();
+        gtk_style_context_add_class(gtk_widget_get_style_context(separator), "separator");
+        gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), separator);
+        gtk_widget_show(separator);
+
+        GtkWidget *exportationSession = gtk_menu_item_new_with_label("Export your sessions");
+        gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), exportationSession);
+        gtk_style_context_add_class(gtk_widget_get_style_context(exportationSession), "MenuBar");
+        g_signal_connect(exportationSession, "activate", G_CALLBACK(on_add_profile_activate), NULL);
+        gtk_widget_show(exportationSession);
+
+        is_export_submenu_created = TRUE;
+    }
+
+    gtk_menu_popup_at_pointer(GTK_MENU(globalExportSubmenu), NULL);
+}
 void on_delete_profile_activate(GtkWidget *widget, gpointer user_data){
     close_submenus();
     close_deleted_submenus();
@@ -723,6 +772,7 @@ void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
     GtkWidget *profile;
     GtkWidget *deleteProfile;
+    GtkWidget *exportation;
     GtkButton *startSession;
     GtkButton *stopSession;
 
@@ -754,12 +804,14 @@ void activate(GtkApplication *app, gpointer user_data) {
 
     profile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "profile"));
     deleteProfile = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "deleteProfiles"));
+    exportation = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "exportation"));
 
     arraySessions(current_profile_id);
     arrayConfigurations(current_profile_id);
     update_current_profile_label();
 
     g_signal_connect(deleteProfile, "button_press_event", G_CALLBACK(on_delete_profile_activate), window);
+    g_signal_connect(exportation, "button_press_event", G_CALLBACK(on_exportations_activate), window);
     g_signal_connect(profile, "button_press_event", G_CALLBACK(on_profile_activate), window);
     g_signal_connect(GTK_BUTTON(gtk_builder_get_object(globalBuilder, "addConfigButton")), "clicked", G_CALLBACK(on_create_config_button_clicked), NULL);
     g_signal_connect(startSession, "clicked", G_CALLBACK(on_start_session_clicked), NULL);

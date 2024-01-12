@@ -40,10 +40,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="configuration">
+              <object class="GtkMenuItem" id="exportation">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Configurations</property>
+                <property name="label" translatable="yes">Export/Import</property>
                 <property name="use-underline">True</property>
                 <style>
                   <class name="MenuBar"/>

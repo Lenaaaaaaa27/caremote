@@ -36,7 +36,7 @@ int create_database() {
             "speed_step INTEGER,"
             "change_step_button CHAR,"
             "id_profile INTEGER,"
-            "FOREIGN KEY (id_profile) REFERENCES profile(id)"
+            "FOREIGN KEY (id_profile) REFERENCES profile(id) ON DELETE CASCADE"
             ");";
 
     if (sqlite3_exec(db, create_table_2_sql, 0, 0, &error_message) != SQLITE_OK) {
@@ -55,8 +55,8 @@ int create_database() {
             "time_start TEXT,"
             "id_configuration INTEGER,"
             "id_profile INTEGER,"
-            "FOREIGN KEY (id_configuration) REFERENCES configuration(id),"
-            "FOREIGN KEY (id_profile) REFERENCES profile(id)"
+            "FOREIGN KEY (id_configuration) REFERENCES configuration(id) ON DELETE CASCADE,"
+            "FOREIGN KEY (id_profile) REFERENCES profile(id) ON DELETE CASCADE"
             ")";
 
     if (sqlite3_exec(db, create_table_3_sql, 0, 0, &error_message) != SQLITE_OK) {
