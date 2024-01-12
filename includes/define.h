@@ -56,9 +56,11 @@ int update_session(Session session);
 int delete_session(int id);
 void error_content(int);
 
+int setConfig(const char *,Setting *);
 //variable stop
 extern int fin;
 extern pthread_mutex_t fin_mutex;
+
 
 
 #endif //CAREMOTE_DEFINE_H

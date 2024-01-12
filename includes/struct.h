@@ -27,7 +27,6 @@ typedef struct{
     int id_profile;
 } Session;
 
-
 typedef struct{
     GtkBuilder *builder;
     gint id_session;
@@ -44,3 +43,11 @@ struct UpdateLabelsData {
     int duration;
     int distanceCovered;
 };
+
+typedef struct {
+    int forceFeedback;
+    char * carName;
+    int defaultUserId;
+    int defaultConfigId;
+    int maxSessionTime;
+} Setting;
