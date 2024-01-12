@@ -38,3 +38,9 @@ typedef struct {
     int clientSocket;
     int id_profile;
 } ControlData;
+
+struct UpdateLabelsData {
+    gdouble instantSpeed;
+    int duration;
+    int distanceCovered;
+};

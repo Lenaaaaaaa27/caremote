@@ -37,4 +37,5 @@ void update_distance_label(int distance);
 void update_duration_label(int duration);
 void errorPopUp(char *errorContent);
 void on_ok_button_clicked(GtkButton *button, gpointer user_data);
+gboolean update_labels_callback(gpointer user_data);
 #endif //CAREMOTE_UI_H

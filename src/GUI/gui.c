@@ -610,9 +610,6 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
         return;
     }
 
-    pthread_t control_thread;
-    pthread_join(control_thread, NULL);
-
     GtkButton *stopSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder, "stopSession"));
     GtkButton *startSession = GTK_BUTTON(gtk_builder_get_object(globalBuilder,"startsession"));
     gtk_widget_set_sensitive(GTK_WIDGET(stopSession), TRUE);
@@ -630,10 +627,23 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
     fin = 1;
     pthread_mutex_unlock(&fin_mutex);
 
+    pthread_t control_thread;
     pthread_create(&control_thread, NULL, control_thread_function, control_data);
-
     pthread_detach(control_thread);
 }
+
+gboolean update_labels_callback(gpointer user_data) {
+    struct UpdateLabelsData *data = (struct UpdateLabelsData *)user_data;
+
+    update_speed_label(data->instantSpeed);
+    update_duration_label(data->duration);
+    update_distance_label(data->distanceCovered);
+
+    g_free(data);
+
+    return FALSE;
+}
+
 
 void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;

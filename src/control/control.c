@@ -135,9 +135,13 @@ int control(Configuration *configuration, int id_user, int clientSocket){
         loop +=1;
         gdouble instantSpeed = fabs(speed(axe_X));
 
-        update_speed_label(instantSpeed);
-        update_duration_label(duration);
-        update_distance_label(distanceCovered);
+        struct UpdateLabelsData *data = g_malloc(sizeof(struct UpdateLabelsData));
+        data->instantSpeed = fabs(speed(axe_X));
+        data->duration = duration;
+        data->distanceCovered = distanceCovered;
+
+        g_idle_add(update_labels_callback, data);
+
     }
 
     session.id_profile = id_user;
