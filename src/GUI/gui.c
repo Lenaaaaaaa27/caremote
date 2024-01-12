@@ -119,13 +119,17 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
 void on_edit_profile_activate(GtkWidget *widget, gpointer user_data){
     GetSession *editUser = (GetSession *)malloc(sizeof(GetSession));
     editUser->builder = gtk_builder_new_from_file("../src/GUI/editProfile.glade");
-
+    GError *error = NULL;
     GtkWidget *editProfileWindow = GTK_WIDGET(gtk_builder_get_object(editUser->builder, "editProfile"));
-
     GtkWidget *entry = GTK_WIDGET(gtk_builder_get_object(editUser->builder, "editProfileinput"));
+
     gtk_entry_set_text(GTK_ENTRY(entry), "");
     g_signal_connect(entry, "activate", G_CALLBACK(on_edit_profile_clicked), editUser);
     g_signal_connect(editProfileWindow, "delete-event", G_CALLBACK(cleanup), editUser);
+
+    GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
+    gtk_window_set_icon(GTK_WINDOW(editProfileWindow), icon);
+
     gtk_widget_show(GTK_WIDGET(editProfileWindow));
 }
 
@@ -148,6 +152,9 @@ void on_edit_profile_clicked(GtkWidget *widget, gpointer user_data){
 void on_add_profile_activate(GtkWidget *widget, gpointer user_data) {
 
     GetSession *addUser = (GetSession *)malloc(sizeof(GetSession));
+    GError *error = NULL;
+    GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
+
     addUser->builder = gtk_builder_new_from_file("../src/GUI/addProfile.glade");
 
     GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(addUser->builder, "addProfile"));
@@ -156,6 +163,8 @@ void on_add_profile_activate(GtkWidget *widget, gpointer user_data) {
     gtk_entry_set_text(GTK_ENTRY(entry), "");
     g_signal_connect(entry, "activate", G_CALLBACK(on_create_profile_clicked), addUser);
     g_signal_connect(addProfileWindow, "delete-event", G_CALLBACK(cleanup), addUser);
+
+    gtk_window_set_icon(GTK_WINDOW(addProfileWindow), icon);
     gtk_widget_show(GTK_WIDGET(addProfileWindow));
 }
 
@@ -182,6 +191,8 @@ void on_delete_it_activate(GtkMenuItem *menu_item, gpointer user_data) {
 
 void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     char *configName;
+    GError *error = NULL;
+    GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
     GetSession *getsession = (GetSession *)malloc(sizeof(GetSession));
     getsession->builder = gtk_builder_new_from_file("../src/GUI/session.glade");
     GtkWidget *sessionWindow = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionWindow"));
@@ -223,6 +234,7 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     g_signal_connect(deleteSessionButton, "clicked", G_CALLBACK(on_delete_session_button_clicked), getsession);
     g_signal_connect(sessionWindow, "delete-event", G_CALLBACK(cleanup), getsession);
 
+    gtk_window_set_icon(GTK_WINDOW(sessionWindow), icon);
     gtk_widget_show(sessionWindow);
 }
 
@@ -472,6 +484,10 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     GetSession *getConfig = (GetSession *)malloc(sizeof(GetSession));
     gint config_id = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(button), "config_id"));
 
+    GError *error = NULL;
+    GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
+
+
     getConfig->builder = gtk_builder_new_from_file("../src/GUI/configuration.glade");
     getConfig->id_session = config_id;
 
@@ -503,6 +519,7 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     g_signal_connect(chosenConfigurationButton, "clicked", G_CALLBACK(on_chosen_configuration_button_clicked), getConfig);
     g_signal_connect(configWindow, "delete-event", G_CALLBACK(cleanup), getConfig);
 
+    gtk_window_set_icon(GTK_WINDOW(configWindow), icon);
     gtk_widget_show(configWindow);
 }
 
@@ -599,6 +616,9 @@ void on_ok_button_clicked(GtkButton *button, gpointer user_data){
 }
 
 void errorPopUp(char *errorContent){
+
+    GError *error = NULL;
+    GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
     GtkBuilder *builder = gtk_builder_new_from_file("../src/GUI/popUpError.glade");
     GtkWidget *errorWindow = GTK_WIDGET(gtk_builder_get_object(builder, "popUpError"));
     GtkWidget *errorLabel = GTK_WIDGET(gtk_builder_get_object(builder, "errorContent"));
@@ -606,6 +626,8 @@ void errorPopUp(char *errorContent){
 
     gtk_label_set_text(GTK_LABEL(errorLabel), errorContent);
     g_signal_connect(errorButton, "clicked", G_CALLBACK(on_ok_button_clicked), builder);
+
+    gtk_window_set_icon(GTK_WINDOW(errorWindow), icon);
     gtk_widget_show_all(errorWindow);
 }
 void on_start_session_clicked(GtkButton *button, gpointer user_data){
@@ -663,6 +685,7 @@ void activate(GtkApplication *app, gpointer user_data) {
     GtkButton *stopSession;
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
+
     window = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "window"));
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
