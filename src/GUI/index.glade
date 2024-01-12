@@ -81,11 +81,11 @@
                     <property name="valign">center</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="width-request">187</property>
+                        <property name="width-request">234</property>
                         <property name="height-request">80</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">VITESSE INSTANTANEE</property>
+                        <property name="label" translatable="yes">INSTANT SPEED</property>
                         <property name="justify">center</property>
                         <attributes>
                           <attribute name="style" value="normal"/>
@@ -95,8 +95,8 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="x">307</property>
-                        <property name="y">74</property>
+                        <property name="x">292</property>
+                        <property name="y">82</property>
                       </packing>
                     </child>
                     <child>
@@ -200,7 +200,7 @@
                         </style>
                       </object>
                       <packing>
-                        <property name="x">135</property>
+                        <property name="x">157</property>
                         <property name="y">25</property>
                       </packing>
                     </child>
@@ -213,8 +213,8 @@
                         </style>
                       </object>
                       <packing>
-                        <property name="x">522</property>
-                        <property name="y">24</property>
+                        <property name="x">558</property>
+                        <property name="y">25</property>
                       </packing>
                     </child>
                     <child>
@@ -289,7 +289,7 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="x">44</property>
+                        <property name="x">40</property>
                         <property name="y">100</property>
                       </packing>
                     </child>
@@ -306,7 +306,7 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="x">245</property>
+                        <property name="x">250</property>
                         <property name="y">15</property>
                       </packing>
                     </child>
@@ -352,13 +352,13 @@
                         </style>
                       </object>
                       <packing>
-                        <property name="x">44</property>
+                        <property name="x">40</property>
                         <property name="y">100</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="width-request">203</property>
+                        <property name="width-request">253</property>
                         <property name="height-request">80</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -369,8 +369,8 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="x">231</property>
-                        <property name="y">21</property>
+                        <property name="x">200</property>
+                        <property name="y">20</property>
                       </packing>
                     </child>
                     <child>
@@ -391,7 +391,7 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="x">447</property>
+                        <property name="x">460</property>
                         <property name="y">36</property>
                       </packing>
                     </child>

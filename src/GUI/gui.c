@@ -67,6 +67,7 @@ void on_delete_profile_activate(GtkWidget *widget, gpointer user_data){
             if (profiles[i].id != 1 && profiles[i].id != current_profile_id) {
                 GtkWidget *profile_item = gtk_menu_item_new_with_label(profiles[i].username);
                 g_object_set_data(G_OBJECT(profile_item), "user_id", GINT_TO_POINTER(profiles[i].id));
+                gtk_style_context_add_class(gtk_widget_get_style_context(profile_item), "MenuBar");
                 g_signal_connect(profile_item, "activate", G_CALLBACK(on_delete_it_activate), user_data);
                 gtk_menu_shell_append(GTK_MENU_SHELL(globalDeleteProfileSubmenu ), profile_item);
                 gtk_widget_show(profile_item);
@@ -91,6 +92,7 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
         for (int i = 0; profiles[i].id != -1; ++i) {
             GtkWidget *profile_item = gtk_menu_item_new_with_label(profiles[i].username);
             g_object_set_data(G_OBJECT(profile_item), "user_id", GINT_TO_POINTER(profiles[i].id));
+            gtk_style_context_add_class(gtk_widget_get_style_context(profile_item), "MenuBar");
             g_signal_connect(profile_item, "activate", G_CALLBACK(on_profile_menu_item_activate), user_data);
             gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), profile_item);
             gtk_widget_show(profile_item);
@@ -103,11 +105,13 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
 
         GtkWidget *edit_profile_item = gtk_menu_item_new_with_label("Edit your current profile");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), edit_profile_item);
+        gtk_style_context_add_class(gtk_widget_get_style_context(edit_profile_item), "MenuBar");
         g_signal_connect(edit_profile_item, "activate", G_CALLBACK(on_edit_profile_activate), user_data);
         gtk_widget_show(edit_profile_item);
 
         GtkWidget *add_profile_item = gtk_menu_item_new_with_label("Add a profile");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), add_profile_item);
+        gtk_style_context_add_class(gtk_widget_get_style_context(add_profile_item), "MenuBar");
         g_signal_connect(add_profile_item, "activate", G_CALLBACK(on_add_profile_activate), NULL);
         gtk_widget_show(add_profile_item);
 

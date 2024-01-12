@@ -1,12 +1,3 @@
-button {
-    margin: 5px;
-    border-radius : 16px;
-    font-size: 24px;
-    color:#fff;
-    background: #282A36;
-    border: none;
-}
-
 .currentProfile{
     font-size: 18px;
     font-weight: bold;
@@ -35,6 +26,10 @@ label{
 .startsession{
     background: #3e9849;
     box-shadow: 6px 7px 7px 4px rgba(0,0,0,0.1);
+    margin: 5px;
+    border-radius : 16px;
+    font-size: 24px;
+    border: none;
 }
 .startsession:hover{
     background: #306e37;
@@ -55,6 +50,10 @@ label{
 .stopsession{
     background: #ce3838;
     box-shadow: 6px 7px 7px 4px rgba(0,0,0,0.1);
+    margin: 5px;
+    border-radius : 16px;
+    font-size: 24px;
+    border: none;
 }
 
 .stopsession:hover{
@@ -82,17 +81,13 @@ label{
 }
 
 #sessionFrame button{
-    background-color: #9388A2;
+    background-color: #282A36;
+    margin: 5px;
+    border-radius : 16px;
+    font-size: 24px;
+    border: none;
 }
 
-.sessionFrame{
-    margin: 5px;
-    border-radius : 20px;
-    font-size: 24px;
-    color:#fff;
-    background: #9388A2;
-    border-style: none;
-}
 
 .errorLabel{
     color: #ff8800;
