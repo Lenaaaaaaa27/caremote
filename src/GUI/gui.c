@@ -61,6 +61,7 @@ void on_delete_profile_activate(GtkWidget *widget, gpointer user_data){
 
     if (!is_delete_profile_submenu_created) {
         globalDeleteProfileSubmenu = gtk_menu_new();
+        gtk_style_context_add_class(gtk_widget_get_style_context(globalDeleteProfileSubmenu), "MenuBar");
 
         for (int i = 0; profiles[i].id != -1; ++i) {
             if (profiles[i].id != 1 && profiles[i].id != current_profile_id) {
@@ -85,6 +86,7 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
 
     if (!is_profile_submenu_created) {
         globalProfileSubmenu = gtk_menu_new();
+        gtk_style_context_add_class(gtk_widget_get_style_context(globalProfileSubmenu), "MenuBar");
 
         for (int i = 0; profiles[i].id != -1; ++i) {
             GtkWidget *profile_item = gtk_menu_item_new_with_label(profiles[i].username);
@@ -95,6 +97,7 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data) {
         }
 
         GtkWidget *separator = gtk_separator_menu_item_new();
+        gtk_style_context_add_class(gtk_widget_get_style_context(separator), "separator");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalProfileSubmenu), separator);
         gtk_widget_show(separator);
 
@@ -314,7 +317,6 @@ void refresh_sessions_view(int profile_id) {
         g_object_set_data(G_OBJECT(button), "session_id", GINT_TO_POINTER(sessions[i].id));
 
         g_signal_connect(button, "clicked", G_CALLBACK(on_session_button_clicked), NULL);
-
         gtk_grid_attach(GTK_GRID(grid), button, 0, row, 1, 1);
 
         row++;
@@ -340,7 +342,6 @@ void arraySessions(int profile_id) {
 
     for (int i = 0; sessions[i].id != -1; ++i) {
         button = gtk_button_new_with_label(sessions[i].name);
-
         gtk_widget_set_size_request(button, 360, 120);
 
         g_object_set_data(G_OBJECT(button), "session_id", GINT_TO_POINTER(sessions[i].id));
@@ -410,7 +411,7 @@ void arrayConfigurations(int profile_id) {
         gtk_widget_set_size_request(button, 360, 120);
 
         g_object_set_data(G_OBJECT(button), "config_id", GINT_TO_POINTER(configurations[i].id));
-
+        gtk_style_context_add_class(gtk_widget_get_style_context(button), "sessionFrame");
         g_signal_connect(button, "clicked", G_CALLBACK(on_configuration_button_clicked), NULL);
 
         gtk_grid_attach(GTK_GRID(grid), button, 0, row, 1, 1);

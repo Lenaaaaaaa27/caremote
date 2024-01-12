@@ -3,7 +3,7 @@ button {
     border-radius : 16px;
     font-size: 24px;
     color:#fff;
-    background-color: #282A36;
+    background: #282A36;
     border: none;
 }
 
@@ -85,7 +85,26 @@ label{
     background-color: #9388A2;
 }
 
+.sessionFrame{
+    margin: 5px;
+    border-radius : 20px;
+    font-size: 24px;
+    color:#fff;
+    background: #9388A2;
+    border-style: none;
+}
+
 .errorLabel{
     color: #ff8800;
 }
+
+.MenuBar {
+   background-color: #414450;
+}
+
+.separator{
+    background-color: white;
+}
+
+
 

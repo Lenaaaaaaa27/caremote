@@ -23,6 +23,9 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Profiles</property>
                 <property name="use-underline">True</property>
+                <style>
+                  <class name="MenuBar"/>
+                </style>
               </object>
             </child>
             <child>
@@ -31,6 +34,9 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Delete a profile</property>
                 <property name="use-underline">True</property>
+                <style>
+                  <class name="MenuBar"/>
+                </style>
               </object>
             </child>
             <child>
@@ -39,8 +45,14 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Configurations</property>
                 <property name="use-underline">True</property>
+                <style>
+                  <class name="MenuBar"/>
+                </style>
               </object>
             </child>
+            <style>
+              <class name="MenuBar"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>
