@@ -15,7 +15,16 @@ void error_content(int code){
     char* error_message;
     switch (code) {
         case 101 :
-            content = "Error 101 : Echec SQL\n";
+            content = "Error 101 : Failure SQL\n";
+            break;
+        case 200 :
+            content = "Error 200 : Car connection failure\n";
+            break;
+        case 300 :
+            content = "Error 300 : Failure to save file\n";
+            break;
+        default:
+            content = "Error 0 : An unknown error has occurred\n";
             break;
     }
     error_message = line_formatting(content);

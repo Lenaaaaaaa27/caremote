@@ -60,6 +60,7 @@ void error_content(int);
 
 int setConfig(const char *,Setting *);
 int exportConfig(Configuration *);
+int exportSession(Session *);
 char *intToDate(int);
 //variable stop
 extern int fin;
