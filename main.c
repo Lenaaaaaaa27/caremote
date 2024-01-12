@@ -3,13 +3,14 @@
 
 void* gtk_thread_function(void* data) {
     GtkApplication *app;
+    Setting setting;
     int status;
 
+    setConfig("config.txt", &setting);
+
     if(verification_database()){
-        create_database();
+        create_database(&setting);
     }
-    Setting setting;
-    //setConfig("config.txt",&setting);
 
     app = gtk_application_new("caremote.first.version", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);

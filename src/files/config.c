@@ -14,8 +14,9 @@ int setConfig(const char *nomFichier, Setting *setting) {
         exit(EXIT_FAILURE);
     }
 
-    char ligne[TAILLE_MAX_LIGNE]; // Vous pouvez ajuster la taille selon vos besoins
+    char ligne[TAILLE_MAX_LIGNE];
     char *endptr;
+
     while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
         char *token = strtok(ligne, ":");
         char *valeur = strtok(NULL, "\n");
@@ -28,7 +29,7 @@ int setConfig(const char *nomFichier, Setting *setting) {
                     return EXIT_FAILURE;
                 }
             } else if (strcmp(token, "CarName") == 0) {
-                setting->carName = (char *)malloc(strlen(valeur) + 1);  // +1 pour le caractère nul
+                setting->carName = (char *)malloc(strlen(valeur) + 1);
                 if (setting->carName == NULL) {
                     return EXIT_FAILURE;
                 }
@@ -48,6 +49,12 @@ int setConfig(const char *nomFichier, Setting *setting) {
                 if (*endptr != '\0') {
                     return EXIT_FAILURE;
                 }
+            } else if (strcmp(token, "ProfileUsername") == 0) {
+                setting->profileUsername = (char *)malloc(strlen(valeur) + 1);
+                if (setting->profileUsername == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(setting->profileUsername, valeur);
             }
         }
     }

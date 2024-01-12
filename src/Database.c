@@ -5,7 +5,7 @@
 #include "../../includes/define.h"
 
 // To create the database
-int create_database() {
+int create_database(Setting *settings) {
     sqlite3 *db;
     Configuration config;
     char *error_message = 0;
@@ -77,7 +77,7 @@ int create_database() {
     config.change_step_button = 'A';
     config.id_profile = 1;
 
-    create_profile("Default User");
+    create_profile(settings->profileUsername);
     create_configuration(&config);
     return 0;
 }

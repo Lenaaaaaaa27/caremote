@@ -38,7 +38,7 @@ double avg_speed(int, int);
 double speed(int);
 
 //database
-int create_database();
+int create_database(Setting *settings);
 int verification_database();
 int create_profile(char username[20]);
 Profile *get_profiles();

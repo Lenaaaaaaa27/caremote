@@ -18,6 +18,8 @@ static gboolean is_delete_profile_submenu_created = FALSE;
 static GtkWidget *globalExportSubmenu = NULL;
 static gboolean is_export_submenu_created = FALSE;
 
+Setting settings;
+
 static void close_submenus() {
     if (is_profile_submenu_created) {
         gtk_widget_destroy(globalProfileSubmenu);
@@ -766,6 +768,7 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
     clientSocket = initConnexion();
     if(clientSocket == 1){
         errorPopUp("Connexion issues with the car !");
+        error_content(200);
         return;
     }
 
@@ -811,6 +814,9 @@ void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *exportation;
     GtkButton *startSession;
     GtkButton *stopSession;
+
+
+    setConfig("config.txt", &settings);
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
 

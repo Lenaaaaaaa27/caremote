@@ -50,4 +50,6 @@ typedef struct {
     int defaultUserId;
     int defaultConfigId;
     int maxSessionTime;
+    char * profileUsername;
+    Configuration *configuration;
 } Setting;
