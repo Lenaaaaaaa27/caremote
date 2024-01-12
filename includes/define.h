@@ -4,18 +4,20 @@
 
 #ifndef CAREMOTE_DEFINE_H
 #define CAREMOTE_DEFINE_H
-#include <Xinput.h>  // Bibliothèque pour la gestion des manettes Xbox
-#include<string.h>
-#include<math.h>
-#include<unistd.h>
-#include<stdlib.h>
-#include<gtk/gtk.h>
-#include<time.h>
-#include<sqlite3.h>
+#include <Xinput.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <gtk/gtk.h>
+#include <time.h>
+#include <sqlite3.h>
 #include "struct.h"
 #include "ui.h"
 #include <pthread.h>
 #include <windows.h>
+#include <cJSON.h>
+#include <commdlg.h>
 //toolbox.c
 char * truncated_string(char*,int);
 //control
@@ -56,6 +58,8 @@ int delete_session(int id);
 void error_content(int);
 
 int setConfig(const char *,Setting *);
+int exportConfig(Configuration *);
+char *intToDate(int);
 //variable stop
 extern int fin;
 extern pthread_mutex_t fin_mutex;

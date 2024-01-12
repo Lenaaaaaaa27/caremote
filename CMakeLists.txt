@@ -24,12 +24,23 @@ add_executable(caremote main.c
         src/data/calculation.c
         src/Database.c
         src/files/config.c
+        src/files/exports.c
 )
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 
 
 target_sources(caremote PRIVATE lib/sqlite-amalgamation-3440000/sqlite3.c)
 target_include_directories(caremote PRIVATE lib/sqlite-amalgamation-3440000/)
+
+set(CJSON_SOURCE_DIR lib/cJSON/)
+add_library(cJSON STATIC
+        ${CJSON_SOURCE_DIR}/cJSON.c
+        ${CJSON_SOURCE_DIR}/cJSON_Utils.c
+        # Ajoutez tous les autres fichiers source de cJSON ici
+)
+target_include_directories(cJSON PUBLIC ${CJSON_SOURCE_DIR})
+target_link_libraries(caremote cJSON)
+
 
 # Ajouter le support de Winsock
 if(WIN32)
