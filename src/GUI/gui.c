@@ -197,6 +197,10 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
         configName = "Deleted configuration";
     }
 
+    int hours = session.duration / 3600;
+    int minutes = (session.duration % 3600) / 60;
+    int secondes = session.duration % 60;
+
     GtkWidget *sessionNameInput = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionName"));
     GtkWidget *sessionDurationLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionDuration"));
     GtkWidget *sessionDistanceLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionDistance"));
@@ -208,9 +212,9 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     GtkWidget *deleteSessionButton = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "deleteSessionButton"));
 
     gtk_entry_set_text(GTK_ENTRY(sessionNameInput), session.name);
-    gtk_label_set_text(GTK_LABEL(sessionDurationLabel), g_strdup_printf("%d", session.duration));
-    gtk_label_set_text(GTK_LABEL(sessionDistanceLabel), g_strdup_printf("%d", session.distance));
-    gtk_label_set_text(GTK_LABEL(sessionAverageSpeedLabel), g_strdup_printf("%.2lf",session.average_speed));
+    gtk_label_set_text(GTK_LABEL(sessionDurationLabel), g_strdup_printf("%dh %dmin %ds", hours, minutes, secondes));
+    gtk_label_set_text(GTK_LABEL(sessionDistanceLabel), g_strdup_printf("%d cm", session.distance));
+    gtk_label_set_text(GTK_LABEL(sessionAverageSpeedLabel), g_strdup_printf("%.2lf cm/s",session.average_speed));
     gtk_label_set_text(GTK_LABEL(sessionTimeStartLabel), session.time_start);
     gtk_label_set_text(GTK_LABEL(sessionConfigurationLabel), configName);
 
@@ -559,9 +563,9 @@ void update_distance_label(int distance){
 
 void update_duration_label(int duration){
 
-    int hours = duration / 3600;  // 3600 secondes dans une heure
-    int minutes = (duration % 3600) / 60;  // 60 secondes dans une minute
-    int secondes = duration % 60;  // Res
+    int hours = duration / 3600;
+    int minutes = (duration % 3600) / 60;
+    int secondes = duration % 60;
     GtkWidget *durationLabel = GTK_WIDGET(gtk_builder_get_object(globalBuilder, "timerSession"));
     gtk_label_set_text(GTK_LABEL(durationLabel), g_strdup_printf("%dh %dmin %ds", hours, minutes, secondes));
 }
