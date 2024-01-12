@@ -740,6 +740,8 @@ void activate(GtkApplication *app, gpointer user_data) {
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
     gtk_window_set_icon(GTK_WINDOW(window), icon);
 
+
+
     if(fin == 1){
         g_signal_connect(window, "destroy", G_CALLBACK(on_stop_session_clicked), NULL);
     }
