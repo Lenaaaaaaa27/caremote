@@ -141,12 +141,19 @@ void on_edit_profile_clicked(GtkWidget *widget, gpointer user_data){
     const gchar *username = gtk_entry_get_text(GTK_ENTRY(entry));
     char *username_copy = g_strdup(username);
 
-    update_profile(current_profile_id, username_copy);
-    g_free(username_copy);
-    update_current_profile_label();
-    GtkWidget *editProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "editProfile"));
-    gtk_widget_destroy(editProfileWindow);
-    free(editUsername);
+    if (strlen(username_copy) == 0) {
+        GtkWidget *errorLabel = GTK_WIDGET(gtk_builder_get_object(editUsername->builder, "errorLabel"));
+        gtk_label_set_text(GTK_LABEL(errorLabel), "You must give a name to your current profile");
+        gtk_widget_show(errorLabel);
+    }else{
+        update_profile(current_profile_id, username_copy);
+        g_free(username_copy);
+        update_current_profile_label();
+        GtkWidget *editProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "editProfile"));
+        gtk_widget_destroy(editProfileWindow);
+        free(editUsername);
+    }
+
 }
 
 void on_add_profile_activate(GtkWidget *widget, gpointer user_data) {
@@ -176,12 +183,19 @@ void on_create_profile_clicked(GtkWidget *widget, gpointer user_data) {
     const gchar *username = gtk_entry_get_text(GTK_ENTRY(entry));
     char *username_copy = g_strdup(username);
 
-    create_profile(username_copy);
-    g_free(username_copy);
+    if (strlen(username_copy) == 0) {
+        GtkWidget *errorLabel = GTK_WIDGET(gtk_builder_get_object(getUsername->builder, "errorLabel"));
+        gtk_label_set_text(GTK_LABEL(errorLabel), "You must give a name to your new profile");
+        gtk_widget_show(errorLabel);
+    }else{
+        create_profile(username_copy);
+        g_free(username_copy);
 
-    GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "addProfile"));
-    gtk_widget_destroy(addProfileWindow);
-    free(getUsername);
+        GtkWidget *addProfileWindow = GTK_WIDGET(gtk_builder_get_object(builder, "addProfile"));
+        gtk_widget_destroy(addProfileWindow);
+        free(getUsername);
+    }
+
 }
 
 void on_delete_it_activate(GtkMenuItem *menu_item, gpointer user_data) {
@@ -256,18 +270,24 @@ void on_edit_session_button_clicked(GtkButton *button, gpointer user_data) {
     GtkBuilder *builder = getsession->builder;
     gint session_id = getsession->id_session;
     Session session = get_session(session_id);
-
+    GtkWidget *sessionWindow = GTK_WIDGET(gtk_builder_get_object(builder, "sessionWindow"));
     GtkEntry *sessionNameInput = GTK_ENTRY(gtk_builder_get_object(builder, "sessionName"));
 
-    const gchar *new_session_name = gtk_entry_get_text(GTK_ENTRY(sessionNameInput));
-    g_strlcpy(session.name, new_session_name, sizeof(session.name));
-    update_session(session);
-    refresh_sessions_view(current_profile_id);
+    const gchar *new_session_name = gtk_entry_get_text(sessionNameInput);
 
-    GtkWidget *sessionWindow = GTK_WIDGET(gtk_builder_get_object(builder, "sessionWindow"));
-    gtk_widget_destroy(sessionWindow);
 
-    free(getsession);
+   if (strlen(new_session_name) == 0) {
+        GtkWidget *errorLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "errorLabel"));
+        gtk_label_set_text(GTK_LABEL(errorLabel), "You must give a name to your session");
+        gtk_widget_show(errorLabel);
+    }else{
+       g_strlcpy(session.name, new_session_name, sizeof(session.name));
+       update_session(session);
+       refresh_sessions_view(current_profile_id);
+       gtk_widget_destroy(sessionWindow);
+       free(getsession);
+   }
+
 }
 
 void refresh_sessions_view(int profile_id) {
@@ -403,10 +423,19 @@ void arrayConfigurations(int profile_id) {
     gtk_widget_show_all(viewportconfiguration);
     free(configurations);
 }
+void show_error_message(GtkWidget *errorLabel, const gchar *message) {
+    gtk_label_set_text(GTK_LABEL(errorLabel), message);
+    if (!gtk_widget_is_visible(errorLabel)) {
+        gtk_widget_show(errorLabel);
+    }
+}
 
 void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data) {
-    GetSession *getConfig = (GetSession *)user_data;
+    GetSession *getConfig = (GetSession *) user_data;
     GtkBuilder *builder = getConfig->builder;
+    boolean conditions = TRUE;
+    GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(builder, "configWindow"));
+    GtkWidget *errorLabel = GTK_WIDGET(gtk_builder_get_object(builder, "errorLabel"));
 
     GtkWidget *getNameConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getNameConfig"));
     GtkWidget *getMoveForwardConfig = GTK_WIDGET(gtk_builder_get_object(builder, "getMoveForwardConfig"));
@@ -424,45 +453,54 @@ void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data)
     const gchar *changeStep = gtk_entry_get_text(GTK_ENTRY(getChangeStepConfig));
     const gchar *speedStep = gtk_entry_get_text(GTK_ENTRY(getSpeedStep));
 
-    Configuration editedConfiguration;
+    if (strlen(name) == 0 || strlen(moveForward) == 0 || strlen(moveBackward) == 0 ||
+    strlen(moveLeft) == 0 || strlen(moveRight) == 0 || strlen(changeStep) == 0 ||
+    strlen(speedStep) == 0 || atoi(speedStep) < 0 || atoi(speedStep) > 100)
+        conditions = FALSE;
 
-    strncpy(editedConfiguration.name, name, sizeof(editedConfiguration.name) - 1);
-    editedConfiguration.name[sizeof(editedConfiguration.name) - 1] = '\0';
 
-    if (strlen(moveForward) > 0)
-        editedConfiguration.move_forward = moveForward[0];
-    else
-        editedConfiguration.move_forward = 'z';
+    if(conditions){
+        Configuration editedConfiguration;
 
-    if (strlen(moveBackward) > 0)
-        editedConfiguration.move_backward = moveBackward[0];
-    else
-        editedConfiguration.move_backward = 's';
+        strncpy(editedConfiguration.name, name, sizeof(editedConfiguration.name) - 1);
+        editedConfiguration.name[sizeof(editedConfiguration.name) - 1] = '\0';
 
-    if (strlen(moveLeft) > 0)
-        editedConfiguration.move_left = moveLeft[0];
-    else
-        editedConfiguration.move_left = 'q';
+        if (strlen(moveForward) > 0)
+            editedConfiguration.move_forward = moveForward[0];
+        else
+            editedConfiguration.move_forward = 'z';
 
-    if (strlen(moveRight) > 0)
-        editedConfiguration.move_right = moveRight[0];
-    else
-        editedConfiguration.move_right = 'd';
+        if (strlen(moveBackward) > 0)
+            editedConfiguration.move_backward = moveBackward[0];
+        else
+            editedConfiguration.move_backward = 's';
 
-    if (strlen(changeStep) > 0)
-        editedConfiguration.change_step_button = changeStep[0];
-    else
-        editedConfiguration.change_step_button = '&';
+        if (strlen(moveLeft) > 0)
+            editedConfiguration.move_left = moveLeft[0];
+        else
+            editedConfiguration.move_left = 'q';
 
-    editedConfiguration.id = getConfig->id_session;
-    editedConfiguration.speed_step = atoi(speedStep);
+        if (strlen(moveRight) > 0)
+            editedConfiguration.move_right = moveRight[0];
+        else
+            editedConfiguration.move_right = 'd';
 
-    update_configuration(editedConfiguration);
-    refresh_configurations_view(current_profile_id);
-    updateChosenConfiguration();
-    GtkWidget *configWindow = GTK_WIDGET(gtk_builder_get_object(builder, "configWindow"));
-    gtk_widget_destroy(configWindow);
-    free(getConfig);
+        if (strlen(changeStep) > 0)
+            editedConfiguration.change_step_button = changeStep[0];
+        else
+            editedConfiguration.change_step_button = '&';
+
+        editedConfiguration.id = getConfig->id_session;
+        editedConfiguration.speed_step = atoi(speedStep);
+
+        update_configuration(editedConfiguration);
+        refresh_configurations_view(current_profile_id);
+        updateChosenConfiguration();
+        gtk_widget_destroy(configWindow);
+        free(getConfig);
+    }else{
+        gtk_label_set_text(GTK_LABEL(errorLabel), "The fields are not filled in correctly");
+    }
 }
 
 void on_delete_configuration_button_clicked(GtkButton *button, gpointer user_data) {

@@ -115,8 +115,6 @@ boolean does_configuration_exist_with_id(int id_configuration) {
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
-    // Retourne true si la configuration a été trouvée, false sinon
     return (result == SQLITE_ROW);
 }
 

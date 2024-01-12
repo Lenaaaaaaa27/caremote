@@ -112,6 +112,8 @@
         </child>
         <child>
           <object class="GtkLabel">
+            <property name="width-request">56</property>
+            <property name="height-request">17</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">Move left :</property>
@@ -270,6 +272,24 @@
           <packing>
             <property name="x">377</property>
             <property name="y">12</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="errorLabel">
+            <property name="width-request">207</property>
+            <property name="height-request">20</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <attributes>
+              <attribute name="size" value="10240"/>
+            </attributes>
+            <style>
+              <class name="errorLabel"/>
+            </style>
+          </object>
+          <packing>
+            <property name="x">123</property>
+            <property name="y">46</property>
           </packing>
         </child>
       </object>
