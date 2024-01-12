@@ -587,6 +587,7 @@ void update_duration_label(int duration){
     gtk_label_set_text(GTK_LABEL(durationLabel), g_strdup_printf("%dh %dmin %ds", hours, minutes, secondes));
 }
 
+
 void* control_thread_function(void* data) {
     ControlData* control_data = (ControlData*)data;
     Configuration* configuration = &(control_data->configuration);
@@ -604,8 +605,6 @@ void on_stop_session_clicked(GtkButton *button, gpointer user_data){
     fin = 0;
     pthread_mutex_unlock(&fin_mutex);
     closeConnexion(clientSocket);
-    Sleep(2000);
-
 }
 
 void on_ok_button_clicked(GtkButton *button, gpointer user_data){

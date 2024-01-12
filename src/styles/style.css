@@ -1,6 +1,6 @@
 button {
     margin: 5px;
-    border-radius: 20px;
+    border-radius : 16px;
     font-size: 24px;
     color:#fff;
     background-color: #282A36;
@@ -18,8 +18,14 @@ label{
 }
 
 .cadre{
-    background-color: #282A36;
-    border-radius : 20px;
+    background-color: #414450;
+    border-radius : 16px;
+    margin:20px;
+    box-shadow: 6px 7px 7px 4px rgba(0,0,0,0.1);
+}
+
+.cadre label{
+    color: white;
 }
 
 .editbutton, .deletebutton{
@@ -28,12 +34,18 @@ label{
 
 .startsession{
     background: #3e9849;
+    box-shadow: 6px 7px 7px 4px rgba(0,0,0,0.1);
 }
 .startsession:hover{
     background: #306e37;
 }
+
+.startsession:disabled{
+    background: #414450;
+}
+
 .fixed2, .window {
-    background-color: #191A23;
+    background-color: #282A36;
 }
 .scrolledWindow{
     border-style: none; /* Supprime la bordure */
@@ -42,18 +54,34 @@ label{
 
 .stopsession{
     background: #ce3838;
+    box-shadow: 6px 7px 7px 4px rgba(0,0,0,0.1);
 }
-.stopsession:focus-visible{
-    background-color: #dcd6d6;
-}
+
 .stopsession:hover{
-    background: #b02d2d;
+    background: #8d2424;
 }
+
+.stopsession:disabled {
+    background: #414450;
+}
+
 .speedProgress {
     min-height: 20px;
     color: #b02d2d;
 }
 
-.warningSessionName{
-    color: rgba(255, 198, 0, 1);
+#sessionFrame{
+    background-color: #414450;
+    margin:20px;
+    border-radius : 16px;
+    box-shadow: 6px 7px 7px 4px rgba(0,0,0,0.1);
 }
+
+#sessionFrame label{
+    color:white;
+}
+
+#sessionFrame button{
+    background-color: #9388A2;
+}
+
