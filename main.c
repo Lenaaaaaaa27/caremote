@@ -8,6 +8,8 @@ void* gtk_thread_function(void* data) {
     if(verification_database()){
         create_database();
     }
+    Setting setting;
+    //setConfig("config.txt",&setting);
 
     app = gtk_application_new("caremote.first.version", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
