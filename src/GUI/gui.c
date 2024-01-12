@@ -5,6 +5,7 @@ static GtkBuilder *globalBuilder = NULL;
 int clientSocket;
 int fin = 0;
 pthread_mutex_t fin_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 static int current_profile_id = 1;
 int chosen_config_id = -1;
 
@@ -180,7 +181,7 @@ void on_delete_it_activate(GtkMenuItem *menu_item, gpointer user_data) {
 }
 
 void on_session_button_clicked(GtkButton *button, gpointer user_data) {
-
+    char *configName;
     GetSession *getsession = (GetSession *)malloc(sizeof(GetSession));
     getsession->builder = gtk_builder_new_from_file("../src/GUI/session.glade");
     GtkWidget *sessionWindow = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionWindow"));
@@ -189,7 +190,12 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
 
     getsession->id_session = session_id;
     Session session = get_session(session_id);
-    Configuration config = get_configuration(session.id_configuration);
+    if(does_configuration_exist_with_id(session.id_configuration)){
+        Configuration config = get_configuration(session.id_configuration);
+        configName = config.name;
+    }else{
+        configName = "Deleted configuration";
+    }
 
     GtkWidget *sessionNameInput = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionName"));
     GtkWidget *sessionDurationLabel = GTK_WIDGET(gtk_builder_get_object(getsession->builder, "sessionDuration"));
@@ -206,7 +212,7 @@ void on_session_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_label_set_text(GTK_LABEL(sessionDistanceLabel), g_strdup_printf("%d", session.distance));
     gtk_label_set_text(GTK_LABEL(sessionAverageSpeedLabel), g_strdup_printf("%.2lf",session.average_speed));
     gtk_label_set_text(GTK_LABEL(sessionTimeStartLabel), session.time_start);
-    gtk_label_set_text(GTK_LABEL(sessionConfigurationLabel), config.name);
+    gtk_label_set_text(GTK_LABEL(sessionConfigurationLabel), configName);
 
 
     g_signal_connect(editSessionButton, "clicked", G_CALLBACK(on_edit_session_button_clicked), getsession);

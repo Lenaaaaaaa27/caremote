@@ -96,6 +96,30 @@ Configuration * get_configurations(int id_profile){
     return array;
 }
 
+boolean does_configuration_exist_with_id(int id_configuration) {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+        error_content(101);
+
+    char *req = "SELECT 1 FROM configuration WHERE id = ?";
+    if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
+        sqlite3_close(db);
+        error_content(101);
+    }
+
+    sqlite3_bind_int(stmt, 1, id_configuration);
+
+    int result = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    // Retourne true si la configuration a été trouvée, false sinon
+    return (result == SQLITE_ROW);
+}
+
 Configuration get_configuration(int id_configuration){
     sqlite3 *db;
     sqlite3_stmt *stmt;
