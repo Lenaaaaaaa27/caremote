@@ -7,6 +7,7 @@
 // To create the database
 int create_database() {
     sqlite3 *db;
+    Configuration config;
     char *error_message = 0;
 
     if (sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
@@ -67,8 +68,17 @@ int create_database() {
 
     sqlite3_close(db);
 
+    strcpy(config.name, "New configuration");
+    config.move_forward = 'Z';
+    config.move_backward = 'S';
+    config.move_left = 'Q';
+    config.move_right = 'D';
+    config.speed_step = 50;
+    config.change_step_button = 'A';
+    config.id_profile = 1;
+
     create_profile("Default User");
-    create_configuration(1);
+    create_configuration(&config);
     return 0;
 }
 

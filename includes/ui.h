@@ -38,4 +38,9 @@ void update_duration_label(int duration);
 void errorPopUp(char *errorContent);
 void on_ok_button_clicked(GtkButton *button, gpointer user_data);
 gboolean update_labels_callback(gpointer user_data);
+
+//exportation/import
+void on_export_configuration_activate(GtkWidget *widget, gpointer user_data);
+void on_export_sessions_activate(GtkWidget *widget, gpointer user_data);
+void on_import_configuration_activate(GtkWidget *widget, gpointer user_data);
 #endif //CAREMOTE_UI_H

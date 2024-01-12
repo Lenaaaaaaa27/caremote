@@ -4,7 +4,7 @@
 //
 #include"../../includes/define.h"
 
-int create_configuration(int id_profile){
+int create_configuration(Configuration *configuration){
 
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -26,14 +26,14 @@ int create_configuration(int id_profile){
         error_content(101);
     }
 
-    sqlite3_bind_text(stmt, 1, "Nouvelle configuration", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, "Z", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, "S", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, "Q", -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, "D", -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 6, 50);
-    sqlite3_bind_text(stmt, 7, "A", -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 8, id_profile);
+    sqlite3_bind_text(stmt, 1, configuration->name, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, &configuration->move_forward, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, &configuration->move_backward, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, &configuration->move_left, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, &configuration->move_right, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 6, configuration->speed_step);
+    sqlite3_bind_text(stmt, 7, &configuration->change_step_button, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 8, configuration->id_profile);
 
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {

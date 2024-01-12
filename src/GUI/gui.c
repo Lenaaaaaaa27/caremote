@@ -65,6 +65,27 @@ void on_profile_menu_item_activate(GtkMenuItem *menu_item, gpointer user_data) {
     refresh_configurations_view(current_profile_id);
 }
 
+void on_export_configuration_activate(GtkWidget *widget, gpointer user_data){
+
+    if(chosen_config_id == -1){
+        errorPopUp("You have to select a configuration before exporting it !");
+        return;
+    }
+    Configuration config = get_configuration(chosen_config_id);
+    exportConfig(&config);
+}
+
+void on_export_sessions_activate(GtkWidget *widget, gpointer user_data){
+    Session *session = get_sessions_by_profile_id(current_profile_id);
+    exportSession(session);
+}
+
+void on_import_configuration_activate(GtkWidget *widget, gpointer user_data){
+
+    refresh_configurations_view(current_profile_id);
+    refresh_sessions_view(current_profile_id);
+}
+
 void on_exportations_activate(GtkWidget *widget, gpointer user_data){
     close_submenus();
     close_deleted_submenus();
@@ -78,13 +99,13 @@ void on_exportations_activate(GtkWidget *widget, gpointer user_data){
         GtkWidget *importation = gtk_menu_item_new_with_label("Import a configuration");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), importation);
         gtk_style_context_add_class(gtk_widget_get_style_context(importation), "MenuBar");
-        g_signal_connect(importation, "activate", G_CALLBACK(on_edit_profile_activate), user_data);
+        g_signal_connect(importation, "activate", G_CALLBACK(on_import_configuration_activate), user_data);
         gtk_widget_show(importation);
 
         GtkWidget *exportation = gtk_menu_item_new_with_label("Export your chosen configuration");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), exportation);
         gtk_style_context_add_class(gtk_widget_get_style_context(exportation), "MenuBar");
-        g_signal_connect(exportation, "activate", G_CALLBACK(on_add_profile_activate), NULL);
+        g_signal_connect(exportation, "activate", G_CALLBACK(on_export_configuration_activate), NULL);
         gtk_widget_show(exportation);
 
         GtkWidget *separator = gtk_separator_menu_item_new();
@@ -95,7 +116,7 @@ void on_exportations_activate(GtkWidget *widget, gpointer user_data){
         GtkWidget *exportationSession = gtk_menu_item_new_with_label("Export your sessions");
         gtk_menu_shell_append(GTK_MENU_SHELL(globalExportSubmenu), exportationSession);
         gtk_style_context_add_class(gtk_widget_get_style_context(exportationSession), "MenuBar");
-        g_signal_connect(exportationSession, "activate", G_CALLBACK(on_add_profile_activate), NULL);
+        g_signal_connect(exportationSession, "activate", G_CALLBACK(on_export_sessions_activate), NULL);
         gtk_widget_show(exportationSession);
 
         is_export_submenu_created = TRUE;
@@ -106,6 +127,8 @@ void on_exportations_activate(GtkWidget *widget, gpointer user_data){
 void on_delete_profile_activate(GtkWidget *widget, gpointer user_data){
     close_submenus();
     close_deleted_submenus();
+    close_exportation_submenus();
+
     Profile *profiles = get_profiles();
 
     if (!is_delete_profile_submenu_created) {
@@ -132,6 +155,8 @@ void on_delete_profile_activate(GtkWidget *widget, gpointer user_data){
 void on_profile_activate(GtkWidget *widget, gpointer user_data) {
     close_submenus();
     close_deleted_submenus();
+    close_exportation_submenus();
+
     Profile *profiles = get_profiles();
 
     if (!is_profile_submenu_created) {
@@ -628,7 +653,18 @@ void on_chosen_configuration_button_clicked(GtkButton *button, gpointer user_dat
 }
 
 void on_create_config_button_clicked(GtkButton *button, gpointer user_data) {
-    create_configuration(current_profile_id);
+    Configuration config;
+
+    strcpy(config.name, "New configuration");
+    config.move_forward = 'Z';
+    config.move_backward = 'S';
+    config.move_left = 'Q';
+    config.move_right = 'D';
+    config.speed_step = 50;
+    config.change_step_button = 'A';
+    config.id_profile = current_profile_id;
+
+    create_configuration(&config);
     refresh_configurations_view(current_profile_id);
 }
 

@@ -5,6 +5,9 @@
 
 int exportConfig(Configuration *configuration) {
 
+    char currentDir[MAX_PATH];
+    getcwd(currentDir, sizeof(currentDir));
+
     cJSON *root = cJSON_CreateObject();
     cJSON_AddItemToObject(root, "name", cJSON_CreateString(configuration->name));
     cJSON_AddItemToObject(root, "move_forward", cJSON_CreateNumber(configuration->move_forward));
@@ -15,7 +18,6 @@ int exportConfig(Configuration *configuration) {
     cJSON_AddItemToObject(root, "change_step_button", cJSON_CreateNumber(configuration->change_step_button));
     char *jsonString = cJSON_Print(root);
 
-    // Initialiser la structure OPENFILENAME
     OPENFILENAME ofn;
     char cheminFichier[MAX_PATH] = "configuration.json";
 
@@ -28,9 +30,8 @@ int exportConfig(Configuration *configuration) {
     ofn.lpstrTitle = "Enregistrer le fichier JSON";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
-    // Afficher la boîte de dialogue de sauvegarde de fichier
     if (GetSaveFileName(&ofn) != 0) {
-        // Enregistrer la chaîne JSON dans le fichier spécifié par l'utilisateur
+
         FILE *fichier = fopen(cheminFichier, "w");
         if (fichier) {
             fprintf(fichier, "%s", jsonString);
@@ -43,6 +44,8 @@ int exportConfig(Configuration *configuration) {
         printf("Annulation de l'enregistrement du fichier.\n");
     }
 
+    chdir(currentDir);
+
     cJSON_Delete(root);
     free(jsonString);
 
@@ -50,6 +53,10 @@ int exportConfig(Configuration *configuration) {
 }
 
 int exportSession(Session *session) {
+
+    char currentDir[MAX_PATH];
+    getcwd(currentDir, sizeof(currentDir));
+
     char configName[30];
     if(does_configuration_exist_with_id(session->id_configuration)) {
         strcpy(configName,get_configuration(session->id_configuration).name);
@@ -93,6 +100,8 @@ int exportSession(Session *session) {
         } else
             error_content(300);
     }
+
+    chdir(currentDir);
 
     cJSON_Delete(root);
     free(jsonString);

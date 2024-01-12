@@ -45,7 +45,7 @@ Profile *get_profiles();
 Profile get_profile(int id_profile);
 int update_profile(int id, char username[30]);
 int delete_profile(int id);
-int create_configuration(int id_profile);
+int create_configuration(Configuration *configuration);
 boolean does_configuration_exist_with_id(int id_configuration);
 Configuration *get_configurations(int id_profile);
 Configuration get_configuration(int id_configuration);
