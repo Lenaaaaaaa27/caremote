@@ -51,5 +51,5 @@ typedef struct {
     int defaultConfigId;
     int maxSessionTime;
     char * profileUsername;
-    Configuration *configuration;
+    Configuration configuration;
 } Setting;

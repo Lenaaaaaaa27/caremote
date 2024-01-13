@@ -20,12 +20,6 @@ static gboolean is_export_submenu_created = FALSE;
 
 Setting settings;
 
-static void close_submenus() {
-    if (is_profile_submenu_created) {
-        gtk_widget_destroy(globalProfileSubmenu);
-        is_profile_submenu_created = FALSE;
-    }
-}
 
 static void close_deleted_submenus() {
     if (is_delete_profile_submenu_created) {
@@ -38,6 +32,13 @@ static void close_exportation_submenus(){
     if (is_export_submenu_created) {
         gtk_widget_destroy(globalExportSubmenu);
         is_export_submenu_created = FALSE;
+    }
+}
+
+void close_submenus() {
+    if (is_profile_submenu_created) {
+        gtk_widget_destroy(globalProfileSubmenu);
+        is_profile_submenu_created = FALSE;
     }
 }
 
@@ -657,12 +658,12 @@ void on_chosen_configuration_button_clicked(GtkButton *button, gpointer user_dat
 void on_create_config_button_clicked(GtkButton *button, gpointer user_data) {
     Configuration config;
 
-    strcpy(config.name, "New configuration");
+    strcpy(config.name, settings.configuration.name);
     config.move_forward = 'Z';
     config.move_backward = 'S';
     config.move_left = 'Q';
     config.move_right = 'D';
-    config.speed_step = 50;
+    config.speed_step = settings.configuration.speed_step;
     config.change_step_button = 'A';
     config.id_profile = current_profile_id;
 

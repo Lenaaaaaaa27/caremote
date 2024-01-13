@@ -27,12 +27,12 @@ int create_configuration(Configuration *configuration){
     }
 
     sqlite3_bind_text(stmt, 1, configuration->name, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, &configuration->move_forward, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, &configuration->move_backward, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, &configuration->move_left, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, &configuration->move_right, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, configuration->move_forward);
+    sqlite3_bind_int(stmt, 3, configuration->move_backward);
+    sqlite3_bind_int(stmt, 4, configuration->move_left);
+    sqlite3_bind_int(stmt, 5, configuration->move_right);
     sqlite3_bind_int(stmt, 6, configuration->speed_step);
-    sqlite3_bind_text(stmt, 7, &configuration->change_step_button, -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 7, configuration->change_step_button);
     sqlite3_bind_int(stmt, 8, configuration->id_profile);
 
 

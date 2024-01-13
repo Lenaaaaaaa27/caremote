@@ -1,63 +1,76 @@
 //
 // Created by arthur on 11/01/2024.
 //
-#define TAILLE_MAX_LIGNE 256
+#define MAX_SIZE_LINE 256
 
 #include "../../includes/define.h"
 
 
-int setConfig(const char *nomFichier, Setting *setting) {
-    FILE *fichier = fopen(nomFichier, "r");
+int setConfig(const char *myfile, Setting *setting) {
+    FILE *file = fopen(myfile, "r");
 
-    if (fichier == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
+    if (file == NULL) {
+        perror("file did't open correctly");
         exit(EXIT_FAILURE);
     }
 
-    char ligne[TAILLE_MAX_LIGNE];
+    char line[MAX_SIZE_LINE];
     char *endptr;
 
-    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
-        char *token = strtok(ligne, ":");
-        char *valeur = strtok(NULL, "\n");
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char *token = strtok(line, ":");
+        char *value = strtok(NULL, "\n");
 
 
-        if (token != NULL && valeur != NULL) {
+        if (token != NULL && value != NULL) {
             if (strcmp(token, "ForceFeedback") == 0) {
-                setting->forceFeedback = strtol(valeur, &endptr, 10);
+                setting->forceFeedback = strtol(value, &endptr, 10);
                 if (*endptr != '\0') {
                     return EXIT_FAILURE;
                 }
             } else if (strcmp(token, "CarName") == 0) {
-                setting->carName = (char *)malloc(strlen(valeur) + 1);
+                setting->carName = (char *)malloc(strlen(value) + 1);
                 if (setting->carName == NULL) {
                     return EXIT_FAILURE;
                 }
-                strcpy(setting->carName, valeur);
+                strcpy(setting->carName, value);
             } else if (strcmp(token, "DefaultUserId") == 0) {
-                setting->defaultUserId = strtol(valeur, &endptr, 10);
+                setting->defaultUserId = strtol(value, &endptr, 10);
                 if (*endptr != '\0') {
                     return EXIT_FAILURE;
                 }
             } else if (strcmp(token, "DefaultConfigId") == 0) {
-                setting->defaultConfigId = strtol(valeur, &endptr, 10);
+                setting->defaultConfigId = strtol(value, &endptr, 10);
                 if (*endptr != '\0') {
                     return EXIT_FAILURE;
                 }
             } else if (strcmp(token, "MaxSessionTime") == 0) {
-                setting->maxSessionTime = strtol(valeur, &endptr, 10);
+                setting->maxSessionTime = strtol(value, &endptr, 10);
                 if (*endptr != '\0') {
                     return EXIT_FAILURE;
                 }
             } else if (strcmp(token, "ProfileUsername") == 0) {
-                setting->profileUsername = (char *)malloc(strlen(valeur) + 1);
+                setting->profileUsername = (char *)malloc(strlen(value) + 1);
                 if (setting->profileUsername == NULL) {
                     return EXIT_FAILURE;
                 }
-                strcpy(setting->profileUsername, valeur);
+                strcpy(setting->profileUsername, value);
+            } else if (strcmp(token, "configurationName") == 0) {
+                char *name = malloc(30 *sizeof(char));
+                if (name == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(name, value);
+                strcpy(setting->configuration.name, name);
+                free(name);
+            } else if (strcmp(token, "configurationSpeedStep") == 0) {
+                setting->configuration.speed_step = strtol(value, &endptr, 10);
+                if (*endptr != '\0') {
+                    return EXIT_FAILURE;
+                }
             }
         }
     }
-    fclose(fichier);
+    fclose(file);
     return EXIT_SUCCESS;
 }

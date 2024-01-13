@@ -68,12 +68,12 @@ int create_database(Setting *settings) {
 
     sqlite3_close(db);
 
-    strcpy(config.name, "New configuration");
-    config.move_forward = 'Z';
+    strcpy(config.name, settings->configuration.name);
+    config.move_forward = settings->configuration.move_forward;
     config.move_backward = 'S';
     config.move_left = 'Q';
     config.move_right = 'D';
-    config.speed_step = 50;
+    config.speed_step = settings->configuration.speed_step;
     config.change_step_button = 'A';
     config.id_profile = 1;
 
