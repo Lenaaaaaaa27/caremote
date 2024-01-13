@@ -4,7 +4,6 @@
 void* gtk_thread_function(void* data) {
     GtkApplication *app;
     Setting setting;
-    int status;
 
     setConfig("config.txt", &setting);
 
@@ -14,7 +13,7 @@ void* gtk_thread_function(void* data) {
 
     app = gtk_application_new("caremote.first.version", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
-    status = g_application_run(G_APPLICATION(app), 0, NULL);
+    g_application_run(G_APPLICATION(app), 0, NULL);
     g_object_unref(app);
 
     return 0;

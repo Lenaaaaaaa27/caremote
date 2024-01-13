@@ -626,8 +626,6 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     GtkWidget *chosenConfigurationButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "chosenConfigurationButton"));
 
     gtk_entry_set_text(GTK_ENTRY(getNameConfig), configuration.name);
-    char a = 65;
-    printf("%c", a);
     gtk_entry_set_text(GTK_ENTRY(getMoveForwardConfig), g_strdup_printf("%c", configuration.move_forward));
     gtk_entry_set_text(GTK_ENTRY(getMoveBackwardConfig), g_strdup_printf("%c", configuration.move_backward));
     gtk_entry_set_text(GTK_ENTRY(getMoveleftConfig), g_strdup_printf("%c", configuration.move_left));
