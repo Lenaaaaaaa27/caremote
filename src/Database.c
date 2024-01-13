@@ -70,11 +70,11 @@ int create_database(Setting *settings) {
 
     strcpy(config.name, settings->configuration.name);
     config.move_forward = settings->configuration.move_forward;
-    config.move_backward = 'S';
-    config.move_left = 'Q';
-    config.move_right = 'D';
+    config.move_backward = settings->configuration.move_backward;
+    config.move_left = settings->configuration.move_left;
+    config.move_right = settings->configuration.move_right;
     config.speed_step = settings->configuration.speed_step;
-    config.change_step_button = 'A';
+    config.change_step_button = settings->configuration.change_step_button;
     config.id_profile = 1;
 
     create_profile(settings->profileUsername);

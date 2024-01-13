@@ -68,6 +68,56 @@ int setConfig(const char *myfile, Setting *setting) {
                 if (*endptr != '\0') {
                     return EXIT_FAILURE;
                 }
+            } else if (strcmp(token, "configurationMoveForward") == 0) {
+                char a;
+                char *name = (char *)malloc(strlen(value) + 1);
+                if (name == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(name, value);
+                a = value[0];
+                setting->configuration.move_forward = a;
+                free(name);
+            } else if (strcmp(token, "configurationMoveBackward") == 0) {
+                char a;
+                char *name = (char *)malloc(strlen(value) + 1);
+                if (name == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(name, value);
+                a = value[0];
+                setting->configuration.move_backward = a;
+                free(name);
+            } else if (strcmp(token, "configurationMoveLeft") == 0) {
+                char a;
+                char *name = (char *)malloc(strlen(value) + 1);
+                if (name == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(name, value);
+                a = value[0];
+                setting->configuration.move_left = a;
+                free(name);
+            } else if (strcmp(token, "configurationMoveRight") == 0) {
+                char a;
+                char *name = (char *)malloc(strlen(value) + 1);
+                if (name == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(name, value);
+                a = value[0];
+                setting->configuration.move_right = a;
+                free(name);
+            } else if (strcmp(token, "configurationChangeStepButton") == 0) {
+                char a;
+                char *name = (char *)malloc(strlen(value) + 1);
+                if (name == NULL) {
+                    return EXIT_FAILURE;
+                }
+                strcpy(name, value);
+                a = value[0];
+                setting->configuration.change_step_button = a;
+                free(name);
             }
         }
     }

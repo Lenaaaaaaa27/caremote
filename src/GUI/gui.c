@@ -626,6 +626,8 @@ void on_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     GtkWidget *chosenConfigurationButton = GTK_WIDGET(gtk_builder_get_object(getConfig->builder, "chosenConfigurationButton"));
 
     gtk_entry_set_text(GTK_ENTRY(getNameConfig), configuration.name);
+    char a = 65;
+    printf("%c", a);
     gtk_entry_set_text(GTK_ENTRY(getMoveForwardConfig), g_strdup_printf("%c", configuration.move_forward));
     gtk_entry_set_text(GTK_ENTRY(getMoveBackwardConfig), g_strdup_printf("%c", configuration.move_backward));
     gtk_entry_set_text(GTK_ENTRY(getMoveleftConfig), g_strdup_printf("%c", configuration.move_left));
@@ -659,12 +661,12 @@ void on_create_config_button_clicked(GtkButton *button, gpointer user_data) {
     Configuration config;
 
     strcpy(config.name, settings.configuration.name);
-    config.move_forward = 'Z';
-    config.move_backward = 'S';
-    config.move_left = 'Q';
-    config.move_right = 'D';
+    config.move_forward = settings.configuration.move_forward;
+    config.move_backward = settings.configuration.move_backward;
+    config.move_left = settings.configuration.move_left;
+    config.move_right = settings.configuration.move_right;
     config.speed_step = settings.configuration.speed_step;
-    config.change_step_button = 'A';
+    config.change_step_button = settings.configuration.change_step_button;
     config.id_profile = current_profile_id;
 
     create_configuration(&config);
