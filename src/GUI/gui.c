@@ -82,6 +82,8 @@ void on_export_sessions_activate(GtkWidget *widget, gpointer user_data){
 
 void on_import_configuration_activate(GtkWidget *widget, gpointer user_data){
 
+    g_print("\n%d", importsConfig(current_profile_id));
+
     refresh_configurations_view(current_profile_id);
     refresh_sessions_view(current_profile_id);
 }

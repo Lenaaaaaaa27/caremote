@@ -25,6 +25,7 @@ add_executable(caremote main.c
         src/Database.c
         src/files/config.c
         src/files/exports.c
+        src/files/imports.c
 )
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 

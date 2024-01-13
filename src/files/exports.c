@@ -36,12 +36,12 @@ int exportConfig(Configuration *configuration) {
         if (fichier) {
             fprintf(fichier, "%s", jsonString);
             fclose(fichier);
-            printf("Fichier enregistré avec succès.\n");
         } else {
-            printf("Erreur lors de l'ouverture du fichier.\n");
+            chdir(currentDir);
+            cJSON_Delete(root);
+            free(jsonString);
+            return EXIT_FAILURE;
         }
-    } else {
-        printf("Annulation de l'enregistrement du fichier.\n");
     }
 
     chdir(currentDir);
@@ -49,7 +49,7 @@ int exportConfig(Configuration *configuration) {
     cJSON_Delete(root);
     free(jsonString);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 int exportSession(Session *session) {
