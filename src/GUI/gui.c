@@ -76,8 +76,10 @@ void on_export_configuration_activate(GtkWidget *widget, gpointer user_data){
 }
 
 void on_export_sessions_activate(GtkWidget *widget, gpointer user_data){
-    Session *session = get_sessions_by_profile_id(current_profile_id);
-    exportSession(session);
+    Session *sessions = get_sessions_by_profile_id(current_profile_id);
+    int count;
+    for (count = 0; sessions[count].id != -1; ++count);
+    exportSessions(sessions, count);
 }
 
 void on_import_configuration_activate(GtkWidget *widget, gpointer user_data){

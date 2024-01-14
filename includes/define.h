@@ -60,7 +60,7 @@ void error_content(int);
 
 int setConfig(const char *,Setting *);
 int exportConfig(Configuration *);
-int exportSession(Session *);
+int exportSessions(Session[],int);
 char *intToDate(int);
 int importsConfig(int);
 int extractIntValue(cJSON *, const char *, int *);
