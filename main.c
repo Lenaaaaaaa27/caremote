@@ -1,11 +1,9 @@
 #include "includes/define.h"
 
+Setting setting;
 
 void* gtk_thread_function(void* data) {
     GtkApplication *app;
-    Setting setting;
-
-    setConfig("config.txt", &setting);
 
     if(verification_database()){
         create_database(&setting);
@@ -20,6 +18,11 @@ void* gtk_thread_function(void* data) {
 }
 
 int main(int argc, char *argv[]) {
+
+    if (setConfig("config.txt", &setting) == EXIT_FAILURE) {
+        MessageBox(NULL, "The configuration has failed. Please check the config.txt file", "Error in configuration", MB_ICONERROR | MB_OK);
+        return EXIT_FAILURE;
+    }
 
     pthread_t gtk_thread;
     pthread_create(&gtk_thread, NULL, gtk_thread_function, NULL);

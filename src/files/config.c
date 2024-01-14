@@ -16,6 +16,7 @@ int setConfig(const char *myfile, Setting *setting) {
 
     char line[MAX_SIZE_LINE];
     char *endptr;
+    char letter;
 
     while (fgets(line, sizeof(line), file) != NULL) {
         char *token = strtok(line, ":");
@@ -69,55 +70,30 @@ int setConfig(const char *myfile, Setting *setting) {
                     return EXIT_FAILURE;
                 }
             } else if (strcmp(token, "configurationMoveForward") == 0) {
-                char a;
-                char *name = (char *)malloc(strlen(value) + 1);
-                if (name == NULL) {
+                letter = value[0];
+                if (!isalpha(letter) || letter == '\0')
                     return EXIT_FAILURE;
-                }
-                strcpy(name, value);
-                a = value[0];
-                setting->configuration.move_forward = a;
-                free(name);
+                setting->configuration.move_forward = letter;
             } else if (strcmp(token, "configurationMoveBackward") == 0) {
-                char a;
-                char *name = (char *)malloc(strlen(value) + 1);
-                if (name == NULL) {
+                letter = value[0];
+                if (!isalpha(letter))
                     return EXIT_FAILURE;
-                }
-                strcpy(name, value);
-                a = value[0];
-                setting->configuration.move_backward = a;
-                free(name);
+                setting->configuration.move_backward = letter;
             } else if (strcmp(token, "configurationMoveLeft") == 0) {
-                char a;
-                char *name = (char *)malloc(strlen(value) + 1);
-                if (name == NULL) {
+                letter = value[0];
+                if (!isalpha(letter))
                     return EXIT_FAILURE;
-                }
-                strcpy(name, value);
-                a = value[0];
-                setting->configuration.move_left = a;
-                free(name);
+                setting->configuration.move_left = letter;
             } else if (strcmp(token, "configurationMoveRight") == 0) {
-                char a;
-                char *name = (char *)malloc(strlen(value) + 1);
-                if (name == NULL) {
+                letter = value[0];
+                if (!isalpha(letter))
                     return EXIT_FAILURE;
-                }
-                strcpy(name, value);
-                a = value[0];
-                setting->configuration.move_right = a;
-                free(name);
+                setting->configuration.move_right = letter;
             } else if (strcmp(token, "configurationChangeStepButton") == 0) {
-                char a;
-                char *name = (char *)malloc(strlen(value) + 1);
-                if (name == NULL) {
+                letter = value[0];
+                if (!isalpha(letter))
                     return EXIT_FAILURE;
-                }
-                strcpy(name, value);
-                a = value[0];
-                setting->configuration.change_step_button = a;
-                free(name);
+                setting->configuration.change_step_button = letter;
             }
         }
     }
