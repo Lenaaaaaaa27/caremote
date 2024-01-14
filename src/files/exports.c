@@ -40,6 +40,7 @@ int exportConfig(Configuration *configuration) {
             chdir(currentDir);
             cJSON_Delete(root);
             free(jsonString);
+            error_content(301);
             return EXIT_FAILURE;
         }
     }

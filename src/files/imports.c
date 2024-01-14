@@ -27,6 +27,7 @@ int importsConfig(int id) {
         if (!file) {
             MessageBox(NULL, "Failed to open file.", "Error", MB_OK | MB_ICONERROR);
             chdir(currentDir);
+            error_content(310);
             return EXIT_FAILURE;
         }
 
@@ -40,7 +41,8 @@ int importsConfig(int id) {
         if (!fileContent) {
             fclose(file);
             chdir(currentDir);
-            return 1;
+            error_content(105);
+            return EXIT_FAILURE;
         }
 
         fread(fileContent, 1, fileSize, file);
@@ -52,6 +54,7 @@ int importsConfig(int id) {
             MessageBox(NULL, "Failed to parse JSON.", "Error", MB_OK | MB_ICONERROR);
             free(fileContent);
             chdir(currentDir);
+            error_content(311);
             return EXIT_FAILURE;
         }
 
@@ -59,6 +62,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(312);
             return EXIT_FAILURE;
         }
 
@@ -66,6 +70,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(312);
             return EXIT_FAILURE;
         }
 
@@ -73,6 +78,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(314);
             return EXIT_FAILURE;
         }
 
@@ -80,6 +86,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(315);
             return EXIT_FAILURE;
         }
 
@@ -87,6 +94,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(316);
             return EXIT_FAILURE;
         }
 
@@ -94,6 +102,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(317);
             return EXIT_FAILURE;
         }
 
@@ -102,6 +111,7 @@ int importsConfig(int id) {
             cJSON_Delete(json);
             free(fileContent);
             chdir(currentDir);
+            error_content(318);
             return EXIT_FAILURE;
         }
         configuration.id_profile = id;
@@ -109,8 +119,8 @@ int importsConfig(int id) {
         cJSON_Delete(json);
         free(fileContent);
     } else {
-
         chdir(currentDir);
+        error_content(320);
         return EXIT_FAILURE;
     }
 
