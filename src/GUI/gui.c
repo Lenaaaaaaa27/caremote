@@ -72,19 +72,26 @@ void on_export_configuration_activate(GtkWidget *widget, gpointer user_data){
         return;
     }
     Configuration config = get_configuration(chosen_config_id);
-    exportConfig(&config);
+    if(exportConfig(&config) == EXIT_FAILURE){
+        errorPopUp("Failure to export configuration");
+    }
 }
 
 void on_export_sessions_activate(GtkWidget *widget, gpointer user_data){
     Session *sessions = get_sessions_by_profile_id(current_profile_id);
     int count;
     for (count = 0; sessions[count].id != -1; ++count);
-    exportSessions(sessions, count);
+    if(exportSessions(sessions, count)){
+        errorPopUp("Failure to export sessions");
+    }
 }
 
 void on_import_configuration_activate(GtkWidget *widget, gpointer user_data){
 
-    g_print("\n%d", importsConfig(current_profile_id));
+    if(importsConfig(current_profile_id)){
+        errorPopUp("Failure to import configuration");
+        return;
+    }
 
     refresh_configurations_view(current_profile_id);
     refresh_sessions_view(current_profile_id);

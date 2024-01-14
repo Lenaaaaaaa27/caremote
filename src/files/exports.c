@@ -101,6 +101,7 @@ int exportSessions(Session sessions[], int numSessions) {
             fclose(fichier);
         } else {
             error_content(300);
+            return 1;
         }
     }
 
@@ -108,7 +109,6 @@ int exportSessions(Session sessions[], int numSessions) {
 
     cJSON_Delete(sessionsArray);
     free(jsonString);
-
 
     return 0;
 }
