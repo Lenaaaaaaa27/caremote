@@ -65,15 +65,19 @@ void error_content(int code){
     }
     error_message = line_formatting(content);
     write_log(error_message);
+    free(error_message);
 }
 
 // by Arthur
 //write the formatting error message to the log file
 void write_log(const char *error_message) {
     FILE *log;
-    log = fopen("log-errors.txt","a");
-    if(log != NULL) {
-        fprintf(log,error_message);
+    log = fopen("log-errors.txt", "a");
+    if (log == NULL) {
+        log = fopen("log-errors.txt", "w");
+    }
+    if (log != NULL) {
+        fprintf(log, "%s\n", error_message);
         fclose(log);
     }
 }
