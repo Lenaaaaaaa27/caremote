@@ -1,12 +1,12 @@
 #include "includes/define.h"
 
-Setting setting;
+Setting *settings;
 
 void* gtk_thread_function(void* data) {
     GtkApplication *app;
 
     if(verification_database()){
-        create_database(&setting);
+        create_database();
     }
 
     app = gtk_application_new("caremote.first.version", G_APPLICATION_DEFAULT_FLAGS);
@@ -19,7 +19,9 @@ void* gtk_thread_function(void* data) {
 
 int main(int argc, char *argv[]) {
 
-    if (setConfig("config.txt", &setting) == EXIT_FAILURE) {
+    settings = malloc(sizeof(Setting));
+
+    if (setConfig("config.txt") == EXIT_FAILURE) {
         MessageBox(NULL, "The configuration has failed. Please check the config.txt file", "Error in configuration", MB_ICONERROR | MB_OK);
         return EXIT_FAILURE;
     }

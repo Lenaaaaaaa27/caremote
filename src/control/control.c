@@ -13,7 +13,7 @@
 #define TIME_LOOP 50
 #define VMAXPULSE ((configuration->speed_step*255)/100)
 
-int control(Configuration *configuration, int id_user, int clientSocket, Setting *setting){
+int control(Configuration *configuration, int id_user, int clientSocket){
     int axe_X = MIN_AXE_X;
     int axe_Z = AVG_AXE_Z;
     int thumbLX;
@@ -24,8 +24,8 @@ int control(Configuration *configuration, int id_user, int clientSocket, Setting
     int loop = 0;
     int pulse = 0;
     int distanceCovered = 0;
-    int forceFeedback = setting->forceFeedback;
-    int maxSessionTime = setting->maxSessionTime;
+    int forceFeedback = settings->forceFeedback;
+    int maxSessionTime = settings->maxSessionTime;
     Session session;
     time_t t;
     char buffer[256];

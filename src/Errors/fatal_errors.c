@@ -11,64 +11,92 @@
 // by Lena
 //returns the error message associated with the error set in parameter
 void error_content(int code){
-    char* content;
-    char* error_message;
+    char content[256];
+    char error_message[300];
+
     switch (code) {
         case 101 :
-            content = "Error 101 : Failure SQL\n";
+            strcpy(content, "Error 101 : Failure SQL");
             break;
         case 105 :
-            content = "Error 105 : memory allocation error\n";
+            strcpy(content, "Error 105 : memory allocation error");
             break;
         case 200 :
-            content = "Error 200 : Car connection failure\n";
+            strcpy(content, "Error 200 : Car connection failure");
             break;
         case 300 :
-            content = "Error 300 : Failure to export sessions\n";
+            strcpy(content, "Error 300 : Failure to export sessions");
             break;
         case 301 :
-            content = "Error 301 : Failure to export configuration\n";
+            strcpy(content,"Error 301 : Failure to export configuration");
             break;
         case 310 :
-            content = "Error 310 : Failed to open file for import\n";
+            strcpy(content,"Error 310 : Failed to open file for import");
             break;
         case 311 :
-            content = "Error 311 : Failed to parse JSON export\n";
+            strcpy(content,"Error 311 : Failed to parse JSON export");
             break;
         case 312 :
-            content = "Error 312 : The name attribute is invalid \n";
+            strcpy(content,"Error 312 : The name attribute is invalid ");
             break;
         case 313 :
-            content = "Error 313 : The move_forward attribute is invalid \n";
+            strcpy(content, "Error 313 : The move_forward attribute is invalid ");
             break;
         case 314 :
-            content = "Error 314 : The move_backward attribute is invalid \n";
+            strcpy(content,"Error 314 : The move_backward attribute is invalid ");
             break;
         case 315 :
-            content = "Error 315 : The move_left attribute is invalid \n";
+            strcpy(content,"Error 315 : The move_left attribute is invalid ");
             break;
         case 316 :
-            content = "Error 316 : the move_right attribute is invalid \n";
+            strcpy(content,"Error 316 : the move_right attribute is invalid ");
             break;
         case 317 :
-            content = "Error 317 : The change_step_button attribute is invalid \n";
+            strcpy(content,"Error 317 : The change_step_button attribute is invalid ");
             break;
         case 318 :
-            content = "Error 318 : The speed_step attribute is invalid \n";
+            strcpy(content,"Error 318 : The speed_step attribute is invalid ");
             break;
         case 320 :
-            content = "Error 320 : Error when opening the window  \n";
+            strcpy(content,"Error 320 : Error when opening the window  ");
             break;
-        case 500 :
-            content = "Error 500 : Failure to read config.txt\n";
+        case 400 :
+            strcpy(content,"Error 400 : Failure to read config.txt");
+            break;
+        case 401 :
+            strcpy(content,"Error 401 : ForceFeedBack hasn't the right data in config.txt");
+            break;
+        case 402 :
+            strcpy(content,"Error 402 : CarName is empty in config.txt");
+            break;
+        case 403 :
+            strcpy(content,"Error 403 : profile id in config.txt doesn't exist");
+            break;
+        case 404 :
+            strcpy(content,"Error 404 : maxSessionTime hasn't the right data in config.txt");
+            break;
+        case 405 :
+            strcpy(content,"Error 405 : profileUsername is empty in config.txt");
+            break;
+        case 406 :
+            strcpy(content, "Error 406 : configurationName is empty in config.txt");
+            break;
+        case 407 :
+            strcpy(content,"Error 407 : configurationSpeedStep hasn't the right data in config.txt");
+            break;
+        case 408 :
+            strcpy(content,"Error 408 : One or numeral configuration key(s) haven't the right data(s) in config.txt");
+            break;
+        case 500:
+            strcpy(content,"Error 500 : Connection failed");
             break;
         default:
-            content = "Error 0 : An unknown error has occurred\n";
+            strcpy(content,"Error 0 : An unknown error has occurred");
             break;
     }
-    error_message = line_formatting(content);
+
+    line_formatting(content, error_message);
     write_log(error_message);
-    free(error_message);
 }
 
 // by Arthur
@@ -87,19 +115,16 @@ void write_log(const char *error_message) {
 
 // by Arthur
 // add the current date and time to the error message and returns the string
-char * line_formatting(const char* content){
+void line_formatting(const char* content, char *line){
     time_t rawtime;
     struct tm *timeinfo;
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    char time[80];
+    char time[44];
     strftime(time, sizeof(time), "%Y-%m-%d %H:%M:%S - ", timeinfo);
 
-    strcat(time,content);
-
-    char * line = malloc(strlen(time) * sizeof(char));
-    if(line != NULL)
-        strcpy(line,time);
-    return line;
+    // Concatenate the time and content
+    strcpy(line, time);
+    strcat(line, content);
 }

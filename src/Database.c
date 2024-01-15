@@ -5,7 +5,7 @@
 #include "../../includes/define.h"
 
 // To create the database
-int create_database(Setting *settings) {
+int create_database() {
     sqlite3 *db;
     Configuration config;
     char *error_message = 0;

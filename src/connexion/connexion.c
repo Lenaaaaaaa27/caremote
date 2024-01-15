@@ -11,7 +11,7 @@
 
 #define PORT 5555
 
-int initConnexion(Setting *setting) {
+int initConnexion() {
     // Initialiser Winsock pour les systèmes Windows
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -19,7 +19,7 @@ int initConnexion(Setting *setting) {
         return EXIT_FAILURE;
     }
 
-    const char *hostname = setting->carName;
+    const char *hostname = settings->carName;
     struct addrinfo hints, *result;
 
     memset(&hints, 0, sizeof(hints));
@@ -55,7 +55,7 @@ int initConnexion(Setting *setting) {
 
     // Tentative de connexion au serveur
     if (connect(clientSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
-        perror("Erreur lors de la connexion au serveur");
+        error_content(500);
         closesocket(clientSocket);
         WSACleanup();
         return EXIT_FAILURE;

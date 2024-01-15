@@ -37,6 +37,28 @@ Une allocation dynamique est faite il faut donc free la mémoire allouer
 @endcode
 */
 
+boolean does_profile_exist_with_id(int id_profile) {
+    sqlite3 *db;
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+        error_content(101);
+
+    char *req = "SELECT 1 FROM profile WHERE id = ?";
+    if (sqlite3_prepare_v2(db, req, -1, &stmt, NULL) != SQLITE_OK) {
+        sqlite3_close(db);
+        error_content(101);
+    }
+
+    sqlite3_bind_int(stmt, 1, id_profile);
+
+    int result = sqlite3_step(stmt);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    return (result == SQLITE_ROW);
+}
+
 Profile * get_profiles(){
     sqlite3 *db;
     sqlite3_stmt *stmt;

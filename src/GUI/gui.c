@@ -6,7 +6,7 @@ int clientSocket;
 int fin = 0;
 pthread_mutex_t fin_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static int current_profile_id = 1;
+static int current_profile_id;
 int chosen_config_id = -1;
 
 static GtkWidget *globalProfileSubmenu = NULL;
@@ -17,9 +17,6 @@ static gboolean is_delete_profile_submenu_created = FALSE;
 
 static GtkWidget *globalExportSubmenu = NULL;
 static gboolean is_export_submenu_created = FALSE;
-
-Setting settings;
-
 
 static void close_deleted_submenus() {
     if (is_delete_profile_submenu_created) {
@@ -669,13 +666,13 @@ void on_chosen_configuration_button_clicked(GtkButton *button, gpointer user_dat
 void on_create_config_button_clicked(GtkButton *button, gpointer user_data) {
     Configuration config;
 
-    strcpy(config.name, settings.configuration.name);
-    config.move_forward = settings.configuration.move_forward;
-    config.move_backward = settings.configuration.move_backward;
-    config.move_left = settings.configuration.move_left;
-    config.move_right = settings.configuration.move_right;
-    config.speed_step = settings.configuration.speed_step;
-    config.change_step_button = settings.configuration.change_step_button;
+    strcpy(config.name, settings->configuration.name);
+    config.move_forward = settings->configuration.move_forward;
+    config.move_backward = settings->configuration.move_backward;
+    config.move_left = settings->configuration.move_left;
+    config.move_right = settings->configuration.move_right;
+    config.speed_step = settings->configuration.speed_step;
+    config.change_step_button = settings->configuration.change_step_button;
     config.id_profile = current_profile_id;
 
     create_configuration(&config);
@@ -733,7 +730,7 @@ void update_duration_label(int duration){
 void* control_thread_function(void* data) {
     ControlData* control_data = (ControlData*)data;
     Configuration* configuration = &(control_data->configuration);
-    control(configuration, control_data->id_profile, control_data->clientSocket, &settings);
+    control(configuration, control_data->id_profile, control_data->clientSocket);
     return NULL;
 }
 
@@ -777,7 +774,7 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
         errorPopUp("You must choose a configuration to start a session !");
         return;
     }
-    clientSocket = initConnexion(&settings);
+    clientSocket = initConnexion();
     if(clientSocket == 1){
         errorPopUp("Connexion issues with the car !");
         error_content(200);
@@ -832,8 +829,12 @@ void activate(GtkApplication *app, gpointer user_data) {
     GtkButton *startSession;
     GtkButton *stopSession;
 
+    if(does_profile_exist_with_id(settings->defaultUserId)) {
+        current_profile_id = settings->defaultUserId;
+    }else{
+        current_profile_id = 1;
+    }
 
-    setConfig("config.txt", &settings);
 
     globalBuilder = gtk_builder_new_from_file("../src/GUI/index.glade");
 
@@ -853,8 +854,6 @@ void activate(GtkApplication *app, gpointer user_data) {
     GError *error = NULL;
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("../src/GUI/car.png", &error);
     gtk_window_set_icon(GTK_WINDOW(window), icon);
-
-
 
     if(fin == 1){
         g_signal_connect(window, "destroy", G_CALLBACK(on_stop_session_clicked), NULL);
