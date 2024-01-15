@@ -10,7 +10,7 @@ int create_profile(char username[20]){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     if (sqlite3_prepare_v2(db, "INSERT INTO profile (username) VALUES (?)", -1, &stmt, NULL) != SQLITE_OK) {
@@ -41,7 +41,7 @@ boolean does_profile_exist_with_id(int id_profile) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if (sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if (sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *req = "SELECT 1 FROM profile WHERE id = ?";
@@ -65,7 +65,7 @@ Profile * get_profiles(){
     Profile *array;
     int size = 0;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     if (sqlite3_prepare_v2(db, "SELECT id,username FROM profile", -1, &stmt, NULL) != SQLITE_OK) {
@@ -100,7 +100,7 @@ Profile get_profile(int id_profile){
     sqlite3_stmt *stmt;
     Profile profile;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     if (sqlite3_prepare_v2(db, "SELECT id, username FROM profile WHERE id = ?", -1, &stmt, NULL) != SQLITE_OK) {
@@ -129,7 +129,7 @@ int update_profile(int id, char username[20]){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     if (sqlite3_prepare_v2(db, "UPDATE profile SET username = ? WHERE id = ?", -1, &stmt, NULL) != SQLITE_OK) {
@@ -157,7 +157,7 @@ int delete_profile(int id){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     if (sqlite3_prepare_v2(db, "DELETE FROM profile WHERE id = ?", -1, &stmt, NULL) != SQLITE_OK) {

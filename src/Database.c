@@ -10,7 +10,7 @@ int create_database() {
     Configuration config;
     char *error_message = 0;
 
-    if (sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
+    if (sqlite3_open("caremote_db", &db) != SQLITE_OK) {
         error_content(101);
     }
 
@@ -84,6 +84,6 @@ int create_database() {
 
 // Verify if the database already exists
 int verification_database(){
-    if (access("../caremote_db", F_OK) == -1) return 1;
+    if (access("caremote_db", F_OK) == -1) return 1;
     return 0;
 }

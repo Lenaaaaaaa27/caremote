@@ -9,7 +9,7 @@ int create_configuration(Configuration *configuration){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     if (sqlite3_prepare_v2(db, "INSERT INTO configuration (name,"
@@ -58,7 +58,7 @@ Configuration * get_configurations(int id_profile){
     Configuration *array;
     int size = 0;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, speed_step, change_step_button, id_profile FROM configuration WHERE id_profile = ? ORDER BY id DESC";
@@ -100,7 +100,7 @@ boolean does_configuration_exist_with_id(int id_configuration) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if (sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if (sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *req = "SELECT 1 FROM configuration WHERE id = ?";
@@ -123,7 +123,7 @@ Configuration get_configuration(int id_configuration){
     sqlite3_stmt *stmt;
     Configuration array;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *req = "SELECT id, name, move_forward, move_backward, move_left, move_right, speed_step, change_step_button, id_profile FROM configuration WHERE id = ?";
@@ -159,7 +159,7 @@ int update_configuration(Configuration configuration) {
                 "move_right = ?, speed_step = ?, change_step_button = ? "
                 "WHERE id = ?";
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK) {
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK) {
         error_content(101);
         sqlite3_free(sql);
     }
@@ -195,7 +195,7 @@ int delete_configuration(int id_configuration) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         return 1;
 
     if (sqlite3_prepare_v2(db, "DELETE FROM configuration WHERE id = ?", -1, &stmt, NULL) != SQLITE_OK) {

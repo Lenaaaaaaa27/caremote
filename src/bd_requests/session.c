@@ -12,7 +12,7 @@ int create_session(Session session){
     sqlite3_stmt *stmt;
     int rc;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     const char *sql_requests = "INSERT INTO session (name, duration, distance, average_speed, time_start, id_configuration, id_profile) VALUES (?,?,?,?,?,?,?)";
@@ -57,7 +57,7 @@ Session * get_sessions_by_profile_id(int id_profile){
     int size = 0;
 
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *sql_requests = "SELECT id, name, duration, distance, average_speed, time_start, id_configuration, id_profile FROM session WHERE id_profile = ? ORDER BY id DESC";
@@ -100,7 +100,7 @@ Session get_session(int id_session){
     Session array;
     int rc;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *sql_requests = "SELECT id, name, duration, distance, average_speed, time_start, id_configuration, id_profile FROM session WHERE id = ?";
@@ -140,7 +140,7 @@ int update_session(Session session){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *sql_request = "UPDATE session SET name = ?, duration = ?, distance = ?, average_speed = ?, time_start = ?, id_configuration = ?, id_profile = ? WHERE id = ?";
@@ -173,7 +173,7 @@ int delete_session(int id){
     sqlite3 *db;
     sqlite3_stmt *stmt;
 
-    if(sqlite3_open("../caremote_db", &db) != SQLITE_OK)
+    if(sqlite3_open("caremote_db", &db) != SQLITE_OK)
         error_content(101);
 
     char *sql_requests = "DELETE FROM session WHERE id = ?";
