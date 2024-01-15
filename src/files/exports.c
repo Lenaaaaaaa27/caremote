@@ -76,7 +76,7 @@ int exportSessions(Session sessions[], int numSessions) {
             strcpy(configName, "Configuration deleted");
         }
         cJSON_AddItemToObject(root, "configName", cJSON_CreateString(configName));
-        cJSON_AddItemToObject(root, "profileId", cJSON_CreateNumber(sessions[i].id_profile));
+        cJSON_AddItemToObject(root, "profileId", cJSON_CreateString(get_profile(sessions[i].id_profile).username));
         cJSON_AddItemToArray(sessionsArray, root);
     }
 
