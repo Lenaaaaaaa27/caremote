@@ -132,7 +132,7 @@ int control(Configuration *configuration, int id_user, int clientSocket, Setting
         }
 
         if(duration >= maxSessionTime) {
-            fin = 0;
+            g_idle_add(on_stop_session_callback, NULL);
         }
 
         if(axe_X < 5 || axe_X > 100) avg_X += abs(axe_X);

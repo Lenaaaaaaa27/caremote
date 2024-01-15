@@ -818,6 +818,11 @@ gboolean update_labels_callback(gpointer user_data) {
     return FALSE;
 }
 
+gboolean on_stop_session_callback(gpointer user_data){
+    on_stop_session_clicked(NULL, NULL);
+    return FALSE;
+}
+
 
 void activate(GtkApplication *app, gpointer user_data) {
     GtkWidget *window;
