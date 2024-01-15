@@ -36,12 +36,13 @@ int exportConfig(Configuration *configuration) {
         if (fichier) {
             fprintf(fichier, "%s", jsonString);
             fclose(fichier);
-            printf("Fichier enregistré avec succès.\n");
         } else {
-            printf("Erreur lors de l'ouverture du fichier.\n");
+            chdir(currentDir);
+            cJSON_Delete(root);
+            free(jsonString);
+            error_content(301);
+            return EXIT_FAILURE;
         }
-    } else {
-        printf("Annulation de l'enregistrement du fichier.\n");
     }
 
     chdir(currentDir);
@@ -49,38 +50,40 @@ int exportConfig(Configuration *configuration) {
     cJSON_Delete(root);
     free(jsonString);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
-int exportSession(Session *session) {
-
+int exportSessions(Session sessions[], int numSessions) {
     char currentDir[MAX_PATH];
     getcwd(currentDir, sizeof(currentDir));
 
+
+    char numberString[10];
     char configName[30];
-    if(does_configuration_exist_with_id(session->id_configuration)) {
-        strcpy(configName,get_configuration(session->id_configuration).name);
-    } else {
-        strcpy(configName,"Configuration deleted");
+    cJSON *sessionsArray = cJSON_CreateArray();
+
+    for (int i = 0; i < numSessions; i++) {
+        cJSON *root = cJSON_CreateObject();
+        cJSON_AddItemToObject(root, "name", cJSON_CreateString(sessions[i].name));
+        cJSON_AddItemToObject(root, "duration", cJSON_CreateString(intToDate(sessions[i].duration)));
+        cJSON_AddItemToObject(root, "distance", cJSON_CreateNumber(sessions[i].distance));
+        snprintf(numberString, sizeof(numberString), "%.2lf", sessions[i].average_speed);
+        cJSON_AddItemToObject(root, "average_speed", cJSON_CreateString(numberString));
+        cJSON_AddItemToObject(root, "time_start", cJSON_CreateString(sessions[i].time_start));
+        if (does_configuration_exist_with_id(sessions[i].id_configuration)) {
+            strcpy(configName, get_configuration(sessions[i].id_configuration).name);
+        } else {
+            strcpy(configName, "Configuration deleted");
+        }
+        cJSON_AddItemToObject(root, "configName", cJSON_CreateString(configName));
+        cJSON_AddItemToObject(root, "profileId", cJSON_CreateNumber(sessions[i].id_profile));
+        cJSON_AddItemToArray(sessionsArray, root);
     }
 
-    char numberString[6];  // Assurez-vous que la taille est suffisante
-    snprintf(numberString, sizeof(numberString), "%.2lf", session->average_speed);
+    char *jsonString = cJSON_Print(sessionsArray);
 
-    cJSON *root = cJSON_CreateObject();
-    cJSON_AddItemToObject(root, "name", cJSON_CreateString(session->name));
-    cJSON_AddItemToObject(root, "duration", cJSON_CreateString(intToDate(session->duration)));
-    cJSON_AddItemToObject(root, "distance", cJSON_CreateNumber(session->distance));
-    cJSON_AddItemToObject(root, "average_speed", cJSON_CreateString(numberString));
-    cJSON_AddItemToObject(root, "time_start", cJSON_CreateString(session->time_start));
-    cJSON_AddItemToObject(root, "configName", cJSON_CreateString(configName));
-    cJSON_AddItemToObject(root, "profileId", cJSON_CreateNumber(session->id_profile));
-    char *jsonString = cJSON_Print(root);
-
-    // Initialiser la structure OPENFILENAME
     OPENFILENAME ofn;
-    char cheminFichier[MAX_PATH] = "session.json";
-
+    char cheminFichier[MAX_PATH] = "sessions.json";
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = NULL;
@@ -90,29 +93,30 @@ int exportSession(Session *session) {
     ofn.lpstrTitle = "Enregistrer le fichier JSON";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
-    // Afficher la boîte de dialogue de sauvegarde de fichier
+
     if (GetSaveFileName(&ofn) != 0) {
-        // Enregistrer la chaîne JSON dans le fichier spécifié par l'utilisateur
         FILE *fichier = fopen(cheminFichier, "w");
         if (fichier) {
             fprintf(fichier, "%s", jsonString);
             fclose(fichier);
-        } else
+        } else {
             error_content(300);
+            return 1;
+        }
     }
 
     chdir(currentDir);
 
-    cJSON_Delete(root);
+    cJSON_Delete(sessionsArray);
     free(jsonString);
 
     return 0;
 }
 
-char *intToDate(int dureeEnSecondes) {
-    time_t temps = (time_t)dureeEnSecondes;
+char *intToDate(int duration) {
+    time_t temps = (time_t)duration;
     struct tm *tempsStruct = gmtime(&temps);
-    char *chaineFormattee = malloc(20);
-    strftime(chaineFormattee, 10, "%H:%M:%S", tempsStruct);
-    return chaineFormattee;
+    char *chaine = malloc(20);
+    strftime(chaine, 10, "%H:%M:%S", tempsStruct);
+    return chaine;
 }
