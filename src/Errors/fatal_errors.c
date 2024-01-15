@@ -59,6 +59,9 @@ void error_content(int code){
         case 320 :
             content = "Error 320 : Error when opening the window  \n";
             break;
+        case 500 :
+            content = "Error 500 : Failure to read config.txt\n";
+            break;
         default:
             content = "Error 0 : An unknown error has occurred\n";
             break;

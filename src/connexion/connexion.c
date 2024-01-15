@@ -2,22 +2,16 @@
 
 #ifdef _WIN32
 #include <winsock2.h>
-#include <ws2tcpip.h>  // Ajout de l'en-tête pour struct addrinfo sur Windows
+#include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <arpa/inet.h>
 #include <netdb.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #define PORT 5555
-#define BUFFER_SIZE 1024
 
-
-int initConnexion() {
+int initConnexion(Setting *setting) {
     // Initialiser Winsock pour les systèmes Windows
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
@@ -25,7 +19,7 @@ int initConnexion() {
         return EXIT_FAILURE;
     }
 
-    const char *hostname = "caremote.local";
+    const char *hostname = setting->carName;
     struct addrinfo hints, *result;
 
     memset(&hints, 0, sizeof(hints));

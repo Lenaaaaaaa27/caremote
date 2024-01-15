@@ -733,7 +733,7 @@ void update_duration_label(int duration){
 void* control_thread_function(void* data) {
     ControlData* control_data = (ControlData*)data;
     Configuration* configuration = &(control_data->configuration);
-    control(configuration, control_data->id_profile, control_data->clientSocket);
+    control(configuration, control_data->id_profile, control_data->clientSocket, &settings);
     return NULL;
 }
 
@@ -777,7 +777,7 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
         errorPopUp("You must choose a configuration to start a session !");
         return;
     }
-    clientSocket = initConnexion();
+    clientSocket = initConnexion(&settings);
     if(clientSocket == 1){
         errorPopUp("Connexion issues with the car !");
         error_content(200);

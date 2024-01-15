@@ -13,7 +13,7 @@
 #define TIME_LOOP 50
 #define VMAXPULSE ((configuration->speed_step*255)/100)
 
-int control(Configuration *configuration, int id_user, int clientSocket){
+int control(Configuration *configuration, int id_user, int clientSocket, Setting *setting){
     int axe_X = MIN_AXE_X;
     int axe_Z = AVG_AXE_Z;
     int thumbLX;
@@ -24,6 +24,8 @@ int control(Configuration *configuration, int id_user, int clientSocket){
     int loop = 0;
     int pulse = 0;
     int distanceCovered = 0;
+    int forceFeedback = setting->forceFeedback;
+    int maxSessionTime = setting->maxSessionTime;
     Session session;
     time_t t;
     char buffer[256];
@@ -106,6 +108,10 @@ int control(Configuration *configuration, int id_user, int clientSocket){
                     axe_Z -= VAR_AXE_Z;
                 }
             }
+            forceFeedback;
+            if (!(GetAsyncKeyState(toupper(configuration->move_left)) & 0x8001) && !(GetAsyncKeyState(toupper(configuration->move_right)) & 0x8001) && forceFeedback == 1) {
+                axe_Z = AVG_AXE_Z;
+            }
 
             if ((GetAsyncKeyState(toupper(configuration->change_step_button)) & 0x8001) && !(previousSpeedSwitchState & 0x8001)) {
                 if(vMax == VMAXPULSE) {
@@ -123,6 +129,10 @@ int control(Configuration *configuration, int id_user, int clientSocket){
             duration += 1;
             distanceCovered += abs(distance(1,(int)avg_speed(pulse,1000/TIME_LOOP)));
             pulse = 0;
+        }
+
+        if(duration >= maxSessionTime) {
+            fin = 0;
         }
 
         if(axe_X < 5 || axe_X > 100) avg_X += abs(axe_X);

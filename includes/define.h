@@ -21,10 +21,10 @@
 //toolbox.c
 char * truncated_string(char*,int);
 //control
-int control(Configuration *, int, int);
+int control(Configuration *, int, int,Setting *);
 
 //connexion
-int initConnexion();
+int initConnexion(Setting *);
 void closeConnexion(int);
 
 //Error
