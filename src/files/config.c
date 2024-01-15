@@ -97,6 +97,18 @@ int setConfig(const char *myfile, Setting *setting) {
             }
         }
     }
+
+    if (setting->forceFeedback < 0 || setting->carName == NULL || setting->carName[0] == '\0' ||
+        setting->defaultUserId < 0 || setting->defaultConfigId < 0 || setting->maxSessionTime < 0 ||
+        setting->profileUsername == NULL || setting->profileUsername[0] == '\0' ||
+        setting->configuration.name[0] == '\0' || setting->configuration.speed_step < 0 ||
+        !isalpha(setting->configuration.move_forward) || !isalpha(setting->configuration.move_backward) ||
+        !isalpha(setting->configuration.move_left) || !isalpha(setting->configuration.move_right) ||
+        !isalpha(setting->configuration.change_step_button)) {
+        error_content(500);
+        return EXIT_FAILURE;
+    }
+
     fclose(file);
     return EXIT_SUCCESS;
 }

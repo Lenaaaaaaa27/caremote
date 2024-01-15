@@ -23,19 +23,15 @@ void error_content(int code){
         case 300 :
             content = "Error 300 : Failure to save file\n";
             break;
+        case 500 :
+            content = "Error 500 : Failure to read config.txt\n";
+            break;
         default:
             content = "Error 0 : An unknown error has occurred\n";
             break;
     }
     error_message = line_formatting(content);
-    handle_error(error_message);
-}
-
-// by Lena
-void handle_error(const char*error_message){
     write_log(error_message);
-    printf("%s\n", error_message);
-    exit(EXIT_FAILURE);
 }
 
 // by Arthur
