@@ -9,6 +9,7 @@ void on_profile_activate(GtkWidget *widget, gpointer user_data);
 void on_add_profile_activate(GtkWidget *widget, gpointer user_data);
 void on_edit_session_button_clicked(GtkButton *button, gpointer user_data);
 void on_edit_profile_activate(GtkWidget *widget, gpointer user_data);
+void on_get_code_activate(GtkWidget *widget, gpointer user_data);
 void on_edit_profile_clicked(GtkWidget *widget, gpointer user_data);
 void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data);
 void on_configuration_button_clicked(GtkButton *button, gpointer user_data);
