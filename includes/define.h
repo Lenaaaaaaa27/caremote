@@ -6,6 +6,7 @@
 #define CAREMOTE_DEFINE_H
 #include <Xinput.h>
 #include <string.h>
+#include <curl/curl.h>
 #include <math.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -75,4 +76,9 @@ extern int fin;
 extern pthread_mutex_t fin_mutex;
 extern Setting *settings;
 
+
+//curl
+
+int curl();
+size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 #endif //CAREMOTE_DEFINE_H

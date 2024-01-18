@@ -26,6 +26,7 @@ add_executable(caremote main.c
         src/files/config.c
         src/files/exports.c
         src/files/imports.c
+        src/curl/curl.c
 )
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 
@@ -50,3 +51,8 @@ if(WIN32)
     # Ajouter la bibliothèque XInput
     target_link_libraries(caremote -lXinput)
 endif()
+
+find_package(CURL REQUIRED)
+
+include_directories(${CURL_INCLUDE_DIRS})
+target_link_libraries(caremote ${CURL_LIBRARIES})

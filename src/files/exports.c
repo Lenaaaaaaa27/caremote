@@ -19,20 +19,20 @@ int exportConfig(Configuration *configuration) {
     char *jsonString = cJSON_Print(root);
 
     OPENFILENAME ofn;
-    char cheminFichier[MAX_PATH] = "configuration.json";
+    char filePath[MAX_PATH] = "configuration.json";
 
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = NULL;
     ofn.lpstrFilter = "Fichiers JSON (*.json)\0*.json\0";
-    ofn.lpstrFile = cheminFichier;
+    ofn.lpstrFile = filePath;
     ofn.nMaxFile = MAX_PATH;
     ofn.lpstrTitle = "Enregistrer le fichier JSON";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
     if (GetSaveFileName(&ofn) != 0) {
 
-        FILE *fichier = fopen(cheminFichier, "w");
+        FILE *fichier = fopen(filePath, "w");
         if (fichier) {
             fprintf(fichier, "%s", jsonString);
             fclose(fichier);
@@ -83,19 +83,19 @@ int exportSessions(Session sessions[], int numSessions) {
     char *jsonString = cJSON_Print(sessionsArray);
 
     OPENFILENAME ofn;
-    char cheminFichier[MAX_PATH] = "sessions.json";
+    char filePath[MAX_PATH] = "sessions.json";
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = NULL;
     ofn.lpstrFilter = "Fichiers JSON (*.json)\0*.json\0";
-    ofn.lpstrFile = cheminFichier;
+    ofn.lpstrFile = filePath;
     ofn.nMaxFile = MAX_PATH;
     ofn.lpstrTitle = "Enregistrer le fichier JSON";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
 
     if (GetSaveFileName(&ofn) != 0) {
-        FILE *fichier = fopen(cheminFichier, "w");
+        FILE *fichier = fopen(filePath, "w");
         if (fichier) {
             fprintf(fichier, "%s", jsonString);
             fclose(fichier);
