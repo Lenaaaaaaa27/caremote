@@ -164,7 +164,16 @@ void on_delete_profile_activate(GtkWidget *widget, gpointer user_data){
 }
 
 void on_curl_activate(GtkWidget *widget, gpointer user_data){
-    curl();
+    int error = curl();
+
+    if(error == 2){
+        errorPopUp("Curl didn't work. Check your connection");
+        return;
+    }
+
+    if(error == EXIT_FAILURE){
+        errorPopUp("Export of caremote_car failed");
+    }
 }
 
 void on_profile_activate(GtkWidget *widget, gpointer user_data) {
