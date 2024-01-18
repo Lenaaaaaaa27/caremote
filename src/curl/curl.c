@@ -11,6 +11,7 @@ int curl() {
 
     CURL *curl = curl_easy_init();
     if (!curl) {
+        error_content(321);
         return EXIT_FAILURE;
     }
     curl_easy_setopt(curl, CURLOPT_CAINFO, "curl-ca-bundle.crt");
@@ -50,8 +51,8 @@ int curl() {
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
         if (res != CURLE_OK) {
-            fprintf(stderr, "curl_easy_perform() a échoué : %s\n", curl_easy_strerror(res));
-            return EXIT_FAILURE;
+            error_content(323);
+            return 2;
         }
 
         fclose(file);

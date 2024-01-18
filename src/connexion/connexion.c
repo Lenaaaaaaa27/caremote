@@ -15,7 +15,7 @@ int initConnexion() {
     // Initialiser Winsock pour les systèmes Windows
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-        perror("Erreur lors de l'initialisation de Winsock");
+        error_content(500);
         return EXIT_FAILURE;
     }
 
@@ -29,7 +29,7 @@ int initConnexion() {
     // Résolution de nom
     int res = getaddrinfo(hostname, NULL, &hints, &result);
     if (res != 0) {
-        fprintf(stderr, "Erreur lors de la resolution de nom: %s\n", gai_strerror(res));
+        error_content(500);
         WSACleanup();
         return EXIT_FAILURE;
     }
@@ -42,8 +42,8 @@ int initConnexion() {
     // Création de la socket client
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket < 0) {
-        perror("Erreur lors de la création de la socket client");
         WSACleanup();
+        error_content(500);
         return EXIT_FAILURE;
     }
 

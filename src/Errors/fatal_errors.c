@@ -60,6 +60,15 @@ void error_content(int code){
         case 320 :
             strcpy(content,"Error 320 : Error when opening the window  ");
             break;
+        case 321 :
+            strcpy(content,"Error 321 : curl initialization error");
+            break;
+        case 322 :
+            strcpy(content,"Error 322 : Failure to export caremote_car");
+            break;
+        case 323 :
+            strcpy(content,"Error 323 : error when running curl");
+            break;
         case 400 :
             strcpy(content,"Error 400 : Failure to read config.txt");
             break;
