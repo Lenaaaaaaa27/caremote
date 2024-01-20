@@ -1,6 +1,6 @@
 //
 // Created by arthu on 22/11/2023.
-//
+// CRUD for profile
 
 #include<sqlite3.h>
 #include"../../includes/define.h"
@@ -30,13 +30,6 @@ int create_profile(char username[20]){
     return 0;
 }
 
-/**
-@brief Cette fonction permet de get tous les profils.
-Une allocation dynamique est faite il faut donc free la mémoire allouer
-@return Retourne un tableau de type Profile
-@endcode
-*/
-
 boolean does_profile_exist_with_id(int id_profile) {
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -59,6 +52,12 @@ boolean does_profile_exist_with_id(int id_profile) {
     return (result == SQLITE_ROW);
 }
 
+/**
+@brief This function gets all profiles.
+Dynamic allocation is performed, so free the memory to be allocated.
+@return Returns an array of Profile type
+@endcode
+*/
 Profile * get_profiles(){
     sqlite3 *db;
     sqlite3_stmt *stmt;
@@ -151,7 +150,6 @@ int update_profile(int id, char username[20]){
 
     return 0;
 }
-
 
 int delete_profile(int id){
     sqlite3 *db;

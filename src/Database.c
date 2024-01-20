@@ -1,6 +1,6 @@
 //
 // Created by Léna on 19/11/2023.
-//
+// creation of the database
 
 #include "../../includes/define.h"
 

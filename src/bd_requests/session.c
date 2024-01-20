@@ -4,7 +4,6 @@
 // Edit Session Struct + CRUD new version : Lena
 //
 
-#include<sqlite3.h>
 #include"../../includes/define.h"
 
 int create_session(Session session){
@@ -44,9 +43,9 @@ int create_session(Session session){
     return 0;
 }
 /**
-@brief Cette fonction permet de get toutes les sessions d'un user.
-Une allocation dynamique est faite il faut donc free la mémoire allouée
-@return Retourne un tableau dynamique de type Session
+@brief This function gets all the sessions of a user.
+A dynamic allocation is made, so free the allocated memory.
+@return Returns a dynamic Session array
 @endcode
 */
 

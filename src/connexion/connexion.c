@@ -1,8 +1,12 @@
+//
+// Created by Arthur on 22/11/2023.
+// Host name resolution and connection establishment
+// returns clientSocket
+//
+
 #include "../../includes/define.h"
 
 #ifdef _WIN32
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <arpa/inet.h>
@@ -12,7 +16,7 @@
 #define PORT 5555
 
 int initConnexion() {
-    // Initialiser Winsock pour les systèmes Windows
+    // Initialize Winsock for Windows systems
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
         error_content(500);
@@ -26,7 +30,7 @@ int initConnexion() {
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
-    // Résolution de nom
+    // Name resolution
     int res = getaddrinfo(hostname, NULL, &hints, &result);
     if (res != 0) {
         error_content(500);
@@ -39,7 +43,7 @@ int initConnexion() {
 
     freeaddrinfo(result);
 
-    // Création de la socket client
+    // Create client socket
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (clientSocket < 0) {
         WSACleanup();
@@ -53,7 +57,7 @@ int initConnexion() {
     serverAddr.sin_addr.s_addr = inet_addr(ip_address);
     serverAddr.sin_port = htons(PORT);
 
-    // Tentative de connexion au serveur
+    // Attempt to connect to the server
     if (connect(clientSocket, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) < 0) {
         error_content(500);
         closesocket(clientSocket);
@@ -63,11 +67,8 @@ int initConnexion() {
 
     return clientSocket;
 }
-
+// Close socket and free Winsock for Windows systems
 void closeConnexion(int clientSocket) {
-    // Fermer la socket
     closesocket(clientSocket);
-
-    // Libérer Winsock pour les systèmes Windows
     WSACleanup();
 }

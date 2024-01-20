@@ -1,6 +1,6 @@
 //
 // Created by arthu on 13/01/2024.
-//
+// for importing configurations in JSON format
 #include "../../includes/define.h"
 
 int importsConfig(int id) {
@@ -8,6 +8,7 @@ int importsConfig(int id) {
     char currentDir[MAX_PATH];
     getcwd(currentDir, sizeof(currentDir));
 
+    // call up a Windows window so the user can choose where to save the file
     OPENFILENAME ofn;
     char szFile[260];
     memset(szFile, 0, sizeof(szFile));
@@ -48,6 +49,7 @@ int importsConfig(int id) {
         fread(fileContent, 1, fileSize, file);
         fclose(file);
 
+        // assigning JSON file values
         fileContent[fileSize] = '\0';
         cJSON *json = cJSON_Parse(fileContent);
         if (!json) {

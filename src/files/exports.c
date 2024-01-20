@@ -1,6 +1,6 @@
 //
 // Created by arthu on 12/01/2024.
-//
+// data exports
 #include "../../includes/define.h"
 
 int exportConfig(Configuration *configuration) {
@@ -18,6 +18,7 @@ int exportConfig(Configuration *configuration) {
     cJSON_AddItemToObject(root, "change_step_button", cJSON_CreateNumber(configuration->change_step_button));
     char *jsonString = cJSON_Print(root);
 
+    // call up a Windows window so the user can choose where to save the file
     OPENFILENAME ofn;
     char filePath[MAX_PATH] = "configuration.json";
 
@@ -82,6 +83,7 @@ int exportSessions(Session sessions[], int numSessions) {
 
     char *jsonString = cJSON_Print(sessionsArray);
 
+    // call up a Windows window so the user can choose where to save the file
     OPENFILENAME ofn;
     char filePath[MAX_PATH] = "sessions.json";
     ZeroMemory(&ofn, sizeof(ofn));
@@ -92,7 +94,6 @@ int exportSessions(Session sessions[], int numSessions) {
     ofn.nMaxFile = MAX_PATH;
     ofn.lpstrTitle = "Enregistrer le fichier JSON";
     ofn.Flags = OFN_OVERWRITEPROMPT;
-
 
     if (GetSaveFileName(&ofn) != 0) {
         FILE *fichier = fopen(filePath, "w");

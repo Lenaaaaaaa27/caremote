@@ -47,9 +47,9 @@ int create_configuration(Configuration *configuration){
 }
 
 /**
-@brief Cette fonction permet de get toutes les configurations.
-Une allocation dynamique est faite il faut donc free la mémoire allouer
-@return Retourne un tableau dynamique de type Configuration
+@brief This function gets all configurations.
+A dynamic allocation is made, so free the allocated memory.
+@return Returns a dynamic array of type Configuration
 @endcode
 */
 Configuration * get_configurations(int id_profile){

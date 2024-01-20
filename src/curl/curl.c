@@ -1,3 +1,7 @@
+//
+// Created by Arthur on 15/01/2023.
+// retrieve the car's code from a github repo and save it on the computer
+
 #include "../../includes/define.h"
 
 size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
@@ -5,6 +9,8 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 }
 
 int curl() {
+
+    // curl initialization
 
     char currentDir[MAX_PATH];
     getcwd(currentDir, sizeof(currentDir));
@@ -18,6 +24,7 @@ int curl() {
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
+    // call a windows window so that the user can choose where to save the zip
     OPENFILENAME ofn;
     char filePath[MAX_PATH] = "caremote_car.zip";
     ZeroMemory(&ofn, sizeof(ofn));
@@ -50,6 +57,7 @@ int curl() {
 
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
+        // file deletion in case of failure
         if (res != CURLE_OK) {
             fclose(file);
             remove(filePath);

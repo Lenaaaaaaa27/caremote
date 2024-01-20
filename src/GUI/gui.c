@@ -1,3 +1,9 @@
+//
+// Created by Lena on 05/12/2023.
+//
+// it allows you to get all the widgets and interactions with them, windows of the user interface.
+
+
 #include "../../includes/define.h"
 
 static GtkBuilder *globalBuilder = NULL;

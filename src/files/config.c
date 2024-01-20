@@ -1,6 +1,8 @@
 //
 // Created by arthur on 11/01/2024.
 //
+// allows to recover initialization data
+
 #define MAX_SIZE_LINE 256
 
 #include "../../includes/define.h"
@@ -19,6 +21,7 @@ int setConfig(const char *myfile) {
     char *endptr;
     char letter;
 
+    // browsing the config file and assigning values
     while (fgets(line, sizeof(line), file) != NULL) {
         char *token = strtok(line, ":");
         char *value = strtok(NULL, "\n");
@@ -94,6 +97,7 @@ int setConfig(const char *myfile) {
         }
     }
 
+    // verification of assigned values
     if(settings->forceFeedback < 0 || settings->forceFeedback > 1 ){
         error_content(401);
         condition = FALSE;

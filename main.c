@@ -1,3 +1,9 @@
+//
+// Created by Lena on 05/11/2023.
+//
+//starting point of the program
+
+
 #include "includes/define.h"
 
 Setting *settings;
@@ -21,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     settings = malloc(sizeof(Setting));
 
-    if (setConfig("config.ini") == EXIT_FAILURE) {
+    if (setConfig("config.ini ") == EXIT_FAILURE) {
         MessageBox(NULL, "The configuration has failed. Please check the config.txt file", "Error in configuration", MB_ICONERROR | MB_OK);
         return EXIT_FAILURE;
     }

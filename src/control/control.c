@@ -1,3 +1,10 @@
+//
+// Created by Arthur on 22/11/2023.
+// Code for controlling the car
+// using 2 axes Axe_X (front/rear) and Axe_Z (steering)
+// we loop from until the end of the session, releasing the key
+// status to modify the values of the various axes.
+
 #include "../../includes/define.h"
 
 
@@ -20,7 +27,6 @@ int control(Configuration *configuration, int id_user, int clientSocket){
     int vMax = VMAXPULSE;
     int previousSpeedSwitchState = 0;
     int duration = 0;
-    int avg_X = 0;
     int loop = 0;
     int pulse = 0;
     int distanceCovered = 0;
@@ -49,12 +55,14 @@ int control(Configuration *configuration, int id_user, int clientSocket){
             thumbLX = state.Gamepad.sThumbLX;
             axe_X = 0;
 
+            // Speed control with a deadband below 100
             if (state.Gamepad.bRightTrigger > 100) {
                 axe_X = state.Gamepad.bRightTrigger <vMax?state.Gamepad.bRightTrigger:vMax;
             } else if (state.Gamepad.bLeftTrigger > 100) {
                 axe_X = state.Gamepad.bLeftTrigger < vMax?-state.Gamepad.bRightTrigger:-vMax;
             }
 
+            //steering control with joystick
             if (thumbLX > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || thumbLX < -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) {
                 if (thumbLX > 0) {
                     if (axe_Z < MAX_AXE_Z)
@@ -67,6 +75,7 @@ int control(Configuration *configuration, int id_user, int clientSocket){
                 axe_Z = AVG_AXE_Z;
             }
 
+            //switching between low and high speeds
             if (state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
                 if (!previousSpeedSwitchState) {
                     previousSpeedSwitchState = 1;
@@ -81,38 +90,40 @@ int control(Configuration *configuration, int id_user, int clientSocket){
             }
         } else {
             // Keyboard control
-
+            // move forward
             if (GetAsyncKeyState(toupper(configuration->move_forward)) & 0x8001) {
                 axe_X = abs(axe_X) > vMax?vMax:axe_X;
                 if (axe_X < vMax)
                     axe_X += VAR_AXE_X;
             }
-
+            // move backward
             if (GetAsyncKeyState(toupper(configuration->move_backward)) & 0x8001) {
                 axe_X = abs(axe_X) > vMax?-vMax:axe_X;
                 if (axe_X > -vMax)
                     axe_X -= VAR_AXE_X;
             }
-
+            // deceleration
             if (!(GetAsyncKeyState(toupper(configuration->move_backward)) & 0x8001) && !(GetAsyncKeyState(toupper(configuration->move_forward)) & 0x8001)) {
                 axe_X = MIN_AXE_X;
             }
-
+            // right
             if (GetAsyncKeyState(toupper(configuration->move_right)) & 0x8001) {
                 if (axe_Z < MAX_AXE_Z) {
                     axe_Z += VAR_AXE_Z;
                 }
             }
+            // left
             if (GetAsyncKeyState(toupper(configuration->move_left)) & 0x8001) {
                 if (axe_Z > MIN_AXE_Z) {
                     axe_Z -= VAR_AXE_Z;
                 }
             }
-            forceFeedback;
+            // force feedback
             if (!(GetAsyncKeyState(toupper(configuration->move_left)) & 0x8001) && !(GetAsyncKeyState(toupper(configuration->move_right)) & 0x8001) && forceFeedback == 1) {
                 axe_Z = AVG_AXE_Z;
             }
 
+            //switching between low and high speeds
             if ((GetAsyncKeyState(toupper(configuration->change_step_button)) & 0x8001) && !(previousSpeedSwitchState & 0x8001)) {
                 if(vMax == VMAXPULSE) {
                     vMax = MAX_AXE_X;
@@ -124,6 +135,7 @@ int control(Configuration *configuration, int id_user, int clientSocket){
             previousSpeedSwitchState = GetAsyncKeyState(toupper(configuration->change_step_button));
         }
 
+        //calculates every second
         pulse+= axe_X;
         if(loop%(1000/TIME_LOOP) == 0) {
             duration += 1;
@@ -131,20 +143,23 @@ int control(Configuration *configuration, int id_user, int clientSocket){
             pulse = 0;
         }
 
+        // test max sessions time
         if(duration >= maxSessionTime) {
             g_idle_add(on_stop_session_callback, NULL);
         }
 
-        if(axe_X < 5 || axe_X > 100) avg_X += abs(axe_X);
+        // sending data to the car
         sprintf(buffer, "c%d", axe_Z);
         send(clientSocket, buffer, strlen(buffer), 0);
         sprintf(buffer, "m%d", axe_X);
         send(clientSocket, buffer, strlen(buffer), 0);
 
+        // waiting time to avoid overloading the program
         Sleep(TIME_LOOP);
         loop +=1;
         gdouble instantSpeed = fabs(speed(axe_X));
 
+        // real-time data display
         struct UpdateLabelsData *data = g_malloc(sizeof(struct UpdateLabelsData));
         data->instantSpeed = fabs(speed(axe_X));
         data->duration = duration;
@@ -153,7 +168,7 @@ int control(Configuration *configuration, int id_user, int clientSocket){
         g_idle_add(update_labels_callback, data);
 
     }
-
+    // Add sessions to database
     session.id_profile = id_user;
     session.id_configuration = configuration->id;
     strcpy(session.name, name);

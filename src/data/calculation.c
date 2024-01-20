@@ -1,6 +1,6 @@
 //
 // Created by arthur on 07/01/2024.
-//
+// distance and speed calculation
 
 #include "../../includes/define.h"
 
