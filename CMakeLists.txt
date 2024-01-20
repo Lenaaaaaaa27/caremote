@@ -27,12 +27,18 @@ add_executable(caremote main.c
         src/files/exports.c
         src/files/imports.c
         src/curl/curl.c
+        resources.rc
 )
+if (WIN32)
+    set(SOURCE_FILES ${SOURCE_FILES}/cmake-build-debug/resources.rc)
+endif()
+
 target_link_libraries(caremote ${GTK4_LIBRARIES})
 
 
 target_sources(caremote PRIVATE lib/sqlite-amalgamation-3440000/sqlite3.c)
 target_include_directories(caremote PRIVATE lib/sqlite-amalgamation-3440000/)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--subsystem,windows -mwindows")
 
 set(CJSON_SOURCE_DIR lib/cJSON/)
 add_library(cJSON STATIC

@@ -52,7 +52,7 @@ int curl() {
 
         if (res != CURLE_OK) {
             fclose(file);
-            remove(filePath); 
+            remove(filePath);
             error_content(323);
             return 2;
         }
