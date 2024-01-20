@@ -46,7 +46,7 @@ int control(Configuration *configuration, int id_user, int clientSocket){
 
     configuration->speed_step < 0?0:configuration->speed_step > 100?100:configuration->speed_step; // 0 <= speed_step <= 100 
 
-    while (fin) {
+    while (end) {
 
         //Joystick control
         XINPUT_STATE state;

@@ -30,10 +30,10 @@ int curl() {
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = NULL;
-    ofn.lpstrFilter = "Fichiers ZIP (*.zip)\0*.zip\0";
+    ofn.lpstrFilter = "ZIP file (*.zip)\0*.zip\0";
     ofn.lpstrFile = filePath;
     ofn.nMaxFile = MAX_PATH;
-    ofn.lpstrTitle = "Enregistrer le fichier ZIP";
+    ofn.lpstrTitle = "Save ZIP file";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
     if (GetSaveFileName(&ofn) != 0) {

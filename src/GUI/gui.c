@@ -9,8 +9,8 @@
 static GtkBuilder *globalBuilder = NULL;
 
 int clientSocket;
-int fin = 0;
-pthread_mutex_t fin_mutex = PTHREAD_MUTEX_INITIALIZER;
+int end = 0;
+pthread_mutex_t end_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static int current_profile_id;
 int chosen_config_id = -1;
@@ -532,12 +532,6 @@ void arrayConfigurations(int profile_id) {
     gtk_widget_show_all(viewportconfiguration);
     free(configurations);
 }
-void show_error_message(GtkWidget *errorLabel, const gchar *message) {
-    gtk_label_set_text(GTK_LABEL(errorLabel), message);
-    if (!gtk_widget_is_visible(errorLabel)) {
-        gtk_widget_show(errorLabel);
-    }
-}
 
 void on_edit_configuration_button_clicked(GtkButton *button, gpointer user_data) {
     GetSession *getConfig = (GetSession *) user_data;
@@ -759,9 +753,9 @@ void on_stop_session_clicked(GtkButton *button, gpointer user_data){
     gtk_widget_set_sensitive(GTK_WIDGET(stopSession), FALSE);
     gtk_widget_set_sensitive(GTK_WIDGET(startSession), TRUE);
 
-    pthread_mutex_lock(&fin_mutex);
-    fin = 0;
-    pthread_mutex_unlock(&fin_mutex);
+    pthread_mutex_lock(&end_mutex);
+    end = 0;
+    pthread_mutex_unlock(&end_mutex);
     closeConnexion(clientSocket);
 }
 
@@ -813,9 +807,9 @@ void on_start_session_clicked(GtkButton *button, gpointer user_data){
     control_data->id_profile = current_profile_id;
     control_data->clientSocket = clientSocket;
 
-    pthread_mutex_lock(&fin_mutex);
-    fin = 1;
-    pthread_mutex_unlock(&fin_mutex);
+    pthread_mutex_lock(&end_mutex);
+    end = 1;
+    pthread_mutex_unlock(&end_mutex);
 
     pthread_t control_thread;
     pthread_create(&control_thread, NULL, control_thread_function, control_data);
@@ -875,7 +869,7 @@ void activate(GtkApplication *app, gpointer user_data) {
     GdkPixbuf *icon = gdk_pixbuf_new_from_file("files/car.png", &error);
     gtk_window_set_icon(GTK_WINDOW(window), icon);
 
-    if(fin == 1){
+    if(end == 1){
         g_signal_connect(window, "destroy", G_CALLBACK(on_stop_session_clicked), NULL);
     }
     g_signal_connect(window, "destroy", G_CALLBACK(destroyWindow), user_data);

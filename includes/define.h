@@ -72,8 +72,8 @@ int extractIntValue(cJSON *, const char *, int *);
 int extractCharValue(cJSON *, const char *, char *);
 int extractStringValue(cJSON *, const char *, char *, size_t);
 //variable stop
-extern int fin;
-extern pthread_mutex_t fin_mutex;
+extern int end;
+extern pthread_mutex_t end_mutex;
 extern Setting *settings;
 
 

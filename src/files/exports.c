@@ -25,18 +25,18 @@ int exportConfig(Configuration *configuration) {
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = NULL;
-    ofn.lpstrFilter = "Fichiers JSON (*.json)\0*.json\0";
+    ofn.lpstrFilter = "File JSON (*.json)\0*.json\0";
     ofn.lpstrFile = filePath;
     ofn.nMaxFile = MAX_PATH;
-    ofn.lpstrTitle = "Enregistrer le fichier JSON";
+    ofn.lpstrTitle = "Save JSON file";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
     if (GetSaveFileName(&ofn) != 0) {
 
-        FILE *fichier = fopen(filePath, "w");
-        if (fichier) {
-            fprintf(fichier, "%s", jsonString);
-            fclose(fichier);
+        FILE *file = fopen(filePath, "w");
+        if (file) {
+            fprintf(file, "%s", jsonString);
+            fclose(file);
         } else {
             chdir(currentDir);
             cJSON_Delete(root);
@@ -89,17 +89,17 @@ int exportSessions(Session sessions[], int numSessions) {
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
     ofn.hwndOwner = NULL;
-    ofn.lpstrFilter = "Fichiers JSON (*.json)\0*.json\0";
+    ofn.lpstrFilter = "File JSON (*.json)\0*.json\0";
     ofn.lpstrFile = filePath;
     ofn.nMaxFile = MAX_PATH;
-    ofn.lpstrTitle = "Enregistrer le fichier JSON";
+    ofn.lpstrTitle = "Save JSON file";
     ofn.Flags = OFN_OVERWRITEPROMPT;
 
     if (GetSaveFileName(&ofn) != 0) {
-        FILE *fichier = fopen(filePath, "w");
-        if (fichier) {
-            fprintf(fichier, "%s", jsonString);
-            fclose(fichier);
+        FILE *file = fopen(filePath, "w");
+        if (file) {
+            fprintf(file, "%s", jsonString);
+            fclose(file);
         } else {
             error_content(300);
             return 1;
@@ -115,9 +115,9 @@ int exportSessions(Session sessions[], int numSessions) {
 }
 
 char *intToDate(int duration) {
-    time_t temps = (time_t)duration;
-    struct tm *tempsStruct = gmtime(&temps);
-    char *chaine = malloc(20);
-    strftime(chaine, 10, "%H:%M:%S", tempsStruct);
-    return chaine;
+    time_t time = (time_t)duration;
+    struct tm *timeStruct = gmtime(&time);
+    char *str = malloc(20);
+    strftime(str, 10, "%H:%M:%S", timeStruct);
+    return str;
 }
