@@ -118,12 +118,12 @@ int setConfig(const char *myfile) {
         condition = FALSE;
     }
 
-    if(settings->profileUsername == NULL || settings->profileUsername[0] == '\0'){
+    if(settings->profileUsername == NULL || settings->profileUsername[0] == '\0' || strlen(settings->profileUsername) > 21){
         error_content(405);
         condition = FALSE;
     }
 
-    if(settings->configuration.name[0] == '\0'){
+    if(settings->configuration.name[0] == '\0' || strlen(settings->configuration.name) > 21){
         error_content(406);
         condition = FALSE;
     }
