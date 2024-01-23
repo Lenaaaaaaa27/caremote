@@ -1,2 +1,2 @@
 # caremote
-Logiciel lourd en C 
+Software which allows you to control a car
